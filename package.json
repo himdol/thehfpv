@@ -2,7 +2,7 @@
   "name": "github.io",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://himdol.github.io",
+  "homepage": "https://himdol.github.io/",
   "dependencies": {
     "@testing-library/dom": "^10.4.1",
     "@testing-library/jest-dom": "^6.7.0",
