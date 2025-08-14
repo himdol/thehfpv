@@ -5,14 +5,29 @@ import '../App.css';
 
 interface LayoutProps {
   children: ReactNode;
+  currentPage: string;
+  setCurrentPage: (page: string) => void;
+  sidebarOpen: boolean;
+  setSidebarOpen: (open: boolean) => void;
 }
 
-const Layout: React.FC<LayoutProps> = ({ children }) => {
+const Layout: React.FC<LayoutProps> = ({ 
+  children, 
+  currentPage, 
+  setCurrentPage, 
+  sidebarOpen, 
+  setSidebarOpen 
+}) => {
   const { isDarkMode } = useTheme();
 
   return (
     <div className={`App ${isDarkMode ? 'dark' : 'light'}`}>
-      <Header />
+      <Header 
+        currentPage={currentPage}
+        setCurrentPage={setCurrentPage}
+        sidebarOpen={sidebarOpen}
+        setSidebarOpen={setSidebarOpen}
+      />
       <main className="main">
         {children}
       </main>

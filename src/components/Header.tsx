@@ -36,7 +36,6 @@ const Header: React.FC<HeaderProps> = ({
   return (
     <header className="header">
       <div className="logo">
-        <span className="logo-m">M</span>
         <span className="logo-h">H</span>
       </div>
       <nav className="nav">

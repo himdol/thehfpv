@@ -9,7 +9,12 @@ function App() {
 
   return (
     <ThemeProvider>
-      <Layout>
+      <Layout 
+        currentPage={currentPage}
+        setCurrentPage={setCurrentPage}
+        sidebarOpen={sidebarOpen}
+        setSidebarOpen={setSidebarOpen}
+      >
         <Router 
           currentPage={currentPage}
           sidebarOpen={sidebarOpen}
