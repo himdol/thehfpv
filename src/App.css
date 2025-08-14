@@ -156,7 +156,7 @@
 }
 
 .buttons button {
-  background: #3b82f6;
+  background: #dc2626;
   color: white;
   border: none;
   padding: 0.75rem 1.5rem;
@@ -168,9 +168,9 @@
 }
 
 .buttons button:hover {
-  background: #2563eb;
+  background: #b91c1c;
   transform: translateY(-2px);
-  box-shadow: 0 5px 15px rgba(59, 130, 246, 0.3);
+  box-shadow: 0 5px 15px rgba(220, 38, 38, 0.3);
 }
 
 .about-page,
@@ -222,7 +222,7 @@
 .blog-page button,
 .shop-page button,
 .login-page button {
-  background: #3b82f6;
+  background: #dc2626;
   color: white;
   border: none;
   padding: 0.75rem 1.5rem;
@@ -237,9 +237,9 @@
 .blog-page button:hover,
 .shop-page button:hover,
 .login-page button:hover {
-  background: #2563eb;
+  background: #b91c1c;
   transform: translateY(-2px);
-  box-shadow: 0 5px 15px rgba(59, 130, 246, 0.3);
+  box-shadow: 0 5px 15px rgba(220, 38, 38, 0.3);
 }
 
 @media (max-width: 768px) {
