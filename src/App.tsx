@@ -1,8 +1,27 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './App.css';
 
 function App() {
   const [currentPage, setCurrentPage] = useState('home');
+  const [isDarkMode, setIsDarkMode] = useState(false);
+
+  // 로컬 스토리지에서 테마 설정 불러오기
+  useEffect(() => {
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme === 'dark') {
+      setIsDarkMode(true);
+    }
+  }, []);
+
+  // 테마 변경 시 로컬 스토리지에 저장
+  useEffect(() => {
+    localStorage.setItem('theme', isDarkMode ? 'dark' : 'light');
+    document.body.className = isDarkMode ? 'dark-mode' : 'light-mode';
+  }, [isDarkMode]);
+
+  const toggleTheme = () => {
+    setIsDarkMode(!isDarkMode);
+  };
 
   const renderPage = () => {
     switch (currentPage) {
@@ -62,7 +81,7 @@ function App() {
   };
 
   return (
-    <div className="App">
+    <div className={`App ${isDarkMode ? 'dark' : 'light'}`}>
       <header className="header">
         <div className="logo">
           <span className="logo-m">M</span>
@@ -100,6 +119,9 @@ function App() {
             로그인
           </button>
         </nav>
+        <button className="theme-toggle" onClick={toggleTheme}>
+          {isDarkMode ? '☀️' : '🌙'}
+        </button>
       </header>
       <main className="main">
         {renderPage()}
