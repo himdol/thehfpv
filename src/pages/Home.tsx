@@ -145,84 +145,20 @@ const Home: React.FC = () => {
                </div>
              </motion.section>
 
-      {/* 블로그 섹션 - 착륙 시나리오 */}
-                   <motion.section
-               className="section blog-section"
-               variants={sectionVariants}
-               initial="hidden"
-               whileInView="visible"
-               viewport={{ once: true, amount: 0.3 }}
-             >
-               <div className="section-content">
-                 <div className="section-layout section-layout-right-image">
-                   <motion.div
-                     className="landing-pad"
-                     initial={{ scale: 0 }}
-                     whileInView={{ scale: 1 }}
-                     transition={{ duration: 0.8, delay: 0.2 }}
-                   >
-                     <h2 className="section-title">블로그</h2>
-                     <p className="section-description">
-                       기술 이야기, 일상, 그리고 다양한 경험을 담은 글들을 만나보세요.
-                     </p>
-                     <motion.button
-                       className="btn-landing"
-                       whileHover={{ scale: 1.05 }}
-                       whileTap={{ scale: 0.95 }}
-                     >
-                       착륙하기
-                     </motion.button>
-                   </motion.div>
-                   <div className="section-image">
-                     {/* 이미지 공간 */}
-                   </div>
-                 </div>
-               </div>
-             </motion.section>
-
-      {/* 샵 섹션 - 착륙 시나리오 */}
-                   <motion.section
-               className="section shop-section"
-               variants={sectionVariants}
-               initial="hidden"
-               whileInView="visible"
-               viewport={{ once: true, amount: 0.3 }}
-             >
-               <div className="section-content">
-                 <div className="section-layout section-layout-left-image">
-                   <div className="section-image">
-                     {/* 이미지 공간 */}
-                   </div>
-                   <motion.div
-                     className="landing-pad"
-                     initial={{ scale: 0 }}
-                     whileInView={{ scale: 1 }}
-                     transition={{ duration: 0.8, delay: 0.2 }}
-                   >
-                     <h2 className="section-title">샵</h2>
-                     <p className="section-description">
-                       개발자를 위한 다양한 제품들을 만나보세요.
-                     </p>
-                     <motion.button
-                       className="btn-landing"
-                       whileHover={{ scale: 1.05 }}
-                       whileTap={{ scale: 0.95 }}
-                     >
-                       착륙하기
-                     </motion.button>
-                   </motion.div>
-                 </div>
-               </div>
-             </motion.section>
 
              {/* 포트폴리오 스크롤 섹션 */}
              <section className="portfolio-scroll-section">
-               <h2 className="portfolio-title">Student's Portfolios</h2>
-               <p className="portfolio-subtitle">수강생 졸업작품</p>
+               <h2 className="portfolio-title">PENDING</h2>
+               <p className="portfolio-subtitle"></p>
                
                <div className="portfolio-container">
                  {/* 1행 - 빠른 속도 */}
                  <div className="portfolio-row portfolio-row-1">
+                   <div className="portfolio-item">갤러리 사이트</div>
+                   <div className="portfolio-item">유튜브 클론</div>
+                   <div className="portfolio-item">개발자 매칭</div>
+                   <div className="portfolio-item">이커머스</div>
+                   <div className="portfolio-item">레트로 UI</div>
                    <div className="portfolio-item">갤러리 사이트</div>
                    <div className="portfolio-item">유튜브 클론</div>
                    <div className="portfolio-item">개발자 매칭</div>
@@ -247,10 +183,20 @@ const Home: React.FC = () => {
                    <div className="portfolio-item">포트폴리오</div>
                    <div className="portfolio-item">인테리어</div>
                    <div className="portfolio-item">원격 일자리</div>
+                   <div className="portfolio-item">도서 판매</div>
+                   <div className="portfolio-item">브랜딩</div>
+                   <div className="portfolio-item">포트폴리오</div>
+                   <div className="portfolio-item">인테리어</div>
+                   <div className="portfolio-item">원격 일자리</div>
                  </div>
 
                  {/* 3행 - 느린 속도 */}
                  <div className="portfolio-row portfolio-row-3">
+                   <div className="portfolio-item">아트 갤러리</div>
+                   <div className="portfolio-item">전시회</div>
+                   <div className="portfolio-item">게임</div>
+                   <div className="portfolio-item">영화 정보</div>
+                   <div className="portfolio-item">커밍순</div>
                    <div className="portfolio-item">아트 갤러리</div>
                    <div className="portfolio-item">전시회</div>
                    <div className="portfolio-item">게임</div>

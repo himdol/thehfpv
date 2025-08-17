@@ -650,6 +650,11 @@
   font-size: 2.5rem;
   font-weight: 700;
   margin-bottom: 0.5rem;
+  color: white;
+}
+
+.home-container.dark .portfolio-title {
+  color: white;
 }
 
 .portfolio-subtitle {
@@ -657,6 +662,10 @@
   font-size: 1.2rem;
   color: #ccc;
   margin-bottom: 3rem;
+}
+
+.home-container.dark .portfolio-subtitle {
+  color: #aaa;
 }
 
 .portfolio-container {
@@ -682,11 +691,22 @@
   text-align: center;
   backdrop-filter: blur(10px);
   transition: all 0.3s ease;
+  color: white;
+}
+
+.home-container.dark .portfolio-item {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #e0e0e0;
 }
 
 .portfolio-item:hover {
   background: rgba(255, 255, 255, 0.2);
   transform: translateY(-2px);
+}
+
+.home-container.dark .portfolio-item:hover {
+  background: rgba(255, 255, 255, 0.15);
 }
 
 /* 1행 - 빠른 속도 */
@@ -710,28 +730,28 @@
 /* 애니메이션 키프레임 */
 @keyframes scroll-left-1 {
   0% {
-    transform: translateX(100%);
+    transform: translateX(0);
   }
   100% {
-    transform: translateX(-100%);
+    transform: translateX(-50%);
   }
 }
 
 @keyframes scroll-left-2 {
   0% {
-    transform: translateX(100%);
+    transform: translateX(0);
   }
   100% {
-    transform: translateX(-100%);
+    transform: translateX(-50%);
   }
 }
 
 @keyframes scroll-left-3 {
   0% {
-    transform: translateX(100%);
+    transform: translateX(0);
   }
   100% {
-    transform: translateX(-100%);
+    transform: translateX(-50%);
   }
 }
 
