@@ -57,6 +57,8 @@ const Home: React.FC = () => {
         }}
       >
         <div className="drone-body">
+          <div className="drone-arm drone-arm-1"></div>
+          <div className="drone-arm drone-arm-2"></div>
           <div className="drone-propeller drone-propeller-1"></div>
           <div className="drone-propeller drone-propeller-2"></div>
           <div className="drone-propeller drone-propeller-3"></div>
