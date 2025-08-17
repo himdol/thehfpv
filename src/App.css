@@ -150,6 +150,62 @@
   background: #1a1a1a;
 }
 
+.banner-image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  opacity: 0.1;
+  background-size: 400% 400%;
+  animation: gradientShift 15s ease infinite;
+}
+
+.home-container.dark .banner-image {
+  background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+  opacity: 0.2;
+}
+
+@keyframes gradientShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.banner-particles {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.particle {
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  background: #667eea;
+  border-radius: 50%;
+  animation: float 6s ease-in-out infinite;
+}
+
+.home-container.dark .particle {
+  background: #4facfe;
+}
+
+.particle-1 { top: 20%; left: 10%; animation-delay: 0s; }
+.particle-2 { top: 60%; left: 80%; animation-delay: 1s; }
+.particle-3 { top: 80%; left: 20%; animation-delay: 2s; }
+.particle-4 { top: 30%; left: 70%; animation-delay: 3s; }
+.particle-5 { top: 70%; left: 30%; animation-delay: 4s; }
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px) rotate(0deg); opacity: 0.7; }
+  50% { transform: translateY(-20px) rotate(180deg); opacity: 1; }
+}
+
 .banner-overlay {
   position: absolute;
   top: 0;
@@ -169,7 +225,7 @@
   z-index: 2;
   text-align: center;
   color: #333333;
-  max-width: 800px;
+  max-width: 900px;
   padding: 0 2rem;
 }
 
@@ -177,12 +233,26 @@
   color: #ffffff;
 }
 
+.banner-badge {
+  display: inline-block;
+  background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+  color: white;
+  padding: 0.5rem 1.5rem;
+  border-radius: 50px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  margin-bottom: 2rem;
+  box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
 .banner-title {
-  font-size: 4rem;
+  font-size: 4.5rem;
   font-weight: 800;
   margin-bottom: 1.5rem;
   text-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  line-height: 1.2;
+  line-height: 1.1;
   color: #333333;
 }
 
@@ -201,14 +271,60 @@
 }
 
 .banner-subtitle {
-  font-size: 1.5rem;
+  font-size: 1.3rem;
   margin-bottom: 3rem;
   opacity: 0.8;
   font-weight: 300;
   color: #666666;
+  line-height: 1.6;
 }
 
 .home-container.dark .banner-subtitle {
+  color: #cccccc;
+}
+
+.banner-stats {
+  display: flex;
+  justify-content: center;
+  gap: 3rem;
+  margin-bottom: 3rem;
+  flex-wrap: wrap;
+}
+
+.stat-item {
+  text-align: center;
+  padding: 1rem;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 15px;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  min-width: 100px;
+}
+
+.home-container.dark .stat-item {
+  background: rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.stat-number {
+  display: block;
+  font-size: 2rem;
+  font-weight: 800;
+  color: #ff6b6b;
+  margin-bottom: 0.5rem;
+}
+
+.home-container.dark .stat-number {
+  color: #4facfe;
+}
+
+.stat-label {
+  font-size: 0.9rem;
+  color: #666666;
+  font-weight: 500;
+}
+
+.home-container.dark .stat-label {
   color: #cccccc;
 }
 
@@ -217,6 +333,34 @@
   gap: 1.5rem;
   justify-content: center;
   flex-wrap: wrap;
+  margin-bottom: 2rem;
+}
+
+.scroll-indicator {
+  position: absolute;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  text-align: center;
+  color: #666666;
+  font-size: 0.9rem;
+  z-index: 10;
+}
+
+.home-container.dark .scroll-indicator {
+  color: #cccccc;
+}
+
+.scroll-arrow {
+  font-size: 1.5rem;
+  margin-bottom: 0.5rem;
+  animation: bounce 2s infinite;
+}
+
+@keyframes bounce {
+  0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+  40% { transform: translateY(-10px); }
+  60% { transform: translateY(-5px); }
 }
 
 .btn-primary, .btn-secondary {
@@ -481,7 +625,20 @@
   }
   
   .banner-subtitle {
-    font-size: 1.2rem;
+    font-size: 1.1rem;
+  }
+  
+  .banner-stats {
+    gap: 1.5rem;
+  }
+  
+  .stat-item {
+    min-width: 80px;
+    padding: 0.8rem;
+  }
+  
+  .stat-number {
+    font-size: 1.5rem;
   }
   
   .banner-buttons {
@@ -506,6 +663,33 @@
   .nav {
     flex-wrap: wrap;
     justify-content: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .banner-title {
+    font-size: 2rem;
+  }
+  
+  .banner-subtitle {
+    font-size: 1rem;
+  }
+  
+  .banner-stats {
+    gap: 1rem;
+  }
+  
+  .stat-item {
+    min-width: 70px;
+    padding: 0.6rem;
+  }
+  
+  .stat-number {
+    font-size: 1.3rem;
+  }
+  
+  .stat-label {
+    font-size: 0.8rem;
   }
 }
 

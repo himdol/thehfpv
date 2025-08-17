@@ -38,31 +38,89 @@ const Home: React.FC = () => {
       {/* 배너 섹션 */}
       <section className="banner-section">
         <div className="banner-background">
+          <div className="banner-image"></div>
           <div className="banner-overlay"></div>
+          <div className="banner-particles">
+            <div className="particle particle-1"></div>
+            <div className="particle particle-2"></div>
+            <div className="particle particle-3"></div>
+            <div className="particle particle-4"></div>
+            <div className="particle particle-5"></div>
+          </div>
           <motion.div 
             className="banner-content"
             initial={{ opacity: 0, y: 50 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1, delay: 0.3 }}
           >
+            <motion.div 
+              className="banner-badge"
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.6, delay: 0.5 }}
+            >
+              🚀 개발자 블로그
+            </motion.div>
             <h1 className="banner-title">
               안녕하세요! 👋
+              <br />
               <span className="highlight">Himdol</span>입니다
             </h1>
             <p className="banner-subtitle">
-              개발자의 여정을 담은 블로그에 오신 것을 환영합니다
+              프론트엔드 개발자의 여정을 담은 블로그에 오신 것을 환영합니다
+              <br />
+              기술 이야기, 일상, 그리고 다양한 경험을 공유합니다
             </p>
+            <motion.div 
+              className="banner-stats"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.8 }}
+            >
+              <div className="stat-item">
+                <span className="stat-number">3+</span>
+                <span className="stat-label">년 경력</span>
+              </div>
+              <div className="stat-item">
+                <span className="stat-number">50+</span>
+                <span className="stat-label">프로젝트</span>
+              </div>
+              <div className="stat-item">
+                <span className="stat-number">100+</span>
+                <span className="stat-label">기술 글</span>
+              </div>
+            </motion.div>
             <motion.div 
               className="banner-buttons"
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.6 }}
+              transition={{ duration: 0.8, delay: 1.0 }}
             >
-              <button className="btn-primary">블로그 보기</button>
-              <button className="btn-secondary">샵 둘러보기</button>
+              <motion.button 
+                className="btn-primary"
+                whileHover={{ scale: 1.05, y: -2 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                📝 블로그 보기
+              </motion.button>
+              <motion.button 
+                className="btn-secondary"
+                whileHover={{ scale: 1.05, y: -2 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                🛍️ 샵 둘러보기
+              </motion.button>
             </motion.div>
           </motion.div>
         </div>
+        <motion.div 
+          className="scroll-indicator"
+          animate={{ y: [0, 10, 0] }}
+          transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+        >
+          <div className="scroll-arrow">↓</div>
+          <span>스크롤하여 더 알아보기</span>
+        </motion.div>
       </section>
 
       {/* 드론 애니메이션 섹션 */}
