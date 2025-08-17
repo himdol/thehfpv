@@ -13,8 +13,6 @@ interface RouterProps {
 
 const Router: React.FC<RouterProps> = ({ currentPage, sidebarOpen, setSidebarOpen }) => {
   switch (currentPage) {
-    case 'home':
-      return <Home />;
     case 'about':
       return <About />;
     case 'blog':

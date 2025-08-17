@@ -17,7 +17,6 @@ const Header: React.FC<HeaderProps> = ({
   const { isDarkMode, toggleTheme } = useTheme();
 
   const navItems = [
-    { id: 'home', label: '홈', showSidebar: false },
     { id: 'about', label: '소개', showSidebar: false },
     { id: 'blog', label: '블로그', showSidebar: true },
     { id: 'shop', label: '샵', showSidebar: true },
@@ -35,7 +34,7 @@ const Header: React.FC<HeaderProps> = ({
 
   return (
     <header className="header">
-      <div className="logo">
+      <div className="logo" onClick={() => setCurrentPage('home')} style={{ cursor: 'pointer' }}>
         <span className="logo-h">H</span>
       </div>
       <nav className="nav">
