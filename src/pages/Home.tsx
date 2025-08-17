@@ -15,22 +15,22 @@ const Home: React.FC = () => {
   useEffect(() => {
     const animate = () => {
       setScrollPosition1(prev => {
-        const newPos = prev - 1;
-        return newPos <= -50 ? 0 : newPos;
+        const newPos = prev - 0.2;
+        return newPos <= -100 ? 0 : newPos;
       });
       
       setScrollPosition2(prev => {
-        const newPos = prev - 0.7;
-        return newPos <= -50 ? 0 : newPos;
+        const newPos = prev - 0.15;
+        return newPos <= -100 ? 0 : newPos;
       });
       
       setScrollPosition3(prev => {
-        const newPos = prev - 0.5;
-        return newPos <= -50 ? 0 : newPos;
+        const newPos = prev - 0.1;
+        return newPos <= -100 ? 0 : newPos;
       });
     };
 
-    const interval = setInterval(animate, 50); // 50ms마다 업데이트
+    const interval = setInterval(animate, 100); // 100ms마다 업데이트 (더 느리게)
     return () => clearInterval(interval);
   }, []);
 
@@ -195,6 +195,16 @@ const Home: React.FC = () => {
                    <div className="portfolio-item">개발자 매칭</div>
                    <div className="portfolio-item">이커머스</div>
                    <div className="portfolio-item">레트로 UI</div>
+                   <div className="portfolio-item">갤러리 사이트</div>
+                   <div className="portfolio-item">유튜브 클론</div>
+                   <div className="portfolio-item">개발자 매칭</div>
+                   <div className="portfolio-item">이커머스</div>
+                   <div className="portfolio-item">레트로 UI</div>
+                   <div className="portfolio-item">갤러리 사이트</div>
+                   <div className="portfolio-item">유튜브 클론</div>
+                   <div className="portfolio-item">개발자 매칭</div>
+                   <div className="portfolio-item">이커머스</div>
+                   <div className="portfolio-item">레트로 UI</div>
                  </div>
 
                  {/* 2행 - 중간 속도 */}
@@ -212,6 +222,16 @@ const Home: React.FC = () => {
                    <div className="portfolio-item">포트폴리오</div>
                    <div className="portfolio-item">인테리어</div>
                    <div className="portfolio-item">원격 일자리</div>
+                   <div className="portfolio-item">도서 판매</div>
+                   <div className="portfolio-item">브랜딩</div>
+                   <div className="portfolio-item">포트폴리오</div>
+                   <div className="portfolio-item">인테리어</div>
+                   <div className="portfolio-item">원격 일자리</div>
+                   <div className="portfolio-item">도서 판매</div>
+                   <div className="portfolio-item">브랜딩</div>
+                   <div className="portfolio-item">포트폴리오</div>
+                   <div className="portfolio-item">인테리어</div>
+                   <div className="portfolio-item">원격 일자리</div>
                  </div>
 
                  {/* 3행 - 느린 속도 */}
@@ -219,6 +239,16 @@ const Home: React.FC = () => {
                    className="portfolio-row portfolio-row-3"
                    style={{ transform: `translateX(${scrollPosition3}%)` }}
                  >
+                   <div className="portfolio-item">아트 갤러리</div>
+                   <div className="portfolio-item">전시회</div>
+                   <div className="portfolio-item">게임</div>
+                   <div className="portfolio-item">영화 정보</div>
+                   <div className="portfolio-item">커밍순</div>
+                   <div className="portfolio-item">아트 갤러리</div>
+                   <div className="portfolio-item">전시회</div>
+                   <div className="portfolio-item">게임</div>
+                   <div className="portfolio-item">영화 정보</div>
+                   <div className="portfolio-item">커밍순</div>
                    <div className="portfolio-item">아트 갤러리</div>
                    <div className="portfolio-item">전시회</div>
                    <div className="portfolio-item">게임</div>
