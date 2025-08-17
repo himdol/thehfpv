@@ -214,6 +214,85 @@ const Home: React.FC = () => {
                  </div>
                </div>
              </motion.section>
+
+             {/* Pixso 스타일 리소스 섹션 */}
+             <motion.section
+               className="section resource-section"
+               variants={sectionVariants}
+               initial="hidden"
+               whileInView="visible"
+               viewport={{ once: true, amount: 0.3 }}
+             >
+               <div className="section-content">
+                 <div className="resource-grid">
+                   <motion.div
+                     className="resource-card"
+                     initial={{ opacity: 0, y: 50 }}
+                     whileInView={{ opacity: 1, y: 0 }}
+                     transition={{ duration: 0.8, delay: 0.1 }}
+                   >
+                     <h3 className="resource-title">디자인 리소스</h3>
+                     <p className="resource-description">
+                       고품질 디자인 소재와 구성요소를 무료로 제공합니다.
+                     </p>
+                     <div className="resource-stats">
+                       <div className="resource-stat">
+                         <span className="resource-stat-number">3000+</span>
+                         <span className="resource-stat-label">리소스</span>
+                       </div>
+                       <div className="resource-stat">
+                         <span className="resource-stat-number">100%</span>
+                         <span className="resource-stat-label">무료</span>
+                       </div>
+                     </div>
+                   </motion.div>
+
+                   <motion.div
+                     className="resource-card"
+                     initial={{ opacity: 0, y: 50 }}
+                     whileInView={{ opacity: 1, y: 0 }}
+                     transition={{ duration: 0.8, delay: 0.2 }}
+                   >
+                     <h3 className="resource-title">플러그인</h3>
+                     <p className="resource-description">
+                       다양한 플러그인으로 디자인을 무한정 확장할 수 있습니다.
+                     </p>
+                     <div className="resource-stats">
+                       <div className="resource-stat">
+                         <span className="resource-stat-number">500+</span>
+                         <span className="resource-stat-label">플러그인</span>
+                       </div>
+                       <div className="resource-stat">
+                         <span className="resource-stat-number">24/7</span>
+                         <span className="resource-stat-label">지원</span>
+                       </div>
+                     </div>
+                   </motion.div>
+
+                   <motion.div
+                     className="resource-card"
+                     initial={{ opacity: 0, y: 50 }}
+                     whileInView={{ opacity: 1, y: 0 }}
+                     transition={{ duration: 0.8, delay: 0.3 }}
+                   >
+                     <h3 className="resource-title">커뮤니티</h3>
+                     <p className="resource-description">
+                       전 세계 디자이너들과 아이디어를 공유하고 협업하세요.
+                     </p>
+                     <div className="resource-stats">
+                       <div className="resource-stat">
+                         <span className="resource-stat-number">10K+</span>
+                         <span className="resource-stat-label">멤버</span>
+                       </div>
+                       <div className="resource-stat">
+                         <span className="resource-stat-number">실시간</span>
+                         <span className="resource-stat-label">협업</span>
+                       </div>
+                     </div>
+                   </motion.div>
+                 </div>
+               </div>
+             </motion.section>
     </div>
   );
 };
