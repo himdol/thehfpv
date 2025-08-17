@@ -11,17 +11,16 @@ const Home: React.FC = () => {
     offset: ["start start", "end end"]
   });
 
-  // 드론 위치 애니메이션 - banner-section 아래에서만 움직임
+  // 드론 위치 애니메이션 - 각 섹션의 이미지 공간에 정중앙으로 이동
   const droneX = useTransform(scrollYProgress, 
     [0, 0.2, 0.4, 0.6, 0.8, 1], 
-    [0, 200, -150, 300, -200, 100]
+    [0, -200, 200, -200, 200, 0]
   );
   const droneY = useTransform(scrollYProgress, 
     [0, 0.2, 0.4, 0.6, 0.8, 1], 
-    [1000, 100, 200, 150, 300, 200]
+    [1000, 100, 100, 100, 100, 100]
   );
-  const droneRotation = useTransform(scrollYProgress, [0, 1], [0, 720]);
-  const droneScale = useTransform(scrollYProgress, [0, 0.5, 1], [1, 1.2, 1]);
+  const droneScale = useTransform(scrollYProgress, [0, 0.5, 1], [1, 1, 1]);
   const droneOpacity = useTransform(scrollYProgress, [0, 0.1, 0.9, 1], [0, 1, 1, 0]);
 
   // 스프링 효과 추가
@@ -51,19 +50,12 @@ const Home: React.FC = () => {
         style={{
           x: springDroneX,
           y: springDroneY,
-          rotate: droneRotation,
           scale: springDroneScale,
           opacity: droneOpacity
         }}
       >
-        <div className="drone-body">
-          <div className="drone-arm drone-arm-1"></div>
-          <div className="drone-arm drone-arm-2"></div>
-          <div className="drone-propeller drone-propeller-1"></div>
-          <div className="drone-propeller drone-propeller-2"></div>
-          <div className="drone-propeller drone-propeller-3"></div>
-          <div className="drone-propeller drone-propeller-4"></div>
-          <div className="drone-camera"></div>
+        <div className="drone-image-placeholder">
+          {/* 150x150 이미지 공간 */}
         </div>
       </motion.div>
 
@@ -164,6 +156,11 @@ const Home: React.FC = () => {
         viewport={{ once: true, amount: 0.3 }}
       >
         <div className="section-content">
+          <div className="section-image-container section-image-left">
+            <div className="section-image-placeholder">
+              {/* 200x200 이미지 공간 */}
+            </div>
+          </div>
           <motion.div 
             className="landing-pad"
             initial={{ scale: 0 }}
@@ -195,6 +192,11 @@ const Home: React.FC = () => {
         viewport={{ once: true, amount: 0.3 }}
       >
         <div className="section-content">
+          <div className="section-image-container section-image-right">
+            <div className="section-image-placeholder">
+              {/* 200x200 이미지 공간 */}
+            </div>
+          </div>
           <motion.div 
             className="landing-pad"
             initial={{ scale: 0 }}
@@ -225,6 +227,11 @@ const Home: React.FC = () => {
         viewport={{ once: true, amount: 0.3 }}
       >
         <div className="section-content">
+          <div className="section-image-container section-image-left">
+            <div className="section-image-placeholder">
+              {/* 200x200 이미지 공간 */}
+            </div>
+          </div>
           <motion.div 
             className="landing-pad"
             initial={{ scale: 0 }}
