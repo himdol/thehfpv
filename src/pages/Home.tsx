@@ -59,17 +59,15 @@ const Home: React.FC = () => {
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.6, delay: 0.5 }}
             >
-              🚀 개발자 블로그
+              H's Website
             </motion.div>
             <h1 className="banner-title">
-              안녕하세요! 👋
+              Hello! 👋
               <br />
-              <span className="highlight">Himdol</span>입니다
+              <span className="highlight">Welcome</span> to H's Website
             </h1>
             <p className="banner-subtitle">
-              프론트엔드 개발자의 여정을 담은 블로그에 오신 것을 환영합니다
-              <br />
-              기술 이야기, 일상, 그리고 다양한 경험을 공유합니다
+              <span className="highlight">#</span>DRONE <span className="highlight">#</span>FPV <span className="highlight">#</span>DIY 
             </p>
             <motion.div 
               className="banner-stats"
@@ -78,16 +76,16 @@ const Home: React.FC = () => {
               transition={{ duration: 0.8, delay: 0.8 }}
             >
               <div className="stat-item">
-                <span className="stat-number">3+</span>
-                <span className="stat-label">년 경력</span>
+                <span className="stat-number">2025. 7. 7.</span>
+                <span className="stat-label">START YOUTUBE</span>
               </div>
               <div className="stat-item">
-                <span className="stat-number">50+</span>
-                <span className="stat-label">프로젝트</span>
+                <span className="stat-number">2025. 8. 17.</span>
+                <span className="stat-label">START WEBSITE</span>
               </div>
               <div className="stat-item">
-                <span className="stat-number">100+</span>
-                <span className="stat-label">기술 글</span>
+                <span className="stat-number">PENDING</span>
+                <span className="stat-label">START DIY</span>
               </div>
             </motion.div>
             <motion.div 
@@ -101,14 +99,21 @@ const Home: React.FC = () => {
                 whileHover={{ scale: 1.05, y: -2 }}
                 whileTap={{ scale: 0.95 }}
               >
-                📝 블로그 보기
+                YOTUBE
               </motion.button>
               <motion.button 
                 className="btn-secondary"
                 whileHover={{ scale: 1.05, y: -2 }}
                 whileTap={{ scale: 0.95 }}
               >
-                🛍️ 샵 둘러보기
+                BLOG
+              </motion.button>
+              <motion.button 
+                className="btn-secondary"
+                whileHover={{ scale: 1.05, y: -2 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                SHOP
               </motion.button>
             </motion.div>
           </motion.div>
@@ -119,7 +124,7 @@ const Home: React.FC = () => {
           transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
         >
           <div className="scroll-arrow">↓</div>
-          <span>스크롤하여 더 알아보기</span>
+          <span>Scroll to see more</span>
         </motion.div>
       </section>
 
