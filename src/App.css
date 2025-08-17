@@ -568,11 +568,11 @@
 }
 
 .section-layout-left-image {
-  flex-direction: row;
+  flex-direction: row !important;
 }
 
 .section-layout-right-image {
-  flex-direction: row-reverse;
+  flex-direction: row-reverse !important;
 }
 
 .section-image {
