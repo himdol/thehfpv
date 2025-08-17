@@ -126,11 +126,10 @@
   height: 100vh;
   position: relative;
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   justify-content: center;
   overflow: hidden;
   background: #ffffff;
-  padding-top: 15vh;
 }
 
 .home-container.dark .banner-section {
