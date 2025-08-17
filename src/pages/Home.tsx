@@ -11,14 +11,22 @@ const Home: React.FC = () => {
     offset: ["start start", "end end"]
   });
 
-  // 드론 위치 애니메이션
-  const droneX = useTransform(scrollYProgress, [0, 0.3, 0.6, 1], [0, 300, -200, 100]);
-  const droneY = useTransform(scrollYProgress, [0, 0.3, 0.6, 1], [0, -100, 50, -150]);
-  const droneRotation = useTransform(scrollYProgress, [0, 1], [0, 360]);
+  // 드론 위치 애니메이션 - 전체 페이지에서 움직임
+  const droneX = useTransform(scrollYProgress, 
+    [0, 0.2, 0.4, 0.6, 0.8, 1], 
+    [0, 200, -150, 300, -200, 100]
+  );
+  const droneY = useTransform(scrollYProgress, 
+    [0, 0.2, 0.4, 0.6, 0.8, 1], 
+    [0, -50, 100, -100, 150, -80]
+  );
+  const droneRotation = useTransform(scrollYProgress, [0, 1], [0, 720]);
+  const droneScale = useTransform(scrollYProgress, [0, 0.5, 1], [1, 1.2, 1]);
 
   // 스프링 효과 추가
-  const springDroneX = useSpring(droneX, { stiffness: 100, damping: 30 });
-  const springDroneY = useSpring(droneY, { stiffness: 100, damping: 30 });
+  const springDroneX = useSpring(droneX, { stiffness: 80, damping: 25 });
+  const springDroneY = useSpring(droneY, { stiffness: 80, damping: 25 });
+  const springDroneScale = useSpring(droneScale, { stiffness: 100, damping: 30 });
 
   // 섹션별 애니메이션 variants
   const sectionVariants = {
@@ -35,6 +43,26 @@ const Home: React.FC = () => {
 
   return (
     <div ref={containerRef} className={`home-container ${isDarkMode ? 'dark' : 'light'}`}>
+      {/* 전체 페이지 드론 */}
+      <motion.div 
+        ref={droneRef}
+        className="global-drone"
+        style={{
+          x: springDroneX,
+          y: springDroneY,
+          rotate: droneRotation,
+          scale: springDroneScale
+        }}
+      >
+        <div className="drone-body">
+          <div className="drone-propeller drone-propeller-1"></div>
+          <div className="drone-propeller drone-propeller-2"></div>
+          <div className="drone-propeller drone-propeller-3"></div>
+          <div className="drone-propeller drone-propeller-4"></div>
+          <div className="drone-camera"></div>
+        </div>
+      </motion.div>
+
       {/* 배너 섹션 */}
       <section className="banner-section">
         <div className="banner-background">
@@ -121,27 +149,7 @@ const Home: React.FC = () => {
         </motion.div>
       </section>
 
-      {/* 드론 애니메이션 섹션 */}
-      <section className="drone-section">
-        <motion.div 
-          ref={droneRef}
-          className="drone"
-          style={{
-            x: springDroneX,
-            y: springDroneY,
-            rotate: droneRotation
-          }}
-        >
-          <div className="drone-body">
-            <div className="drone-propeller drone-propeller-1"></div>
-            <div className="drone-propeller drone-propeller-2"></div>
-            <div className="drone-propeller drone-propeller-3"></div>
-            <div className="drone-propeller drone-propeller-4"></div>
-            <div className="drone-camera"></div>
-          </div>
-        </motion.div>
-        <div className="drone-trail"></div>
-      </section>
+
 
       {/* 소개 섹션 - 착륙 시나리오 */}
       <motion.section 
