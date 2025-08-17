@@ -53,14 +53,7 @@ const Home: React.FC = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1, delay: 0.3 }}
           >
-            <motion.div 
-              className="banner-badge"
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.6, delay: 0.5 }}
-            >
-              H's Website
-            </motion.div>
+
             <h1 className="banner-title">
               Hello! 👋
               <br />

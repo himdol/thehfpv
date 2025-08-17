@@ -243,18 +243,7 @@
   color: #ffffff;
 }
 
-.banner-badge {
-  display: inline-block;
-  background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
-  color: white;
-  padding: 0.5rem 1.5rem;
-  border-radius: 50px;
-  font-size: 0.9rem;
-  font-weight: 600;
-  box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
-  text-transform: uppercase;
-  letter-spacing: 1px;
-}
+
 
 .banner-title {
   font-size: 5rem;
