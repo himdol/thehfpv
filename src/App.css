@@ -271,7 +271,7 @@
 }
 
 .highlight {
-  background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+  background: linear-gradient(45deg, #ff4444, #ff6666);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
