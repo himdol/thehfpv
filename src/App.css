@@ -454,8 +454,8 @@
 .section-image-container {
   position: absolute;
   top: 2rem;
-  width: 200px;
-  height: 200px;
+  width: 180px;
+  height: 180px;
 }
 
 .section-image-left {
@@ -467,8 +467,8 @@
 }
 
 .section-image-placeholder {
-  width: 200px;
-  height: 200px;
+  width: 180px;
+  height: 180px;
   background: rgba(255, 255, 255, 0.1);
   border: 2px dashed #ff4444;
   border-radius: 8px;
