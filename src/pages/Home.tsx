@@ -1,7 +1,9 @@
 import React, { useRef } from 'react';
 import { motion, useScroll, useTransform, useSpring } from 'framer-motion';
+import { useTheme } from '../contexts/ThemeContext';
 
 const Home: React.FC = () => {
+  const { isDarkMode } = useTheme();
   const containerRef = useRef<HTMLDivElement>(null);
   const droneRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
@@ -32,7 +34,7 @@ const Home: React.FC = () => {
   };
 
   return (
-    <div ref={containerRef} className="home-container">
+    <div ref={containerRef} className={`home-container ${isDarkMode ? 'dark' : 'light'}`}>
       {/* 배너 섹션 */}
       <section className="banner-section">
         <div className="banner-background">
