@@ -632,8 +632,8 @@
   margin-top: 7rem;
 }
 
-/* 포트폴리오 스크롤 섹션 */
-.portfolio-scroll-section {
+/* 스크린 슬라이드 섹션 */
+.screen-slide-scroll-section {
   background: #1a1a1a;
   color: white;
   padding: 4rem 0;
@@ -641,11 +641,11 @@
   position: relative;
 }
 
-.home-container.dark .portfolio-scroll-section {
+.home-container.dark .screen-slide-scroll-section {
   background: #0a0a0a;
 }
 
-.portfolio-title {
+.screen-slide-title {
   text-align: center;
   font-size: 2.5rem;
   font-weight: 700;
@@ -653,42 +653,43 @@
   color: white;
 }
 
-.home-container.dark .portfolio-title {
+.home-container.dark .screen-slide-title {
   color: white;
 }
 
-.portfolio-subtitle {
+.screen-slide-subtitle {
   text-align: center;
   font-size: 1.2rem;
   color: #ccc;
   margin-bottom: 3rem;
 }
 
-.home-container.dark .portfolio-subtitle {
+.home-container.dark .screen-slide-subtitle {
   color: #aaa;
 }
 
-.portfolio-container {
+.screen-slide-container {
   position: relative;
-  height: 400px;
+  height: 450px;
   overflow: hidden;
 }
 
-.portfolio-row {
+.screen-slide-row {
   display: flex;
   position: absolute;
   white-space: nowrap;
-  gap: 2rem;
+  gap: 1.5rem;
   padding: 1rem 0;
+  will-change: transform;
 }
 
-.portfolio-item {
+.screen-slide-item {
   background: rgba(255, 255, 255, 0.1);
   border: 1px solid rgba(255, 255, 255, 0.2);
-  border-radius: 8px;
-  padding: 1rem 1.5rem;
-  width: 230px;
-  height: 150px;
+  border-radius: 12px;
+  padding: 1.2rem 1.8rem;
+  width: 240px;
+  height: 160px;
   text-align: center;
   backdrop-filter: blur(10px);
   transition: all 0.3s ease;
@@ -697,39 +698,45 @@
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
+  font-weight: 500;
+  font-size: 1.1rem;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
 }
 
-.home-container.dark .portfolio-item {
+.home-container.dark .screen-slide-item {
   background: rgba(255, 255, 255, 0.05);
   border: 1px solid rgba(255, 255, 255, 0.1);
   color: #e0e0e0;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
 }
 
-.portfolio-item:hover {
+.screen-slide-item:hover {
   background: rgba(255, 255, 255, 0.2);
-  transform: translateY(-2px);
+  transform: translateY(-3px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
 }
 
-.home-container.dark .portfolio-item:hover {
+.home-container.dark .screen-slide-item:hover {
   background: rgba(255, 255, 255, 0.15);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
 }
 
-/* 1행 - 빠른 속도 */
-.portfolio-row-1 {
-  top: 0;
-  transition: transform 0.05s linear;
+/* 1행 - 빠른 속도 (위쪽) */
+.screen-slide-row-1 {
+  top: 20px;
+  transition: transform 0.1s ease-out;
 }
 
-/* 2행 - 중간 속도 */
-.portfolio-row-2 {
-  top: 100px;
-  transition: transform 0.05s linear;
+/* 2행 - 중간 속도 (중간, 겹치도록) */
+.screen-slide-row-2 {
+  top: 140px;
+  transition: transform 0.1s ease-out;
 }
 
-/* 3행 - 느린 속도 */
-.portfolio-row-3 {
-  top: 200px;
-  transition: transform 0.05s linear;
+/* 3행 - 느린 속도 (아래쪽, 겹치도록) */
+.screen-slide-row-3 {
+  top: 260px;
+  transition: transform 0.1s ease-out;
 }
 
 .landing-pad {
