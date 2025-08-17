@@ -17,10 +17,10 @@ const Header: React.FC<HeaderProps> = ({
   const { isDarkMode, toggleTheme } = useTheme();
 
   const navItems = [
-    { id: 'about', label: '소개', showSidebar: false },
-    { id: 'blog', label: '블로그', showSidebar: true },
-    { id: 'shop', label: '샵', showSidebar: true },
-    { id: 'login', label: '로그인', showSidebar: false },
+    { id: 'about', label: 'About H', showSidebar: false },
+    { id: 'blog', label: 'BLOG', showSidebar: true },
+    { id: 'shop', label: 'SHOP', showSidebar: true },
+    { id: 'login', label: 'SIGN IN', showSidebar: false },
   ];
 
   const handleNavClick = (item: typeof navItems[0]) => {
