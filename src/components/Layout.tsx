@@ -1,5 +1,6 @@
 import React, { ReactNode } from 'react';
 import Header from './Header';
+import Footer from './Footer';
 import { useTheme } from '../contexts/ThemeContext';
 import '../App.css';
 
@@ -31,6 +32,7 @@ const Layout: React.FC<LayoutProps> = ({
       <main className="main">
         {children}
       </main>
+      <Footer />
     </div>
   );
 };
