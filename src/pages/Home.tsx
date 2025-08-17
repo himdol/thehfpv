@@ -14,11 +14,11 @@ const Home: React.FC = () => {
   // 드론 위치 애니메이션 - 각 섹션의 이미지 공간에 정중앙으로 이동
   const droneX = useTransform(scrollYProgress, 
     [0, 0.2, 0.4, 0.6, 0.8, 1], 
-    [-75, -215, 215, -215, 215, -75]
+    [392, -215, 215, -215, 215, 392]
   );
   const droneY = useTransform(scrollYProgress, 
     [0, 0.2, 0.4, 0.6, 0.8, 1], 
-    [1000, 115, 115, 115, 115, 115]
+    [1282, 115, 115, 115, 115, 1282]
   );
   const droneScale = useTransform(scrollYProgress, [0, 0.5, 1], [1, 1, 1]);
   const droneOpacity = useTransform(scrollYProgress, [0, 0.1, 0.9, 1], [0, 1, 1, 0]);
