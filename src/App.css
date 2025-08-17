@@ -712,47 +712,19 @@
 /* 1행 - 빠른 속도 */
 .portfolio-row-1 {
   top: 0;
-  animation: scroll-left-1 60s linear infinite;
+  transition: transform 0.05s linear;
 }
 
 /* 2행 - 중간 속도 */
 .portfolio-row-2 {
   top: 100px;
-  animation: scroll-left-2 80s linear infinite;
+  transition: transform 0.05s linear;
 }
 
 /* 3행 - 느린 속도 */
 .portfolio-row-3 {
   top: 200px;
-  animation: scroll-left-3 100s linear infinite;
-}
-
-/* 애니메이션 키프레임 */
-@keyframes scroll-left-1 {
-  0% {
-    transform: translateX(0);
-  }
-  100% {
-    transform: translateX(-50%);
-  }
-}
-
-@keyframes scroll-left-2 {
-  0% {
-    transform: translateX(0);
-  }
-  100% {
-    transform: translateX(-50%);
-  }
-}
-
-@keyframes scroll-left-3 {
-  0% {
-    transform: translateX(0);
-  }
-  100% {
-    transform: translateX(-50%);
-  }
+  transition: transform 0.05s linear;
 }
 
 .landing-pad {
