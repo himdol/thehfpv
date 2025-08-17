@@ -11,14 +11,14 @@ const Home: React.FC = () => {
     offset: ["start start", "end end"]
   });
 
-  // 드론 위치 애니메이션 - 전체 페이지에서 움직임
+  // 드론 위치 애니메이션 - 배너 섹션 위쪽에서만 움직임
   const droneX = useTransform(scrollYProgress, 
     [0, 0.2, 0.4, 0.6, 0.8, 1], 
     [0, 200, -150, 300, -200, 100]
   );
   const droneY = useTransform(scrollYProgress, 
     [0, 0.2, 0.4, 0.6, 0.8, 1], 
-    [0, -50, 100, -100, 150, -80]
+    [-100, -150, -200, -120, -180, -100]
   );
   const droneRotation = useTransform(scrollYProgress, [0, 1], [0, 720]);
   const droneScale = useTransform(scrollYProgress, [0, 0.5, 1], [1, 1.2, 1]);
