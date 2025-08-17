@@ -363,8 +363,6 @@
 .scroll-indicator {
   position: absolute;
   bottom: 2rem;
-  left: 50%;
-  transform: translateX(-50%);
   text-align: center;
   color: #666666;
   font-size: 0.9rem;
