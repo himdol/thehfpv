@@ -11,27 +11,65 @@ const Home: React.FC = () => {
   const [scrollPosition2, setScrollPosition2] = useState(0);
   const [scrollPosition3, setScrollPosition3] = useState(0);
 
+  // 각 행의 아이템들 정의 (이미지와 텍스트를 모두 지원)
+  const row1Items = [
+    { text: '갤러리 사이트', image: 'https://velog.velcdn.com/images/sdb016/post/34bdac57-2d63-43ce-a14c-8054e9e036de/test.png' }
+  ];
+  const row2Items = [
+    { text: '도서 판매', image: 'https://velog.velcdn.com/images/sdb016/post/34bdac57-2d63-43ce-a14c-8054e9e036de/test.png' },
+    { text: '브랜딩', image: 'https://velog.velcdn.com/images/sdb016/post/34bdac57-2d63-43ce-a14c-8054e9e036de/test.png' },
+    { text: '포트폴리오', image: 'https://velog.velcdn.com/images/sdb016/post/34bdac57-2d63-43ce-a14c-8054e9e036de/test.png' },
+    { text: '인테리어', image: 'https://velog.velcdn.com/images/sdb016/post/34bdac57-2d63-43ce-a14c-8054e9e036de/test.png' },
+    { text: '원격 일자리', image: 'https://velog.velcdn.com/images/sdb016/post/34bdac57-2d63-43ce-a14c-8054e9e036de/test.png' }
+  ];
+  const row3Items = [
+    { text: '아트 갤러리', image: 'https://velog.velcdn.com/images/sdb016/post/34bdac57-2d63-43ce-a14c-8054e9e036de/test.png' },
+    { text: '전시회', image: 'https://velog.velcdn.com/images/sdb016/post/34bdac57-2d63-43ce-a14c-8054e9e036de/test.png' },
+    { text: '게임', image: 'https://velog.velcdn.com/images/sdb016/post/34bdac57-2d63-43ce-a14c-8054e9e036de/test.png' },
+    { text: '영화 정보', image: 'https://velog.velcdn.com/images/sdb016/post/34bdac57-2d63-43ce-a14c-8054e9e036de/test.png' },
+    { text: '커밍순', image: 'https://velog.velcdn.com/images/sdb016/post/34bdac57-2d63-43ce-a14c-8054e9e036de/test.png' }
+  ];
+
+  // 진짜 무한루프를 위한 아이템 생성 함수 (이미지와 텍스트 지원)
+  const createInfiniteItems = <T,>(items: T[]) => {
+    if (items.length === 0) return [];
+    
+    // 무한루프를 위해 최소 2개 이상의 아이템이 필요
+    // 1개 아이템일 때는 2개로 복사, 여러 개일 때는 1번 더 복사
+    const repeatCount = items.length === 1 ? 2 : 2;
+    return Array(repeatCount).fill(items).flat();
+  };
+
+  const infiniteRow1Items = createInfiniteItems(row1Items);
+  const infiniteRow2Items = createInfiniteItems(row2Items);
+  const infiniteRow3Items = createInfiniteItems(row3Items);
+
   // 무한 스크롤 애니메이션
   useEffect(() => {
     const animate = () => {
+      // 각 행의 리셋 포인트 계산 (원본 아이템 세트가 완전히 지나간 후)
+      const resetPoint1 = -100; // 첫 번째 세트가 완전히 지나간 후
+      const resetPoint2 = -100;
+      const resetPoint3 = -100;
+
       setScrollPosition1(prev => {
-        const newPos = prev - 0.05;
-        // 아이템이 3번 반복되므로 -200%에서 리셋 (더 자연스러운 무한 스크롤)
-        return newPos <= -200 ? 0 : newPos;
+        const newPos = prev - 0.08;
+        // 마지막 아이템이 끝나면 즉시 첫 번째 아이템으로 리셋
+        return newPos <= resetPoint1 ? 0 : newPos;
       });
       
       setScrollPosition2(prev => {
-        const newPos = prev - 0.03;
-        return newPos <= -200 ? 0 : newPos;
+        const newPos = prev - 0.055;
+        return newPos <= resetPoint2 ? 0 : newPos;
       });
       
       setScrollPosition3(prev => {
-        const newPos = prev - 0.02;
-        return newPos <= -200 ? 0 : newPos;
+        const newPos = prev - 0.035;
+        return newPos <= resetPoint3 ? 0 : newPos;
       });
     };
 
-    const interval = setInterval(animate, 200); // 200ms마다 업데이트
+    const interval = setInterval(animate, 30); // 30ms마다 업데이트 (더 부드럽게)
     return () => clearInterval(interval);
   }, []);
 
@@ -186,21 +224,14 @@ const Home: React.FC = () => {
                    className="screen-slide-row screen-slide-row-1"
                    style={{ transform: `translateX(${scrollPosition1}%)` }}
                  >
-                   <div className="screen-slide-item">갤러리 사이트</div>
-                   <div className="screen-slide-item">유튜브 클론</div>
-                   <div className="screen-slide-item">개발자 매칭</div>
-                   <div className="screen-slide-item">이커머스</div>
-                   <div className="screen-slide-item">레트로 UI</div>
-                   <div className="screen-slide-item">갤러리 사이트</div>
-                   <div className="screen-slide-item">유튜브 클론</div>
-                   <div className="screen-slide-item">개발자 매칭</div>
-                   <div className="screen-slide-item">이커머스</div>
-                   <div className="screen-slide-item">레트로 UI</div>
-                   <div className="screen-slide-item">갤러리 사이트</div>
-                   <div className="screen-slide-item">유튜브 클론</div>
-                   <div className="screen-slide-item">개발자 매칭</div>
-                   <div className="screen-slide-item">이커머스</div>
-                   <div className="screen-slide-item">레트로 UI</div>
+                   {infiniteRow1Items.map((item, index) => (
+                     <div key={`row1-${index}`} className="screen-slide-item">
+                       <img src={item.image} alt={item.text} />
+                       <div className="item-content">
+                         <span>{item.text}</span>
+                       </div>
+                     </div>
+                   ))}
                  </div>
 
                  {/* 2행 - 중간 속도 */}
@@ -208,21 +239,14 @@ const Home: React.FC = () => {
                    className="screen-slide-row screen-slide-row-2"
                    style={{ transform: `translateX(${scrollPosition2}%)` }}
                  >
-                   <div className="screen-slide-item">도서 판매</div>
-                   <div className="screen-slide-item">브랜딩</div>
-                   <div className="screen-slide-item">포트폴리오</div>
-                   <div className="screen-slide-item">인테리어</div>
-                   <div className="screen-slide-item">원격 일자리</div>
-                   <div className="screen-slide-item">도서 판매</div>
-                   <div className="screen-slide-item">브랜딩</div>
-                   <div className="screen-slide-item">포트폴리오</div>
-                   <div className="screen-slide-item">인테리어</div>
-                   <div className="screen-slide-item">원격 일자리</div>
-                   <div className="screen-slide-item">도서 판매</div>
-                   <div className="screen-slide-item">브랜딩</div>
-                   <div className="screen-slide-item">포트폴리오</div>
-                   <div className="screen-slide-item">인테리어</div>
-                   <div className="screen-slide-item">원격 일자리</div>
+                   {infiniteRow2Items.map((item, index) => (
+                     <div key={`row2-${index}`} className="screen-slide-item">
+                       <img src={item.image} alt={item.text} />
+                       <div className="item-content">
+                         <span>{item.text}</span>
+                       </div>
+                     </div>
+                   ))}
                  </div>
 
                  {/* 3행 - 느린 속도 */}
@@ -230,21 +254,14 @@ const Home: React.FC = () => {
                    className="screen-slide-row screen-slide-row-3"
                    style={{ transform: `translateX(${scrollPosition3}%)` }}
                  >
-                   <div className="screen-slide-item">아트 갤러리</div>
-                   <div className="screen-slide-item">전시회</div>
-                   <div className="screen-slide-item">게임</div>
-                   <div className="screen-slide-item">영화 정보</div>
-                   <div className="screen-slide-item">커밍순</div>
-                   <div className="screen-slide-item">아트 갤러리</div>
-                   <div className="screen-slide-item">전시회</div>
-                   <div className="screen-slide-item">게임</div>
-                   <div className="screen-slide-item">영화 정보</div>
-                   <div className="screen-slide-item">커밍순</div>
-                   <div className="screen-slide-item">아트 갤러리</div>
-                   <div className="screen-slide-item">전시회</div>
-                   <div className="screen-slide-item">게임</div>
-                   <div className="screen-slide-item">영화 정보</div>
-                   <div className="screen-slide-item">커밍순</div>
+                   {infiniteRow3Items.map((item, index) => (
+                     <div key={`row3-${index}`} className="screen-slide-item">
+                       <img src={item.image} alt={item.text} />
+                       <div className="item-content">
+                         <span>{item.text}</span>
+                       </div>
+                     </div>
+                   ))}
                  </div>
                </div>
              </section>
