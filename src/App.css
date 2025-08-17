@@ -322,12 +322,12 @@
   display: block;
   font-size: 2rem;
   font-weight: 800;
-  color: #ff6b6b;
+  color: #ff4444;
   margin-bottom: 0.5rem;
 }
 
 .home-container.dark .stat-number {
-  color: #4facfe;
+  color: #ff6666;
 }
 
 .stat-label {
@@ -393,15 +393,15 @@
 }
 
 .btn-primary {
-  background: #0066ff;
+  background: #ff4444;
   color: white;
-  box-shadow: 0 4px 12px rgba(0, 102, 255, 0.3);
+  box-shadow: 0 4px 12px rgba(255, 68, 68, 0.3);
 }
 
 .btn-primary:hover {
-  background: #0052cc;
+  background: #ff3333;
   transform: translateY(-2px);
-  box-shadow: 0 8px 20px rgba(0, 102, 255, 0.4);
+  box-shadow: 0 8px 20px rgba(255, 68, 68, 0.4);
 }
 
 .btn-secondary {
@@ -554,7 +554,7 @@
   font-size: 3.5rem;
   font-weight: 800;
   margin-bottom: 2rem;
-  background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+  background: linear-gradient(45deg, #ff4444, #ff6666);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -575,7 +575,7 @@
 }
 
 .btn-landing {
-  background: linear-gradient(45deg, #667eea, #764ba2);
+  background: linear-gradient(45deg, #ff4444, #ff6666);
   color: white;
   border: none;
   padding: 1rem 2.5rem;
@@ -584,14 +584,14 @@
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
-  box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+  box-shadow: 0 8px 25px rgba(255, 68, 68, 0.4);
   text-transform: uppercase;
   letter-spacing: 1px;
 }
 
 .btn-landing:hover {
   transform: translateY(-3px);
-  box-shadow: 0 12px 35px rgba(102, 126, 234, 0.6);
+  box-shadow: 0 12px 35px rgba(255, 68, 68, 0.6);
 }
 
 /* 섹션별 배경 */
