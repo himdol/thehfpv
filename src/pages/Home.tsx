@@ -118,25 +118,30 @@ const Home: React.FC = () => {
                viewport={{ once: true, amount: 0.3 }}
              >
                <div className="section-content">
-                 <motion.div
-                   className="landing-pad"
-                   initial={{ scale: 0 }}
-                   whileInView={{ scale: 1 }}
-                   transition={{ duration: 0.8, delay: 0.2 }}
-                 >
-                   <h2 className="section-title">소개</h2>
-                   <p className="section-description">
-                     프론트엔드 개발자로서 React, TypeScript, 그리고 최신 웹 기술에 대한
-                     경험과 지식을 공유하고 있습니다.
-                   </p>
-                   <motion.button
-                     className="btn-landing"
-                     whileHover={{ scale: 1.05 }}
-                     whileTap={{ scale: 0.95 }}
+                 <div className="section-layout section-layout-left-image">
+                   <div className="section-image">
+                     {/* 이미지 공간 */}
+                   </div>
+                   <motion.div
+                     className="landing-pad"
+                     initial={{ scale: 0 }}
+                     whileInView={{ scale: 1 }}
+                     transition={{ duration: 0.8, delay: 0.2 }}
                    >
-                     착륙하기
-                   </motion.button>
-                 </motion.div>
+                     <h2 className="section-title">소개</h2>
+                     <p className="section-description">
+                       프론트엔드 개발자로서 React, TypeScript, 그리고 최신 웹 기술에 대한
+                       경험과 지식을 공유하고 있습니다.
+                     </p>
+                     <motion.button
+                       className="btn-landing"
+                       whileHover={{ scale: 1.05 }}
+                       whileTap={{ scale: 0.95 }}
+                     >
+                       착륙하기
+                     </motion.button>
+                   </motion.div>
+                 </div>
                </div>
              </motion.section>
 
@@ -149,24 +154,29 @@ const Home: React.FC = () => {
                viewport={{ once: true, amount: 0.3 }}
              >
                <div className="section-content">
-                 <motion.div
-                   className="landing-pad"
-                   initial={{ scale: 0 }}
-                   whileInView={{ scale: 1 }}
-                   transition={{ duration: 0.8, delay: 0.2 }}
-                 >
-                   <h2 className="section-title">블로그</h2>
-                   <p className="section-description">
-                     기술 이야기, 일상, 그리고 다양한 경험을 담은 글들을 만나보세요.
-                   </p>
-                   <motion.button
-                     className="btn-landing"
-                     whileHover={{ scale: 1.05 }}
-                     whileTap={{ scale: 0.95 }}
+                 <div className="section-layout section-layout-right-image">
+                   <motion.div
+                     className="landing-pad"
+                     initial={{ scale: 0 }}
+                     whileInView={{ scale: 1 }}
+                     transition={{ duration: 0.8, delay: 0.2 }}
                    >
-                     착륙하기
-                   </motion.button>
-                 </motion.div>
+                     <h2 className="section-title">블로그</h2>
+                     <p className="section-description">
+                       기술 이야기, 일상, 그리고 다양한 경험을 담은 글들을 만나보세요.
+                     </p>
+                     <motion.button
+                       className="btn-landing"
+                       whileHover={{ scale: 1.05 }}
+                       whileTap={{ scale: 0.95 }}
+                     >
+                       착륙하기
+                     </motion.button>
+                   </motion.div>
+                   <div className="section-image">
+                     {/* 이미지 공간 */}
+                   </div>
+                 </div>
                </div>
              </motion.section>
 
@@ -179,24 +189,29 @@ const Home: React.FC = () => {
                viewport={{ once: true, amount: 0.3 }}
              >
                <div className="section-content">
-                 <motion.div
-                   className="landing-pad"
-                   initial={{ scale: 0 }}
-                   whileInView={{ scale: 1 }}
-                   transition={{ duration: 0.8, delay: 0.2 }}
-                 >
-                   <h2 className="section-title">샵</h2>
-                   <p className="section-description">
-                     개발자를 위한 다양한 제품들을 만나보세요.
-                   </p>
-                   <motion.button
-                     className="btn-landing"
-                     whileHover={{ scale: 1.05 }}
-                     whileTap={{ scale: 0.95 }}
+                 <div className="section-layout section-layout-left-image">
+                   <div className="section-image">
+                     {/* 이미지 공간 */}
+                   </div>
+                   <motion.div
+                     className="landing-pad"
+                     initial={{ scale: 0 }}
+                     whileInView={{ scale: 1 }}
+                     transition={{ duration: 0.8, delay: 0.2 }}
                    >
-                     착륙하기
-                   </motion.button>
-                 </motion.div>
+                     <h2 className="section-title">샵</h2>
+                     <p className="section-description">
+                       개발자를 위한 다양한 제품들을 만나보세요.
+                     </p>
+                     <motion.button
+                       className="btn-landing"
+                       whileHover={{ scale: 1.05 }}
+                       whileTap={{ scale: 0.95 }}
+                     >
+                       착륙하기
+                     </motion.button>
+                   </motion.div>
+                 </div>
                </div>
              </motion.section>
     </div>
