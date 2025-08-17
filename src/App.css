@@ -670,7 +670,7 @@
 
 .portfolio-container {
   position: relative;
-  height: 300px;
+  height: 400px;
   overflow: hidden;
 }
 
@@ -687,11 +687,16 @@
   border: 1px solid rgba(255, 255, 255, 0.2);
   border-radius: 8px;
   padding: 1rem 1.5rem;
-  min-width: 200px;
+  width: 230px;
+  height: 150px;
   text-align: center;
   backdrop-filter: blur(10px);
   transition: all 0.3s ease;
   color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
 }
 
 .home-container.dark .portfolio-item {
