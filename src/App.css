@@ -567,11 +567,11 @@
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
 }
 
-.section-layout-left-image {
+.section-layout.section-layout-left-image {
   flex-direction: row !important;
 }
 
-.section-layout-right-image {
+.section-layout.section-layout-right-image {
   flex-direction: row-reverse !important;
 }
 
@@ -617,40 +617,9 @@
 }
 
 .landing-pad {
-  background: rgba(0, 0, 0, 0.05);
-  backdrop-filter: blur(20px);
-  border-radius: 30px;
-  padding: 4rem;
-  border: 1px solid rgba(0, 0, 0, 0.1);
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
-  position: relative;
-  overflow: hidden;
-}
-
-.home-container.dark .landing-pad {
-  background: rgba(255, 255, 255, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-}
-
-.landing-pad::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: linear-gradient(45deg, transparent 30%, rgba(0, 0, 0, 0.05) 50%, transparent 70%);
-  transform: translateX(-100%);
-  animation: shimmer 3s infinite;
-}
-
-.home-container.dark .landing-pad::before {
-  background: linear-gradient(45deg, transparent 30%, rgba(255, 255, 255, 0.1) 50%, transparent 70%);
-}
-
-@keyframes shimmer {
-  0% { transform: translateX(-100%); }
-  100% { transform: translateX(100%); }
+  flex: 1;
+  text-align: left;
+  padding: 1rem;
 }
 
 .section-title {
