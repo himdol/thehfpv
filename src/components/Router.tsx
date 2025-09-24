@@ -6,9 +6,10 @@ import Login from '../pages/Login';
 
 interface RouterProps {
   currentPage: string;
+  setCurrentPage: (page: string) => void;
 }
 
-const Router: React.FC<RouterProps> = ({ currentPage }) => {
+const Router: React.FC<RouterProps> = ({ currentPage, setCurrentPage }) => {
   switch (currentPage) {
     case 'about':
       return <About />;
@@ -17,7 +18,7 @@ const Router: React.FC<RouterProps> = ({ currentPage }) => {
     case 'login':
       return <Login />;
     default:
-      return <Home />;
+      return <Home setCurrentPage={setCurrentPage} />;
   }
 };
 

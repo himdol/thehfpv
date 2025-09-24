@@ -2,7 +2,11 @@ import React, { useRef, useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { useTheme } from '../contexts/ThemeContext';
 
-const Home: React.FC = () => {
+interface HomeProps {
+  setCurrentPage: (page: string) => void;
+}
+
+const Home: React.FC<HomeProps> = ({ setCurrentPage }) => {
   const { isDarkMode } = useTheme();
   const containerRef = useRef<HTMLDivElement>(null);
   
@@ -151,15 +155,9 @@ const Home: React.FC = () => {
                 className="btn-secondary"
                 whileHover={{ scale: 1.05, y: -2 }}
                 whileTap={{ scale: 0.95 }}
+                onClick={() => setCurrentPage('blog')}
               >
                 BLOG
-              </motion.button>
-              <motion.button 
-                className="btn-secondary"
-                whileHover={{ scale: 1.05, y: -2 }}
-                whileTap={{ scale: 0.95 }}
-              >
-                SHOP
               </motion.button>
             </motion.div>
           </motion.div>

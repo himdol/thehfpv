@@ -14,6 +14,7 @@ function App() {
       >
         <Router 
           currentPage={currentPage}
+          setCurrentPage={setCurrentPage}
         />
       </Layout>
     </ThemeProvider>
