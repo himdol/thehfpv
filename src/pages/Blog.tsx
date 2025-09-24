@@ -160,7 +160,7 @@ const Blog: React.FC<BlogProps> = ({ sidebarOpen, setSidebarOpen }) => {
   }, [blogPosts, searchTerm, selectedCategory, sortBy]);
 
   return (
-    <div className="flex">
+    <div className="blog-layout">
       {/* 사이드바 */}
       <Sidebar 
         isOpen={sidebarOpen} 
@@ -169,28 +169,28 @@ const Blog: React.FC<BlogProps> = ({ sidebarOpen, setSidebarOpen }) => {
       />
 
       {/* 메인 콘텐츠 */}
-      <div className={`flex-1 transition-all duration-300 ${sidebarOpen ? 'lg:ml-64' : ''}`}>
+      <div className={`blog-main ${sidebarOpen ? 'with-sidebar' : ''}`}>
         <div className="blog-container">
           {/* 헤더 */}
-          <div className="mb-8">
-            <h1 className="text-3xl font-bold text-gray-900 mb-4">블로그</h1>
-            <p className="text-gray-600">개발, 일상, 그리고 다양한 경험을 공유합니다.</p>
+          <div className="blog-header">
+            <h1 className="blog-title">블로그</h1>
+            <p className="blog-subtitle">개발, 일상, 그리고 다양한 경험을 공유합니다.</p>
           </div>
 
           {/* 검색 및 필터 */}
           <div className="mb-8">
             <div className="blog-filters">
               {/* 검색바 */}
-              <div className="flex-1">
-                <div className="relative">
+              <div className="blog-search-container">
+                <div className="blog-search-wrapper">
                   <input
                     type="text"
                     placeholder="블로그 포스트 검색..."
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
-                    className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                    className="blog-search-input"
                   />
-                  <svg className="absolute left-3 top-3.5 h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <svg className="blog-search-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                   </svg>
                 </div>
@@ -200,7 +200,7 @@ const Blog: React.FC<BlogProps> = ({ sidebarOpen, setSidebarOpen }) => {
               <select 
                 value={selectedCategory}
                 onChange={(e) => setSelectedCategory(e.target.value)}
-                className="px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                className="blog-select"
               >
                 {categories.map(category => (
                   <option key={category.id} value={category.id}>
@@ -213,7 +213,7 @@ const Blog: React.FC<BlogProps> = ({ sidebarOpen, setSidebarOpen }) => {
               <select 
                 value={sortBy}
                 onChange={(e) => setSortBy(e.target.value as 'date' | 'popular' | 'title')}
-                className="px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                className="blog-select"
               >
                 <option value="date">최신순</option>
                 <option value="popular">인기순</option>
@@ -222,20 +222,20 @@ const Blog: React.FC<BlogProps> = ({ sidebarOpen, setSidebarOpen }) => {
             </div>
 
             {/* 결과 정보 */}
-            <div className="flex items-center justify-between text-sm text-gray-600 mb-4">
+            <div className="blog-results-info">
               <span>
                 총 {filteredAndSortedPosts.length}개의 포스트
                 {selectedCategory && ` (${selectedCategory} 카테고리)`}
                 {searchTerm && ` (검색어: "${searchTerm}")`}
               </span>
-              <div className="flex space-x-2">
+              <div>
                 {(searchTerm || selectedCategory) && (
                   <button
                     onClick={() => {
                       setSearchTerm('');
                       setSelectedCategory('');
                     }}
-                    className="text-blue-600 hover:text-blue-700 font-medium"
+                    className="blog-reset-btn"
                   >
                     필터 초기화
                   </button>
@@ -245,23 +245,23 @@ const Blog: React.FC<BlogProps> = ({ sidebarOpen, setSidebarOpen }) => {
           </div>
 
           {/* 블로그 포스트 목록 */}
-          <div className="space-y-8">
+          <div>
             {filteredAndSortedPosts.length === 0 ? (
-              <div className="text-center py-12">
-                <svg className="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <div className="blog-empty-state">
+                <svg className="blog-empty-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.172 16.172a4 4 0 015.656 0M9 12h6m-6-4h6m2 5.291A7.962 7.962 0 0112 15c-2.34 0-4.29-1.009-5.824-2.709M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                 </svg>
-                <h3 className="mt-2 text-sm font-medium text-gray-900">포스트를 찾을 수 없습니다</h3>
-                <p className="mt-1 text-sm text-gray-500">
+                <h3 className="blog-empty-title">포스트를 찾을 수 없습니다</h3>
+                <p className="blog-empty-description">
                   {searchTerm ? `"${searchTerm}"에 대한 검색 결과가 없습니다.` : '선택한 카테고리에 포스트가 없습니다.'}
                 </p>
-                <div className="mt-6">
+                <div>
                   <button
                     onClick={() => {
                       setSearchTerm('');
                       setSelectedCategory('');
                     }}
-                    className="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700"
+                    className="blog-empty-btn"
                   >
                     필터 초기화
                   </button>
@@ -313,12 +313,12 @@ const Blog: React.FC<BlogProps> = ({ sidebarOpen, setSidebarOpen }) => {
                         {post.title}
                       </h2>
                       
-                      <p className="text-gray-600 mb-4 leading-relaxed blog-excerpt">
+                      <p className="blog-excerpt">
                         {post.excerpt}
                       </p>
                       
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center space-x-4">
+                      <div className="blog-post-footer">
+                        <div className="blog-post-meta">
                           <div className="blog-author">
                             <div className="blog-author-avatar">
                               {post.author}
@@ -333,7 +333,7 @@ const Blog: React.FC<BlogProps> = ({ sidebarOpen, setSidebarOpen }) => {
                               </span>
                             ))}
                             {post.tags.length > 3 && (
-                              <span className="text-xs text-gray-400">
+                              <span className="blog-tag-more">
                                 +{post.tags.length - 3}
                               </span>
                             )}
@@ -360,40 +360,40 @@ const Blog: React.FC<BlogProps> = ({ sidebarOpen, setSidebarOpen }) => {
 
           {/* 페이지네이션 */}
           {filteredAndSortedPosts.length > 0 && (
-            <div className="mt-12 flex justify-center">
-              <nav className="flex items-center space-x-2">
+            <div className="blog-pagination">
+              <nav className="blog-pagination-nav">
                 <motion.button 
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
-                  className="px-4 py-2 text-gray-500 hover:text-gray-700 disabled:opacity-50 rounded-lg transition-colors"
+                  className="blog-pagination-btn disabled"
                 >
                   이전
                 </motion.button>
                 <motion.button 
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
-                  className="px-4 py-2 bg-blue-600 text-white rounded-lg font-medium"
+                  className="blog-pagination-btn active"
                 >
                   1
                 </motion.button>
                 <motion.button 
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
-                  className="px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-lg transition-colors"
+                  className="blog-pagination-btn"
                 >
                   2
                 </motion.button>
                 <motion.button 
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
-                  className="px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-lg transition-colors"
+                  className="blog-pagination-btn"
                 >
                   3
                 </motion.button>
                 <motion.button 
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
-                  className="px-4 py-2 text-gray-500 hover:text-gray-700 rounded-lg transition-colors"
+                  className="blog-pagination-btn"
                 >
                   다음
                 </motion.button>
