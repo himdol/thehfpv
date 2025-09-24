@@ -2,25 +2,25 @@
 .App {
   text-align: center;
   min-height: 100vh;
-  background: #ffffff;
-  color: #333333;
+  background: #fef2f2;
+  color: #7f1d1d;
   transition: all 0.3s ease;
 }
 
 /* 다크 모드 */
 .App.dark {
-  background: #1a1a1a;
-  color: #ffffff;
+  background: #1f0f0f;
+  color: #fecaca;
 }
 
 .header {
-  background: rgba(255, 255, 255, 0.9);
+  background: rgba(254, 242, 242, 0.9);
   backdrop-filter: blur(10px);
   padding: 1rem 2rem;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 10px rgba(127, 29, 29, 0.1);
   transition: all 0.3s ease;
   position: fixed;
   top: 0;
@@ -30,8 +30,8 @@
 }
 
 .App.dark .header {
-  background: rgba(26, 26, 26, 0.9);
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+  background: rgba(31, 15, 15, 0.9);
+  box-shadow: 0 2px 10px rgba(127, 29, 29, 0.3);
 }
 
 .logo {
@@ -40,11 +40,11 @@
 }
 
 .logo-m {
-  color: #3b82f6;
+  color: #dc2626;
 }
 
 .logo-h {
-  color: #ff0000;
+  color: #b91c1c;
 }
 
 .nav {
@@ -55,7 +55,7 @@
 .nav-item {
   background: none;
   border: none;
-  color: #333333;
+  color: #7f1d1d;
   padding: 0.5rem 1rem;
   border-radius: 0.5rem;
   cursor: pointer;
@@ -64,31 +64,29 @@
 }
 
 .App.dark .nav-item {
-  color: #ffffff;
+  color: #fecaca;
 }
 
 .nav-item:hover {
-  background: rgba(255, 0, 0, 0.15);
-  color: #ff0000;
+  background: rgba(220, 38, 38, 0.15);
+  color: #dc2626;
   transform: translateY(-1px);
 }
 
 .App.dark .nav-item:hover {
-  background: rgba(255, 0, 0, 0.25);
-  color: #ff6666;
+  background: rgba(220, 38, 38, 0.25);
+  color: #f87171;
 }
 
 .nav-item.active {
-  background: linear-gradient(135deg, rgba(255, 0, 0, 0.2) 0%, rgba(255, 0, 0, 0.3) 100%);
-  color: #ff0000;
+  background: linear-gradient(135deg, rgba(220, 38, 38, 0.2) 0%, rgba(220, 38, 38, 0.3) 100%);
+  color: #dc2626;
   font-weight: bold;
-
 }
 
 .App.dark .nav-item.active {
-  background: linear-gradient(135deg, rgba(255, 0, 0, 0.3) 0%, rgba(255, 0, 0, 0.4) 100%);
-  color: #ff6666;
-
+  background: linear-gradient(135deg, rgba(220, 38, 38, 0.3) 0%, rgba(220, 38, 38, 0.4) 100%);
+  color: #f87171;
 }
 
 .theme-toggle {
@@ -1331,8 +1329,8 @@
 
 .blog-search-input:focus {
   outline: none;
-  border-color: #3b82f6;
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+  border-color: #dc2626;
+  box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.1);
 }
 
 .blog-search-icon {
@@ -1356,8 +1354,8 @@
 
 .blog-select:focus {
   outline: none;
-  border-color: #3b82f6;
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+  border-color: #dc2626;
+  box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.1);
 }
 
 .blog-results-info {
@@ -1370,14 +1368,14 @@
 }
 
 .blog-reset-btn {
-  color: #2563eb;
+  color: #dc2626;
   font-weight: 500;
   cursor: pointer;
   transition: color 0.3s ease;
 }
 
 .blog-reset-btn:hover {
-  color: #1d4ed8;
+  color: #b91c1c;
 }
 
 .blog-empty-state {
@@ -1414,14 +1412,14 @@
   font-size: 0.875rem;
   font-weight: 500;
   color: white;
-  background-color: #2563eb;
+  background-color: #dc2626;
   cursor: pointer;
   transition: all 0.3s ease;
   margin-top: 1.5rem;
 }
 
 .blog-empty-btn:hover {
-  background-color: #1d4ed8;
+  background-color: #b91c1c;
 }
 
 .blog-pagination {
@@ -1451,7 +1449,7 @@
 }
 
 .blog-pagination-btn.active {
-  background-color: #2563eb;
+  background-color: #dc2626;
   color: white;
 }
 
@@ -1601,8 +1599,8 @@
 }
 
 .sidebar-nav-btn:hover {
-  background-color: #dbeafe;
-  color: #2563eb;
+  background-color: #fecaca;
+  color: #dc2626;
 }
 
 .sidebar-nav-label {
@@ -1618,7 +1616,7 @@
 }
 
 .sidebar-nav-btn:hover .sidebar-nav-count {
-  background-color: #bfdbfe;
+  background-color: #fca5a5;
 }
 
 .sidebar-features {
@@ -1654,8 +1652,8 @@
 }
 
 .sidebar-feature-btn:hover {
-  background-color: #dbeafe;
-  color: #2563eb;
+  background-color: #fecaca;
+  color: #dc2626;
 }
 
 .sidebar-feature-icon {
@@ -1680,7 +1678,7 @@
 
 .App.dark .sidebar-nav-btn:hover {
   background-color: #374151;
-  color: #60a5fa;
+  color: #f87171;
 }
 
 .App.dark .sidebar-nav-count {
@@ -1698,7 +1696,7 @@
 
 .App.dark .sidebar-feature-btn:hover {
   background-color: #374151;
-  color: #60a5fa;
+  color: #f87171;
 }
 
 .App.dark .sidebar-close-btn {
@@ -1718,6 +1716,8 @@
   flex-direction: column;
   gap: 1rem;
   margin-bottom: 1.5rem;
+  width: 100%;
+  max-width: 800px;
 }
 
 @media (min-width: 1024px) {
@@ -1842,7 +1842,7 @@
 }
 
 .blog-title:hover {
-  color: #2563eb;
+  color: #dc2626;
 }
 
 .blog-author {
@@ -1882,14 +1882,14 @@
 .blog-read-more {
   display: flex;
   align-items: center;
-  color: #2563eb;
+  color: #dc2626;
   font-weight: 500;
   transition: color 0.3s ease;
   cursor: pointer;
 }
 
 .blog-read-more:hover {
-  color: #1d4ed8;
+  color: #b91c1c;
 }
 
 /* Dark mode styles for blog */
@@ -1903,15 +1903,15 @@
 }
 
 .App.dark .blog-title:hover {
-  color: #60a5fa;
+  color: #f87171;
 }
 
 .App.dark .blog-read-more {
-  color: #60a5fa;
+  color: #f87171;
 }
 
 .App.dark .blog-read-more:hover {
-  color: #93c5fd;
+  color: #fca5a5;
 }
 
 .App.dark .blog-tag {
