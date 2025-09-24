@@ -1457,6 +1457,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
+  margin-top: auto;
 }
 
 .blog-tag-more {
@@ -1525,6 +1526,10 @@
   overflow: hidden;
   transition: all 0.3s ease;
   margin-bottom: 2rem;
+  min-height: 280px;
+  display: flex;
+  flex-direction: column;
+  cursor: pointer;
 }
 
 .blog-post:hover {
@@ -1535,6 +1540,7 @@
 .blog-post-content {
   display: flex;
   flex-direction: column;
+  flex: 1;
 }
 
 @media (min-width: 768px) {
@@ -1559,6 +1565,8 @@
 .blog-post-text {
   padding: 1.5rem;
   flex: 1;
+  display: flex;
+  flex-direction: column;
 }
 
 .blog-post-header {
@@ -1656,24 +1664,12 @@
 
 .blog-tag {
   font-size: 0.75rem;
-  color: #6b7280;
-  background-color: #f3f4f6;
+  color: #dc2626;
+  background-color: #fecaca;
   padding: 0.125rem 0.5rem;
   border-radius: 9999px;
 }
 
-.blog-read-more {
-  display: flex;
-  align-items: center;
-  color: #2563eb;
-  font-weight: 500;
-  transition: color 0.3s ease;
-  cursor: pointer;
-}
-
-.blog-read-more:hover {
-  color: #1d4ed8;
-}
 
 /* Dark mode styles for blog */
 .App.dark .blog-post {
@@ -1689,17 +1685,10 @@
   color: #60a5fa;
 }
 
-.App.dark .blog-read-more {
-  color: #60a5fa;
-}
-
-.App.dark .blog-read-more:hover {
-  color: #93c5fd;
-}
 
 .App.dark .blog-tag {
-  color: #9ca3af;
-  background-color: #374151;
+  color: #f87171;
+  background-color: #7f1d1d;
 }
 
 /* Responsive Footer */

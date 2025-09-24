@@ -19,6 +19,14 @@ interface BlogProps {}
 const Blog: React.FC<BlogProps> = () => {
   // 상태 관리
   const [searchTerm, setSearchTerm] = useState('');
+  
+  // 블로그 포스트 클릭 핸들러
+  const handlePostClick = (postId: number) => {
+    // 실제 프로젝트에서는 라우터를 사용하여 상세 페이지로 이동
+    // 예: navigate(`/blog/${postId}`)
+    console.log(`블로그 포스트 ${postId} 클릭됨`);
+    alert(`블로그 포스트 "${blogPosts.find(p => p.id === postId)?.title}"를 클릭했습니다!`);
+  };
   const blogPosts: BlogPost[] = useMemo(() => [
     {
       id: 1,
@@ -212,13 +220,14 @@ const Blog: React.FC<BlogProps> = () => {
               </div>
             ) : (
               filteredAndSortedPosts.map((post, index) => (
-                <motion.article 
-                  key={post.id} 
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.5, delay: index * 0.1 }}
-                  className="blog-post"
-                >
+                    <motion.article
+                      key={post.id}
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.5, delay: index * 0.1 }}
+                      className="blog-post"
+                      onClick={() => handlePostClick(post.id)}
+                    >
                   <div className="blog-post-content">
                     {/* 이미지 섹션 */}
                     {post.image && (
@@ -283,16 +292,6 @@ const Blog: React.FC<BlogProps> = () => {
                           </div>
                         </div>
                         
-                        <motion.button 
-                          whileHover={{ scale: 1.05 }}
-                          whileTap={{ scale: 0.95 }}
-                          className="blog-read-more"
-                        >
-                          읽기
-                          <svg className="ml-1 h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                          </svg>
-                        </motion.button>
                       </div>
                     </div>
                   </div>
