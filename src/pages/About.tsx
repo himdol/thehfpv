@@ -5,7 +5,7 @@ const About: React.FC = () => {
     <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
       {/* 헤더 */}
       <div className="text-center mb-16">
-        <h1 className="text-4xl font-bold text-gray-900 mb-6">안녕하세요, Himdol입니다! 👋</h1>
+        <h1 className="text-4xl font-bold text-gray-900 mb-6">안녕하세요, H입니다! 👋</h1>
         <p className="text-xl text-gray-600 max-w-3xl mx-auto">
           프론트엔드 개발자로서 React, TypeScript, 그리고 최신 웹 기술에 대한 
           경험과 지식을 공유하고 있습니다.

@@ -1,5 +1,19 @@
-import React from 'react';
+import React, { useState, useMemo } from 'react';
+import { motion } from 'framer-motion';
 import Sidebar from '../components/Sidebar';
+
+interface BlogPost {
+  id: number;
+  title: string;
+  excerpt: string;
+  category: string;
+  date: string;
+  readTime: string;
+  author: string;
+  tags: string[];
+  featured?: boolean;
+  image?: string;
+}
 
 interface BlogProps {
   sidebarOpen: boolean;
@@ -7,7 +21,11 @@ interface BlogProps {
 }
 
 const Blog: React.FC<BlogProps> = ({ sidebarOpen, setSidebarOpen }) => {
-  const blogPosts = [
+  // 상태 관리
+  const [searchTerm, setSearchTerm] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState('');
+  const [sortBy, setSortBy] = useState<'date' | 'popular' | 'title'>('date');
+  const blogPosts: BlogPost[] = useMemo(() => [
     {
       id: 1,
       title: "React 19 새로운 기능들",
@@ -15,8 +33,10 @@ const Blog: React.FC<BlogProps> = ({ sidebarOpen, setSidebarOpen }) => {
       category: "기술",
       date: "2024-01-15",
       readTime: "5분",
-      author: "Himdol",
-      tags: ["React", "JavaScript", "Frontend"]
+      author: "H",
+      tags: ["React", "JavaScript", "Frontend"],
+      featured: true,
+      image: "https://images.unsplash.com/photo-1633356122544-f134324a6cee?w=800"
     },
     {
       id: 2,
@@ -25,8 +45,9 @@ const Blog: React.FC<BlogProps> = ({ sidebarOpen, setSidebarOpen }) => {
       category: "일상",
       date: "2024-01-12",
       readTime: "3분",
-      author: "Himdol",
-      tags: ["일상", "개발팁", "생산성"]
+      author: "H",
+      tags: ["일상", "개발팁", "생산성"],
+      image: "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=800"
     },
     {
       id: 3,
@@ -35,8 +56,9 @@ const Blog: React.FC<BlogProps> = ({ sidebarOpen, setSidebarOpen }) => {
       category: "음식",
       date: "2024-01-10",
       readTime: "4분",
-      author: "Himdol",
-      tags: ["음식", "요리", "건강"]
+      author: "H",
+      tags: ["음식", "요리", "건강"],
+      image: "https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?w=800"
     },
     {
       id: 4,
@@ -45,8 +67,10 @@ const Blog: React.FC<BlogProps> = ({ sidebarOpen, setSidebarOpen }) => {
       category: "기술",
       date: "2024-01-08",
       readTime: "7분",
-      author: "Himdol",
-      tags: ["TypeScript", "JavaScript", "타입"]
+      author: "H",
+      tags: ["TypeScript", "JavaScript", "타입"],
+      featured: true,
+      image: "https://images.unsplash.com/photo-1516116216624-53e697fedbea?w=800"
     },
     {
       id: 5,
@@ -55,8 +79,9 @@ const Blog: React.FC<BlogProps> = ({ sidebarOpen, setSidebarOpen }) => {
       category: "여행",
       date: "2024-01-05",
       readTime: "6분",
-      author: "Himdol",
-      tags: ["여행", "일본", "문화"]
+      author: "H",
+      tags: ["여행", "일본", "문화"],
+      image: "https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?w=800"
     },
     {
       id: 6,
@@ -65,10 +90,74 @@ const Blog: React.FC<BlogProps> = ({ sidebarOpen, setSidebarOpen }) => {
       category: "독서",
       date: "2024-01-03",
       readTime: "4분",
-      author: "Himdol",
-      tags: ["독서", "클린코드", "개발"]
+      author: "H",
+      tags: ["독서", "클린코드", "개발"],
+      image: "https://images.unsplash.com/photo-1481627834876-b7833e8f5570?w=800"
+    },
+    {
+      id: 7,
+      title: "Framer Motion 애니메이션 가이드",
+      excerpt: "React에서 Framer Motion을 사용하여 부드러운 애니메이션을 만드는 방법을 단계별로 설명합니다.",
+      category: "기술",
+      date: "2024-01-20",
+      readTime: "8분",
+      author: "H",
+      tags: ["React", "Framer Motion", "애니메이션"],
+      featured: true,
+      image: "https://images.unsplash.com/photo-1558655146-9f40138edfeb?w=800"
+    },
+    {
+      id: 8,
+      title: "GitHub Pages 배포하기",
+      excerpt: "React 앱을 GitHub Pages에 무료로 배포하는 방법과 자동화 설정을 알아봅니다.",
+      category: "기술",
+      date: "2024-01-18",
+      readTime: "6분",
+      author: "H",
+      tags: ["GitHub", "배포", "React"],
+      image: "https://images.unsplash.com/photo-1556075798-4825dfaaf498?w=800"
     }
+  ], []);
+
+  // 카테고리 목록
+  const categories = [
+    { id: '', label: '모든 카테고리', count: blogPosts.length },
+    { id: '기술', label: '기술', count: blogPosts.filter(post => post.category === '기술').length },
+    { id: '일상', label: '일상', count: blogPosts.filter(post => post.category === '일상').length },
+    { id: '여행', label: '여행', count: blogPosts.filter(post => post.category === '여행').length },
+    { id: '음식', label: '음식', count: blogPosts.filter(post => post.category === '음식').length },
+    { id: '독서', label: '독서', count: blogPosts.filter(post => post.category === '독서').length },
   ];
+
+  // 필터링 및 정렬 로직
+  const filteredAndSortedPosts = useMemo(() => {
+    let filtered = blogPosts.filter(post => {
+      const matchesSearch = post.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                           post.excerpt.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                           post.tags.some(tag => tag.toLowerCase().includes(searchTerm.toLowerCase()));
+      const matchesCategory = !selectedCategory || post.category === selectedCategory;
+      return matchesSearch && matchesCategory;
+    });
+
+    // 정렬
+    filtered.sort((a, b) => {
+      switch (sortBy) {
+        case 'date':
+          return new Date(b.date).getTime() - new Date(a.date).getTime();
+        case 'title':
+          return a.title.localeCompare(b.title);
+        case 'popular':
+          // featured 포스트를 먼저, 그 다음 날짜순
+          if (a.featured && !b.featured) return -1;
+          if (!a.featured && b.featured) return 1;
+          return new Date(b.date).getTime() - new Date(a.date).getTime();
+        default:
+          return 0;
+      }
+    });
+
+    return filtered;
+  }, [blogPosts, searchTerm, selectedCategory, sortBy]);
 
   return (
     <div className="flex">
@@ -89,93 +178,231 @@ const Blog: React.FC<BlogProps> = ({ sidebarOpen, setSidebarOpen }) => {
           </div>
 
           {/* 검색 및 필터 */}
-          <div className="mb-8 flex flex-col sm:flex-row gap-4">
-            <div className="flex-1">
-              <div className="relative">
-                <input
-                  type="text"
-                  placeholder="블로그 포스트 검색..."
-                  className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                />
-                <svg className="absolute left-3 top-2.5 h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                </svg>
+          <div className="mb-8">
+            <div className="flex flex-col lg:flex-row gap-4 mb-6">
+              {/* 검색바 */}
+              <div className="flex-1">
+                <div className="relative">
+                  <input
+                    type="text"
+                    placeholder="블로그 포스트 검색..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                  />
+                  <svg className="absolute left-3 top-3.5 h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                  </svg>
+                </div>
+              </div>
+              
+              {/* 카테고리 필터 */}
+              <select 
+                value={selectedCategory}
+                onChange={(e) => setSelectedCategory(e.target.value)}
+                className="px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+              >
+                {categories.map(category => (
+                  <option key={category.id} value={category.id}>
+                    {category.label} ({category.count})
+                  </option>
+                ))}
+              </select>
+              
+              {/* 정렬 옵션 */}
+              <select 
+                value={sortBy}
+                onChange={(e) => setSortBy(e.target.value as 'date' | 'popular' | 'title')}
+                className="px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+              >
+                <option value="date">최신순</option>
+                <option value="popular">인기순</option>
+                <option value="title">제목순</option>
+              </select>
+            </div>
+
+            {/* 결과 정보 */}
+            <div className="flex items-center justify-between text-sm text-gray-600 mb-4">
+              <span>
+                총 {filteredAndSortedPosts.length}개의 포스트
+                {selectedCategory && ` (${selectedCategory} 카테고리)`}
+                {searchTerm && ` (검색어: "${searchTerm}")`}
+              </span>
+              <div className="flex space-x-2">
+                {(searchTerm || selectedCategory) && (
+                  <button
+                    onClick={() => {
+                      setSearchTerm('');
+                      setSelectedCategory('');
+                    }}
+                    className="text-blue-600 hover:text-blue-700 font-medium"
+                  >
+                    필터 초기화
+                  </button>
+                )}
               </div>
             </div>
-            <select className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-              <option value="">모든 카테고리</option>
-              <option value="tech">기술</option>
-              <option value="life">일상</option>
-              <option value="travel">여행</option>
-              <option value="food">음식</option>
-              <option value="book">독서</option>
-            </select>
           </div>
 
           {/* 블로그 포스트 목록 */}
           <div className="space-y-8">
-            {blogPosts.map((post) => (
-              <article key={post.id} className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow">
-                <div className="p-6">
-                  <div className="flex items-center justify-between mb-4">
-                    <div className="flex items-center space-x-4">
-                      <span className="text-sm text-blue-600 font-medium bg-blue-50 px-3 py-1 rounded-full">
-                        {post.category}
-                      </span>
-                      <span className="text-sm text-gray-500">{post.readTime}</span>
-                    </div>
-                    <span className="text-sm text-gray-500">{post.date}</span>
-                  </div>
-                  
-                  <h2 className="text-2xl font-bold text-gray-900 mb-3 hover:text-blue-600 transition-colors cursor-pointer">
-                    {post.title}
-                  </h2>
-                  
-                  <p className="text-gray-600 mb-4 leading-relaxed">
-                    {post.excerpt}
-                  </p>
-                  
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center space-x-4">
-                      <div className="flex items-center space-x-2">
-                        <div className="w-8 h-8 bg-gray-300 rounded-full flex items-center justify-center">
-                          <span className="text-sm font-medium text-gray-700">H</span>
+            {filteredAndSortedPosts.length === 0 ? (
+              <div className="text-center py-12">
+                <svg className="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.172 16.172a4 4 0 015.656 0M9 12h6m-6-4h6m2 5.291A7.962 7.962 0 0112 15c-2.34 0-4.29-1.009-5.824-2.709M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                </svg>
+                <h3 className="mt-2 text-sm font-medium text-gray-900">포스트를 찾을 수 없습니다</h3>
+                <p className="mt-1 text-sm text-gray-500">
+                  {searchTerm ? `"${searchTerm}"에 대한 검색 결과가 없습니다.` : '선택한 카테고리에 포스트가 없습니다.'}
+                </p>
+                <div className="mt-6">
+                  <button
+                    onClick={() => {
+                      setSearchTerm('');
+                      setSelectedCategory('');
+                    }}
+                    className="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700"
+                  >
+                    필터 초기화
+                  </button>
+                </div>
+              </div>
+            ) : (
+              filteredAndSortedPosts.map((post, index) => (
+                <motion.article 
+                  key={post.id} 
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5, delay: index * 0.1 }}
+                  className="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1"
+                >
+                  <div className="md:flex">
+                    {/* 이미지 섹션 */}
+                    {post.image && (
+                      <div className="md:w-1/3 h-48 md:h-auto">
+                        <img
+                          src={post.image}
+                          alt={post.title}
+                          className="w-full h-full object-cover"
+                        />
+                      </div>
+                    )}
+                    
+                    {/* 콘텐츠 섹션 */}
+                    <div className={`p-6 ${post.image ? 'md:w-2/3' : 'w-full'}`}>
+                      <div className="flex items-center justify-between mb-4">
+                        <div className="flex items-center space-x-4">
+                          <span className={`text-sm font-medium px-3 py-1 rounded-full ${
+                            post.category === '기술' ? 'text-blue-600 bg-blue-50' :
+                            post.category === '일상' ? 'text-green-600 bg-green-50' :
+                            post.category === '여행' ? 'text-purple-600 bg-purple-50' :
+                            post.category === '음식' ? 'text-orange-600 bg-orange-50' :
+                            post.category === '독서' ? 'text-indigo-600 bg-indigo-50' :
+                            'text-gray-600 bg-gray-50'
+                          }`}>
+                            {post.category}
+                          </span>
+                          {post.featured && (
+                            <span className="text-xs text-yellow-600 bg-yellow-50 px-2 py-1 rounded-full font-medium">
+                              ⭐ 추천
+                            </span>
+                          )}
+                          <span className="text-sm text-gray-500">{post.readTime}</span>
                         </div>
-                        <span className="text-sm text-gray-700">{post.author}</span>
+                        <span className="text-sm text-gray-500">{post.date}</span>
                       </div>
                       
-                      <div className="flex space-x-2">
-                        {post.tags.map((tag, index) => (
-                          <span key={index} className="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded">
-                            #{tag}
-                          </span>
-                        ))}
+                      <h2 className="text-2xl font-bold text-gray-900 mb-3 hover:text-blue-600 transition-colors cursor-pointer">
+                        {post.title}
+                      </h2>
+                      
+                      <p className="text-gray-600 mb-4 leading-relaxed line-clamp-3">
+                        {post.excerpt}
+                      </p>
+                      
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center space-x-4">
+                          <div className="flex items-center space-x-2">
+                            <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-green-500 rounded-full flex items-center justify-center">
+                              <span className="text-sm font-medium text-white">{post.author}</span>
+                            </div>
+                            <span className="text-sm text-gray-700">{post.author}</span>
+                          </div>
+                          
+                          <div className="flex flex-wrap gap-1">
+                            {post.tags.slice(0, 3).map((tag, tagIndex) => (
+                              <span key={tagIndex} className="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded-full">
+                                #{tag}
+                              </span>
+                            ))}
+                            {post.tags.length > 3 && (
+                              <span className="text-xs text-gray-400">
+                                +{post.tags.length - 3}
+                              </span>
+                            )}
+                          </div>
+                        </div>
+                        
+                        <motion.button 
+                          whileHover={{ scale: 1.05 }}
+                          whileTap={{ scale: 0.95 }}
+                          className="flex items-center text-blue-600 hover:text-blue-700 font-medium transition-colors"
+                        >
+                          읽기
+                          <svg className="ml-1 h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                          </svg>
+                        </motion.button>
                       </div>
                     </div>
-                    
-                    <button className="text-blue-600 hover:text-blue-700 font-medium transition-colors">
-                      읽기 →
-                    </button>
                   </div>
-                </div>
-              </article>
-            ))}
+                </motion.article>
+              ))
+            )}
           </div>
 
           {/* 페이지네이션 */}
-          <div className="mt-12 flex justify-center">
-            <nav className="flex items-center space-x-2">
-              <button className="px-3 py-2 text-gray-500 hover:text-gray-700 disabled:opacity-50">
-                이전
-              </button>
-              <button className="px-3 py-2 bg-blue-600 text-white rounded-lg">1</button>
-              <button className="px-3 py-2 text-gray-700 hover:bg-gray-100 rounded-lg">2</button>
-              <button className="px-3 py-2 text-gray-700 hover:bg-gray-100 rounded-lg">3</button>
-              <button className="px-3 py-2 text-gray-500 hover:text-gray-700">
-                다음
-              </button>
-            </nav>
-          </div>
+          {filteredAndSortedPosts.length > 0 && (
+            <div className="mt-12 flex justify-center">
+              <nav className="flex items-center space-x-2">
+                <motion.button 
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  className="px-4 py-2 text-gray-500 hover:text-gray-700 disabled:opacity-50 rounded-lg transition-colors"
+                >
+                  이전
+                </motion.button>
+                <motion.button 
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  className="px-4 py-2 bg-blue-600 text-white rounded-lg font-medium"
+                >
+                  1
+                </motion.button>
+                <motion.button 
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  className="px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-lg transition-colors"
+                >
+                  2
+                </motion.button>
+                <motion.button 
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  className="px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-lg transition-colors"
+                >
+                  3
+                </motion.button>
+                <motion.button 
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  className="px-4 py-2 text-gray-500 hover:text-gray-700 rounded-lg transition-colors"
+                >
+                  다음
+                </motion.button>
+              </nav>
+            </div>
+          )}
         </div>
       </div>
     </div>

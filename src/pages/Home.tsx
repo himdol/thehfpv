@@ -17,7 +17,7 @@ const Home: React.FC = () => {
   ];
   const row2Items = [
     { text: '도서 판매', image: 'https://velog.velcdn.com/images/sdb016/post/34bdac57-2d63-43ce-a14c-8054e9e036de/test.png' },
-    { text: '브랜딩', image: 'https://velog.velcdn.com/images/sdb016/post/34bdac57-2d63-43ce-a14c-8054e9e036de/test.png' },
+    { text: '블로그', image: 'https://velog.velcdn.com/images/sdb016/post/34bdac57-2d63-43ce-a14c-8054e9e036de/test.png' },
     { text: '포트폴리오', image: 'https://velog.velcdn.com/images/sdb016/post/34bdac57-2d63-43ce-a14c-8054e9e036de/test.png' },
     { text: '인테리어', image: 'https://velog.velcdn.com/images/sdb016/post/34bdac57-2d63-43ce-a14c-8054e9e036de/test.png' },
     { text: '원격 일자리', image: 'https://velog.velcdn.com/images/sdb016/post/34bdac57-2d63-43ce-a14c-8054e9e036de/test.png' }
