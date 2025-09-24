@@ -30,25 +30,21 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose, type }) => {
       {/* 오버레이 */}
       {isOpen && (
         <div 
-          className="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden"
+          className="sidebar-overlay"
           onClick={onClose}
         />
       )}
 
       {/* 사이드바 */}
-      <div className={`
-        fixed top-16 left-0 h-full w-64 bg-white shadow-lg transform transition-transform duration-300 ease-in-out z-50
-        ${isOpen ? 'translate-x-0' : '-translate-x-full'}
-        lg:translate-x-0 lg:static lg:shadow-none
-      `}>
-        <div className="p-6">
-          <div className="flex items-center justify-between mb-6">
-            <h2 className="text-xl font-bold text-gray-900">
+      <div className={`sidebar ${isOpen ? 'open' : ''}`}>
+        <div className="sidebar-content">
+          <div className="sidebar-header">
+            <h2 className="sidebar-title">
               {type === 'blog' ? '블로그' : '샵'} 카테고리
             </h2>
             <button
               onClick={onClose}
-              className="lg:hidden text-gray-500 hover:text-gray-700"
+              className="sidebar-close-btn"
             >
               <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -56,14 +52,14 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose, type }) => {
             </button>
           </div>
 
-          <nav className="space-y-2">
+          <nav className="sidebar-nav">
             {categories.map((category) => (
               <button
                 key={category.id}
-                className="w-full flex items-center justify-between px-4 py-3 text-left text-gray-700 hover:bg-blue-50 hover:text-blue-600 rounded-lg transition-colors"
+                className="sidebar-nav-btn"
               >
-                <span className="font-medium">{category.label}</span>
-                <span className="text-sm text-gray-500 bg-gray-100 px-2 py-1 rounded-full">
+                <span className="sidebar-nav-label">{category.label}</span>
+                <span className="sidebar-nav-count">
                   {category.count}
                 </span>
               </button>
@@ -71,25 +67,25 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose, type }) => {
           </nav>
 
           {/* 추가 기능 */}
-          <div className="mt-8 pt-6 border-t border-gray-200">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">
+          <div className="sidebar-features">
+            <h3 className="sidebar-features-title">
               {type === 'blog' ? '블로그' : '샵'} 기능
             </h3>
-            <div className="space-y-2">
-              <button className="w-full flex items-center px-4 py-2 text-gray-700 hover:bg-blue-50 hover:text-blue-600 rounded-lg transition-colors">
-                <svg className="h-5 w-5 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <div className="sidebar-features-list">
+              <button className="sidebar-feature-btn">
+                <svg className="sidebar-feature-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                 </svg>
                 검색
               </button>
-              <button className="w-full flex items-center px-4 py-2 text-gray-700 hover:bg-blue-50 hover:text-blue-600 rounded-lg transition-colors">
-                <svg className="h-5 w-5 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <button className="sidebar-feature-btn">
+                <svg className="sidebar-feature-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
                 </svg>
                 {type === 'blog' ? '인기 글' : '인기 상품'}
               </button>
-              <button className="w-full flex items-center px-4 py-2 text-gray-700 hover:bg-blue-50 hover:text-blue-600 rounded-lg transition-colors">
-                <svg className="h-5 w-5 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <button className="sidebar-feature-btn">
+                <svg className="sidebar-feature-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
                 최신
