@@ -179,18 +179,6 @@ const Blog: React.FC<BlogProps> = () => {
                 총 {filteredAndSortedPosts.length}개의 포스트
                 {searchTerm && ` (검색어: "${searchTerm}")`}
               </span>
-              <div>
-                {searchTerm && (
-                        <button
-                          onClick={() => {
-                            setSearchTerm('');
-                          }}
-                          className="blog-reset-btn"
-                        >
-                          RESET
-                        </button>
-                )}
-              </div>
             </div>
           </div>
 
