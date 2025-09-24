@@ -1311,17 +1311,19 @@
 
 .blog-search-input {
   width: 100%;
-  padding: 0.75rem 2.5rem 0.75rem 2.5rem;
-  border: 1px solid #d1d5db;
-  border-radius: 0.5rem;
+  padding: 0.75rem 1rem;
+  border: 2px solid #e5e7eb;
+  border-radius: 2rem;
   font-size: 1rem;
+  background: #ffffff;
+  color: #1f2937;
   transition: all 0.3s ease;
 }
 
 .blog-search-input:focus {
   outline: none;
-  border-color: #3b82f6;
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+  border-color: #ff0000;
+  box-shadow: 0 0 0 3px rgba(255, 0, 0, 0.1);
 }
 
 .blog-search-icon {
@@ -1359,14 +1361,24 @@
 }
 
 .blog-reset-btn {
-  color: #2563eb;
-  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: linear-gradient(135deg, #ff4444 0%, #ff0000 100%);
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 1.5rem;
+  font-weight: 600;
   cursor: pointer;
-  transition: color 0.3s ease;
+  transition: all 0.3s ease;
+  font-size: 0.875rem;
 }
 
 .blog-reset-btn:hover {
-  color: #1d4ed8;
+  background: linear-gradient(135deg, #ff0000 0%, #cc0000 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(255, 0, 0, 0.3);
 }
 
 .blog-empty-state {
@@ -1471,8 +1483,7 @@
 }
 
 /* Dark mode styles for blog */
-.App.dark .blog-search-input,
-.App.dark .blog-select {
+.App.dark .blog-search-input {
   background: #374151;
   border-color: #4b5563;
   color: #f9fafb;

@@ -181,14 +181,14 @@ const Blog: React.FC<BlogProps> = () => {
               </span>
               <div>
                 {searchTerm && (
-                  <button
-                    onClick={() => {
-                      setSearchTerm('');
-                    }}
-                    className="blog-reset-btn"
-                  >
-                    검색 초기화
-                  </button>
+                        <button
+                          onClick={() => {
+                            setSearchTerm('');
+                          }}
+                          className="blog-reset-btn"
+                        >
+                          RESET
+                        </button>
                 )}
               </div>
             </div>
@@ -207,14 +207,14 @@ const Blog: React.FC<BlogProps> = () => {
                 </p>
                 <div>
                   {searchTerm && (
-                    <button
-                      onClick={() => {
-                        setSearchTerm('');
-                      }}
-                      className="blog-empty-btn"
-                    >
-                      검색 초기화
-                    </button>
+                        <button
+                          onClick={() => {
+                            setSearchTerm('');
+                          }}
+                          className="blog-empty-btn"
+                        >
+                          RESET
+                        </button>
                   )}
                 </div>
               </div>
