@@ -23,7 +23,6 @@ interface BlogProps {
 const Blog: React.FC<BlogProps> = ({ sidebarOpen, setSidebarOpen }) => {
   // 상태 관리
   const [searchTerm, setSearchTerm] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState('');
   const [sortBy, setSortBy] = useState<'date' | 'popular' | 'title'>('date');
   const blogPosts: BlogPost[] = useMemo(() => [
     {
@@ -119,15 +118,6 @@ const Blog: React.FC<BlogProps> = ({ sidebarOpen, setSidebarOpen }) => {
     }
   ], []);
 
-  // 카테고리 목록
-  const categories = [
-    { id: '', label: '모든 카테고리', count: blogPosts.length },
-    { id: '기술', label: '기술', count: blogPosts.filter(post => post.category === '기술').length },
-    { id: '일상', label: '일상', count: blogPosts.filter(post => post.category === '일상').length },
-    { id: '여행', label: '여행', count: blogPosts.filter(post => post.category === '여행').length },
-    { id: '음식', label: '음식', count: blogPosts.filter(post => post.category === '음식').length },
-    { id: '독서', label: '독서', count: blogPosts.filter(post => post.category === '독서').length },
-  ];
 
   // 필터링 및 정렬 로직
   const filteredAndSortedPosts = useMemo(() => {
@@ -135,8 +125,7 @@ const Blog: React.FC<BlogProps> = ({ sidebarOpen, setSidebarOpen }) => {
       const matchesSearch = post.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
                            post.excerpt.toLowerCase().includes(searchTerm.toLowerCase()) ||
                            post.tags.some(tag => tag.toLowerCase().includes(searchTerm.toLowerCase()));
-      const matchesCategory = !selectedCategory || post.category === selectedCategory;
-      return matchesSearch && matchesCategory;
+      return matchesSearch;
     });
 
     // 정렬
@@ -157,7 +146,7 @@ const Blog: React.FC<BlogProps> = ({ sidebarOpen, setSidebarOpen }) => {
     });
 
     return filtered;
-  }, [blogPosts, searchTerm, selectedCategory, sortBy]);
+  }, [blogPosts, searchTerm, sortBy]);
 
   return (
     <div className="blog-layout">
@@ -196,19 +185,6 @@ const Blog: React.FC<BlogProps> = ({ sidebarOpen, setSidebarOpen }) => {
                 </div>
               </div>
               
-              {/* 카테고리 필터 */}
-              <select 
-                value={selectedCategory}
-                onChange={(e) => setSelectedCategory(e.target.value)}
-                className="blog-select"
-              >
-                {categories.map(category => (
-                  <option key={category.id} value={category.id}>
-                    {category.label} ({category.count})
-                  </option>
-                ))}
-              </select>
-              
               {/* 정렬 옵션 */}
               <select 
                 value={sortBy}
@@ -225,19 +201,17 @@ const Blog: React.FC<BlogProps> = ({ sidebarOpen, setSidebarOpen }) => {
             <div className="blog-results-info">
               <span>
                 총 {filteredAndSortedPosts.length}개의 포스트
-                {selectedCategory && ` (${selectedCategory} 카테고리)`}
                 {searchTerm && ` (검색어: "${searchTerm}")`}
               </span>
               <div>
-                {(searchTerm || selectedCategory) && (
+                {searchTerm && (
                   <button
                     onClick={() => {
                       setSearchTerm('');
-                      setSelectedCategory('');
                     }}
                     className="blog-reset-btn"
                   >
-                    필터 초기화
+                    검색 초기화
                   </button>
                 )}
               </div>
@@ -245,7 +219,7 @@ const Blog: React.FC<BlogProps> = ({ sidebarOpen, setSidebarOpen }) => {
           </div>
 
           {/* 블로그 포스트 목록 */}
-          <div>
+          <div className="blog-posts-container">
             {filteredAndSortedPosts.length === 0 ? (
               <div className="blog-empty-state">
                 <svg className="blog-empty-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -253,18 +227,19 @@ const Blog: React.FC<BlogProps> = ({ sidebarOpen, setSidebarOpen }) => {
                 </svg>
                 <h3 className="blog-empty-title">포스트를 찾을 수 없습니다</h3>
                 <p className="blog-empty-description">
-                  {searchTerm ? `"${searchTerm}"에 대한 검색 결과가 없습니다.` : '선택한 카테고리에 포스트가 없습니다.'}
+                  {searchTerm ? `"${searchTerm}"에 대한 검색 결과가 없습니다.` : '등록된 포스트가 없습니다.'}
                 </p>
                 <div>
-                  <button
-                    onClick={() => {
-                      setSearchTerm('');
-                      setSelectedCategory('');
-                    }}
-                    className="blog-empty-btn"
-                  >
-                    필터 초기화
-                  </button>
+                  {searchTerm && (
+                    <button
+                      onClick={() => {
+                        setSearchTerm('');
+                      }}
+                      className="blog-empty-btn"
+                    >
+                      검색 초기화
+                    </button>
+                  )}
                 </div>
               </div>
             ) : (

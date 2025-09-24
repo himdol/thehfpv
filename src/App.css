@@ -1273,6 +1273,9 @@
   max-width: 1200px;
   margin: 0 auto;
   padding: 2rem 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .blog-layout {
@@ -1470,6 +1473,11 @@
 .blog-tag-more {
   font-size: 0.75rem;
   color: #9ca3af;
+}
+
+.blog-posts-container {
+  width: 100%;
+  max-width: 800px;
 }
 
 /* Dark mode styles for blog */
