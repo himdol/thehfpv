@@ -23,7 +23,6 @@ interface BlogProps {
 const Blog: React.FC<BlogProps> = ({ sidebarOpen, setSidebarOpen }) => {
   // 상태 관리
   const [searchTerm, setSearchTerm] = useState('');
-  const [sortBy, setSortBy] = useState<'date' | 'popular' | 'title'>('date');
   const blogPosts: BlogPost[] = useMemo(() => [
     {
       id: 1,
@@ -128,25 +127,15 @@ const Blog: React.FC<BlogProps> = ({ sidebarOpen, setSidebarOpen }) => {
       return matchesSearch;
     });
 
-    // 정렬
+    // 정렬: 추천 포스트를 먼저, 그 다음 날짜순
     filtered.sort((a, b) => {
-      switch (sortBy) {
-        case 'date':
-          return new Date(b.date).getTime() - new Date(a.date).getTime();
-        case 'title':
-          return a.title.localeCompare(b.title);
-        case 'popular':
-          // featured 포스트를 먼저, 그 다음 날짜순
-          if (a.featured && !b.featured) return -1;
-          if (!a.featured && b.featured) return 1;
-          return new Date(b.date).getTime() - new Date(a.date).getTime();
-        default:
-          return 0;
-      }
+      if (a.featured && !b.featured) return -1;
+      if (!a.featured && b.featured) return 1;
+      return new Date(b.date).getTime() - new Date(a.date).getTime();
     });
 
     return filtered;
-  }, [blogPosts, searchTerm, sortBy]);
+  }, [blogPosts, searchTerm]);
 
   return (
     <div className="blog-layout">
@@ -154,7 +143,6 @@ const Blog: React.FC<BlogProps> = ({ sidebarOpen, setSidebarOpen }) => {
       <Sidebar 
         isOpen={sidebarOpen} 
         onClose={() => setSidebarOpen(false)} 
-        type="blog" 
       />
 
       {/* 메인 콘텐츠 */}
@@ -185,16 +173,6 @@ const Blog: React.FC<BlogProps> = ({ sidebarOpen, setSidebarOpen }) => {
                 </div>
               </div>
               
-              {/* 정렬 옵션 */}
-              <select 
-                value={sortBy}
-                onChange={(e) => setSortBy(e.target.value as 'date' | 'popular' | 'title')}
-                className="blog-select"
-              >
-                <option value="date">최신순</option>
-                <option value="popular">인기순</option>
-                <option value="title">제목순</option>
-              </select>
             </div>
 
             {/* 결과 정보 */}

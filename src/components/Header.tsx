@@ -19,7 +19,6 @@ const Header: React.FC<HeaderProps> = ({
   const navItems = [
     { id: 'about', label: 'About H', showSidebar: false },
     { id: 'blog', label: 'BLOG', showSidebar: true },
-    { id: 'shop', label: 'SHOP', showSidebar: true },
     { id: 'login', label: 'SIGN IN', showSidebar: false },
   ];
 
