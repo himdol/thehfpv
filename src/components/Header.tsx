@@ -4,31 +4,22 @@ import { useTheme } from '../contexts/ThemeContext';
 interface HeaderProps {
   currentPage: string;
   setCurrentPage: (page: string) => void;
-  sidebarOpen: boolean;
-  setSidebarOpen: (open: boolean) => void;
 }
 
 const Header: React.FC<HeaderProps> = ({ 
   currentPage, 
-  setCurrentPage, 
-  sidebarOpen, 
-  setSidebarOpen 
+  setCurrentPage
 }) => {
   const { isDarkMode, toggleTheme } = useTheme();
 
   const navItems = [
-    { id: 'about', label: 'About H', showSidebar: false },
-    { id: 'blog', label: 'BLOG', showSidebar: true },
-    { id: 'login', label: 'SIGN IN', showSidebar: false },
+    { id: 'about', label: 'About H' },
+    { id: 'blog', label: 'BLOG' },
+    { id: 'login', label: 'SIGN IN' },
   ];
 
   const handleNavClick = (item: typeof navItems[0]) => {
     setCurrentPage(item.id);
-    if (item.showSidebar) {
-      setSidebarOpen(true);
-    } else {
-      setSidebarOpen(false);
-    }
   };
 
   return (

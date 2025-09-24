@@ -6,16 +6,14 @@ import Login from '../pages/Login';
 
 interface RouterProps {
   currentPage: string;
-  sidebarOpen: boolean;
-  setSidebarOpen: (open: boolean) => void;
 }
 
-const Router: React.FC<RouterProps> = ({ currentPage, sidebarOpen, setSidebarOpen }) => {
+const Router: React.FC<RouterProps> = ({ currentPage }) => {
   switch (currentPage) {
     case 'about':
       return <About />;
     case 'blog':
-      return <Blog sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />;
+      return <Blog />;
     case 'login':
       return <Login />;
     default:

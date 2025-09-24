@@ -5,20 +5,15 @@ import Router from './components/Router';
 
 function App() {
   const [currentPage, setCurrentPage] = useState('home');
-  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   return (
     <ThemeProvider>
       <Layout 
         currentPage={currentPage}
         setCurrentPage={setCurrentPage}
-        sidebarOpen={sidebarOpen}
-        setSidebarOpen={setSidebarOpen}
       >
         <Router 
           currentPage={currentPage}
-          sidebarOpen={sidebarOpen}
-          setSidebarOpen={setSidebarOpen}
         />
       </Layout>
     </ThemeProvider>

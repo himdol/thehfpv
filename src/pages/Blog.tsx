@@ -1,6 +1,5 @@
 import React, { useState, useMemo } from 'react';
 import { motion } from 'framer-motion';
-import Sidebar from '../components/Sidebar';
 
 interface BlogPost {
   id: number;
@@ -15,12 +14,9 @@ interface BlogPost {
   image?: string;
 }
 
-interface BlogProps {
-  sidebarOpen: boolean;
-  setSidebarOpen: (open: boolean) => void;
-}
+interface BlogProps {}
 
-const Blog: React.FC<BlogProps> = ({ sidebarOpen, setSidebarOpen }) => {
+const Blog: React.FC<BlogProps> = () => {
   // 상태 관리
   const [searchTerm, setSearchTerm] = useState('');
   const blogPosts: BlogPost[] = useMemo(() => [
@@ -139,14 +135,8 @@ const Blog: React.FC<BlogProps> = ({ sidebarOpen, setSidebarOpen }) => {
 
   return (
     <div className="blog-layout">
-      {/* 사이드바 */}
-      <Sidebar 
-        isOpen={sidebarOpen} 
-        onClose={() => setSidebarOpen(false)} 
-      />
-
       {/* 메인 콘텐츠 */}
-      <div className={`blog-main ${sidebarOpen ? 'with-sidebar' : ''}`}>
+      <div className="blog-main">
         <div className="blog-container">
           {/* 헤더 */}
           <div className="blog-header">
