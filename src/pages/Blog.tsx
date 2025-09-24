@@ -170,7 +170,7 @@ const Blog: React.FC<BlogProps> = ({ sidebarOpen, setSidebarOpen }) => {
 
       {/* 메인 콘텐츠 */}
       <div className={`flex-1 transition-all duration-300 ${sidebarOpen ? 'lg:ml-64' : ''}`}>
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="blog-container">
           {/* 헤더 */}
           <div className="mb-8">
             <h1 className="text-3xl font-bold text-gray-900 mb-4">블로그</h1>
@@ -179,7 +179,7 @@ const Blog: React.FC<BlogProps> = ({ sidebarOpen, setSidebarOpen }) => {
 
           {/* 검색 및 필터 */}
           <div className="mb-8">
-            <div className="flex flex-col lg:flex-row gap-4 mb-6">
+            <div className="blog-filters">
               {/* 검색바 */}
               <div className="flex-1">
                 <div className="relative">
@@ -274,36 +274,33 @@ const Blog: React.FC<BlogProps> = ({ sidebarOpen, setSidebarOpen }) => {
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.5, delay: index * 0.1 }}
-                  className="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1"
+                  className="blog-post"
                 >
-                  <div className="md:flex">
+                  <div className="blog-post-content">
                     {/* 이미지 섹션 */}
                     {post.image && (
-                      <div className="md:w-1/3 h-48 md:h-auto">
-                        <img
-                          src={post.image}
-                          alt={post.title}
-                          className="w-full h-full object-cover"
-                        />
-                      </div>
+                      <img
+                        src={post.image}
+                        alt={post.title}
+                        className="blog-post-image"
+                      />
                     )}
                     
                     {/* 콘텐츠 섹션 */}
-                    <div className={`p-6 ${post.image ? 'md:w-2/3' : 'w-full'}`}>
-                      <div className="flex items-center justify-between mb-4">
-                        <div className="flex items-center space-x-4">
-                          <span className={`text-sm font-medium px-3 py-1 rounded-full ${
-                            post.category === '기술' ? 'text-blue-600 bg-blue-50' :
-                            post.category === '일상' ? 'text-green-600 bg-green-50' :
-                            post.category === '여행' ? 'text-purple-600 bg-purple-50' :
-                            post.category === '음식' ? 'text-orange-600 bg-orange-50' :
-                            post.category === '독서' ? 'text-indigo-600 bg-indigo-50' :
-                            'text-gray-600 bg-gray-50'
+                    <div className="blog-post-text">
+                      <div className="blog-post-header">
+                        <div className="blog-post-meta">
+                          <span className={`blog-category ${
+                            post.category === '기술' ? 'tech' :
+                            post.category === '일상' ? 'life' :
+                            post.category === '여행' ? 'travel' :
+                            post.category === '음식' ? 'food' :
+                            post.category === '독서' ? 'book' : ''
                           }`}>
                             {post.category}
                           </span>
                           {post.featured && (
-                            <span className="text-xs text-yellow-600 bg-yellow-50 px-2 py-1 rounded-full font-medium">
+                            <span className="blog-featured">
                               ⭐ 추천
                             </span>
                           )}
@@ -312,26 +309,26 @@ const Blog: React.FC<BlogProps> = ({ sidebarOpen, setSidebarOpen }) => {
                         <span className="text-sm text-gray-500">{post.date}</span>
                       </div>
                       
-                      <h2 className="text-2xl font-bold text-gray-900 mb-3 hover:text-blue-600 transition-colors cursor-pointer">
+                      <h2 className="blog-title">
                         {post.title}
                       </h2>
                       
-                      <p className="text-gray-600 mb-4 leading-relaxed line-clamp-3">
+                      <p className="text-gray-600 mb-4 leading-relaxed blog-excerpt">
                         {post.excerpt}
                       </p>
                       
                       <div className="flex items-center justify-between">
                         <div className="flex items-center space-x-4">
-                          <div className="flex items-center space-x-2">
-                            <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-green-500 rounded-full flex items-center justify-center">
-                              <span className="text-sm font-medium text-white">{post.author}</span>
+                          <div className="blog-author">
+                            <div className="blog-author-avatar">
+                              {post.author}
                             </div>
                             <span className="text-sm text-gray-700">{post.author}</span>
                           </div>
                           
-                          <div className="flex flex-wrap gap-1">
+                          <div className="blog-tags">
                             {post.tags.slice(0, 3).map((tag, tagIndex) => (
-                              <span key={tagIndex} className="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded-full">
+                              <span key={tagIndex} className="blog-tag">
                                 #{tag}
                               </span>
                             ))}
@@ -346,7 +343,7 @@ const Blog: React.FC<BlogProps> = ({ sidebarOpen, setSidebarOpen }) => {
                         <motion.button 
                           whileHover={{ scale: 1.05 }}
                           whileTap={{ scale: 0.95 }}
-                          className="flex items-center text-blue-600 hover:text-blue-700 font-medium transition-colors"
+                          className="blog-read-more"
                         >
                           읽기
                           <svg className="ml-1 h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
