@@ -11,6 +11,8 @@ export interface BlogPost {
   featured?: boolean;
   image?: string;
   slug?: string;
+  likes: number;
+  isLiked: boolean;
 }
 
 export interface BlogCategory {

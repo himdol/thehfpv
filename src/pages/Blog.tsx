@@ -20,7 +20,7 @@ const Blog: React.FC<BlogProps> = () => {
       try {
         setLoading(true);
         const postsData = await blogService.getAllPosts();
-        setPosts(postsData);
+        setPosts(postsData.posts);
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Failed to load blog data');
       } finally {
@@ -30,6 +30,21 @@ const Blog: React.FC<BlogProps> = () => {
 
     loadData();
   }, []);
+
+  // Handle like toggle
+  const handleLikeToggle = (postId: number) => {
+    setPosts(prevPosts => 
+      prevPosts.map(post => 
+        post.id === postId 
+          ? { 
+              ...post, 
+              isLiked: !post.isLiked,
+              likes: post.isLiked ? post.likes - 1 : post.likes + 1
+            }
+          : post
+      )
+    );
+  };
 
   // Filter and sort posts
   const filteredAndSortedPosts = useMemo(() => {
@@ -73,6 +88,18 @@ const Blog: React.FC<BlogProps> = () => {
   // Clear all filters
   const clearFilters = () => {
     setFilters({ searchTerm: '' });
+  };
+
+  // Convert category to display name
+  const getCategoryDisplayName = (category: string) => {
+    const categoryMap: { [key: string]: string } = {
+      'Tech': 'Tech',
+      'Life': 'Vlog',
+      'Travel': 'Travel',
+      'Food': 'Food',
+      'Book': 'Book'
+    };
+    return categoryMap[category] || category;
   };
 
   // Handle post click
@@ -165,26 +192,26 @@ const Blog: React.FC<BlogProps> = () => {
                 ⭐ Featured
               </button>
               <button
-                className={`blog-tag-filter-btn ${filters.category === '기술' ? 'active' : ''}`}
-                onClick={() => handleCategoryChange(filters.category === '기술' ? '' : '기술')}
+                className={`blog-tag-filter-btn ${filters.category === 'Tech' ? 'active' : ''}`}
+                onClick={() => handleCategoryChange(filters.category === 'Tech' ? '' : 'Tech')}
               >
                 💻 Tech
               </button>
               <button
-                className={`blog-tag-filter-btn ${filters.category === '일상' ? 'active' : ''}`}
-                onClick={() => handleCategoryChange(filters.category === '일상' ? '' : '일상')}
+                className={`blog-tag-filter-btn ${filters.category === 'Life' ? 'active' : ''}`}
+                onClick={() => handleCategoryChange(filters.category === 'Life' ? '' : 'Life')}
               >
                 📝 Vlog
               </button>
               <button
-                className={`blog-tag-filter-btn ${filters.category === '여행' ? 'active' : ''}`}
-                onClick={() => handleCategoryChange(filters.category === '여행' ? '' : '여행')}
+                className={`blog-tag-filter-btn ${filters.category === 'Travel' ? 'active' : ''}`}
+                onClick={() => handleCategoryChange(filters.category === 'Travel' ? '' : 'Travel')}
               >
                 ✈️ Travel
               </button>
               <button
-                className={`blog-tag-filter-btn ${filters.category === '음식' ? 'active' : ''}`}
-                onClick={() => handleCategoryChange(filters.category === '음식' ? '' : '음식')}
+                className={`blog-tag-filter-btn ${filters.category === 'Food' ? 'active' : ''}`}
+                onClick={() => handleCategoryChange(filters.category === 'Food' ? '' : 'Food')}
               >
                 🍕 Food
               </button>
@@ -195,7 +222,7 @@ const Blog: React.FC<BlogProps> = () => {
               <span>
                 {filteredAndSortedPosts.length} posts total
                 {filters.searchTerm && ` (search: "${filters.searchTerm}")`}
-                {filters.category && ` • category: ${filters.category}`}
+                {filters.category && ` • category: ${getCategoryDisplayName(filters.category)}`}
                 {filters.featured && ` • featured only`}
               </span>
               {(filters.searchTerm || filters.category || filters.featured) && (
@@ -247,17 +274,17 @@ const Blog: React.FC<BlogProps> = () => {
                       <div className="blog-post-header">
                         <div className="blog-post-meta">
                           <span className={`blog-category ${
-                            post.category === '기술' ? 'tech' :
-                            post.category === '일상' ? 'life' :
-                            post.category === '여행' ? 'travel' :
-                            post.category === '음식' ? 'food' :
-                            post.category === '독서' ? 'book' : ''
+                            post.category === 'Tech' ? 'tech' :
+                            post.category === 'Life' ? 'life' :
+                            post.category === 'Travel' ? 'travel' :
+                            post.category === 'Food' ? 'food' :
+                            post.category === 'Book' ? 'book' : ''
                           }`}>
-                            {post.category}
+                            {getCategoryDisplayName(post.category)}
                           </span>
                           {post.featured && (
                             <span className="blog-featured">
-                              ⭐ Featured
+                              ⭐
                             </span>
                           )}
                           <span className="text-sm text-gray-500">{post.readTime}</span>
@@ -272,12 +299,6 @@ const Blog: React.FC<BlogProps> = () => {
                       </p>
                       <div className="blog-post-footer">
                         <div className="blog-post-meta">
-                          <div className="blog-author">
-                            <div className="blog-author-avatar">
-                              {post.author}
-                            </div>
-                            <span className="text-sm text-gray-700">{post.author}</span>
-                          </div>
                           <div className="blog-tags">
                             {post.tags.slice(0, 3).map((tag, tagIndex) => (
                               <span key={tagIndex} className="blog-tag">
@@ -291,6 +312,26 @@ const Blog: React.FC<BlogProps> = () => {
                             )}
                           </div>
                         </div>
+                        <button 
+                          className={`blog-like-btn ${post.isLiked ? 'liked' : ''}`}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleLikeToggle(post.id);
+                          }}
+                        >
+                          <span className="blog-like-icon">
+                            {post.isLiked ? (
+                              <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+                              </svg>
+                            ) : (
+                              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+                              </svg>
+                            )}
+                          </span>
+                          <span className="blog-like-count">{post.likes}</span>
+                        </button>
                       </div>
                     </div>
                   </div>
