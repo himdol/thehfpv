@@ -10,7 +10,7 @@ interface BlogProps {
 
 const Blog: React.FC<BlogProps> = ({ setCurrentPage }) => {
   // Auth context
-  const { isLoggedIn, checkAuthStatus } = useAuth();
+  const { checkAuthStatus } = useAuth();
   
   // State management
   const [posts, setPosts] = useState<BlogPost[]>([]);
