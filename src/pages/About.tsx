@@ -1,5 +1,5 @@
 import React, { useRef, useState, useEffect } from 'react';
-import { motion, useInView } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { useTheme } from '../contexts/ThemeContext';
 import { useCounter } from '../hooks/useCounter';
 

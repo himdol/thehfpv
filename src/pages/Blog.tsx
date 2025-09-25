@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { motion } from 'framer-motion';
-import { BlogPost, BlogFilters, BlogCategory } from '../types/blog';
+import { BlogPost, BlogFilters } from '../types/blog';
 import { blogService } from '../services/blogService';
 
 interface BlogProps {}
@@ -8,7 +8,6 @@ interface BlogProps {}
 const Blog: React.FC<BlogProps> = () => {
   // State management
   const [posts, setPosts] = useState<BlogPost[]>([]);
-  const [categories, setCategories] = useState<BlogCategory[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [filters, setFilters] = useState<BlogFilters>({
@@ -20,12 +19,8 @@ const Blog: React.FC<BlogProps> = () => {
     const loadData = async () => {
       try {
         setLoading(true);
-        const [postsData, categoriesData] = await Promise.all([
-          blogService.getAllPosts(),
-          blogService.getCategories()
-        ]);
+        const postsData = await blogService.getAllPosts();
         setPosts(postsData);
-        setCategories(categoriesData);
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Failed to load blog data');
       } finally {
