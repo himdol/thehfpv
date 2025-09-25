@@ -18,7 +18,7 @@ const Footer: React.FC = () => {
   };
 
   const handleYouTubeClick = () => {
-    window.open('https://www.youtube.com', '_blank');
+    window.open('https://www.youtube.com/@thehfpv', '_blank');
   };
 
   return (

@@ -4,7 +4,7 @@ import Layout from './components/Layout';
 import Router from './components/Router';
 
 function App() {
-  const [currentPage, setCurrentPage] = useState('home');
+  const [currentPage, setCurrentPage] = useState('about');
 
   return (
     <ThemeProvider>
