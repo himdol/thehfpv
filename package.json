@@ -26,7 +26,8 @@
     "eject": "react-scripts eject",
     "predeploy": "npm run build",
     "deploy": "gh-pages -d build",
-    "dev": "concurrently \"npm start\" \"cd backend && ./gradlew bootRun\"",
+    "kill-ports": "npx kill-port 3000 8080",
+    "dev": "npm run kill-ports && concurrently \"npm start\" \"cd backend && ./gradlew bootRun\"",
     "dev:backend": "cd backend && ./gradlew bootRun",
     "dev:frontend": "npm start",
     "install:all": "npm install && cd backend && ./gradlew build"
@@ -53,6 +54,7 @@
     "autoprefixer": "^10.4.21",
     "concurrently": "^8.2.2",
     "gh-pages": "^6.3.0",
+    "kill-port": "^2.0.1",
     "postcss": "^8.5.6",
     "tailwindcss": "^4.1.11"
   }

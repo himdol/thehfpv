@@ -4,6 +4,28 @@ REM TheHFPV Full Stack Development Server Startup Script for Windows
 echo 🚀 Starting TheHFPV Full Stack Development Environment...
 echo.
 
+REM Function to kill processes on specific ports
+echo 🧹 Cleaning up existing processes...
+
+REM Kill processes on port 3000
+for /f "tokens=5" %%a in ('netstat -aon ^| findstr :3000') do (
+    if not "%%a"=="0" (
+        echo 🛑 Killing process on port 3000: %%a
+        taskkill /F /PID %%a >nul 2>&1
+    )
+)
+
+REM Kill processes on port 8080
+for /f "tokens=5" %%a in ('netstat -aon ^| findstr :8080') do (
+    if not "%%a"=="0" (
+        echo 🛑 Killing process on port 8080: %%a
+        taskkill /F /PID %%a >nul 2>&1
+    )
+)
+
+timeout /t 2 /nobreak >nul
+echo.
+
 REM Check if Node.js is installed
 node --version >nul 2>&1
 if errorlevel 1 (

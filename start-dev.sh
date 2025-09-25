@@ -5,6 +5,34 @@
 echo "🚀 Starting TheHFPV Full Stack Development Environment..."
 echo ""
 
+# Function to kill processes on specific ports
+kill_port() {
+    local port=$1
+    local pids=""
+    
+    # Try lsof first (Linux/Mac)
+    if command -v lsof &> /dev/null; then
+        pids=$(lsof -ti:$port 2>/dev/null)
+    # Fallback to netstat (if lsof is not available)
+    elif command -v netstat &> /dev/null; then
+        pids=$(netstat -tlnp 2>/dev/null | grep ":$port " | awk '{print $7}' | cut -d'/' -f1 | sort -u)
+    fi
+    
+    if [ ! -z "$pids" ]; then
+        echo "🛑 Killing processes on port $port: $pids"
+        echo $pids | xargs kill -9 2>/dev/null
+        sleep 2
+    else
+        echo "✅ Port $port is available"
+    fi
+}
+
+# Kill existing processes on ports 3000 and 8080
+echo "🧹 Cleaning up existing processes..."
+kill_port 3000
+kill_port 8080
+echo ""
+
 # Check if Node.js is installed
 if ! command -v node &> /dev/null; then
     echo "❌ Node.js is not installed. Please install Node.js first."
