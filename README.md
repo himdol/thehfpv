@@ -15,7 +15,9 @@
 - **Spring Security** - 인증/인가
 - **Spring Data JPA** - 데이터 접근 계층
 - **MySQL** - 데이터베이스
-- **Maven** - 빌드 도구
+- **Gradle** - 빌드 도구
+- **Checkstyle** - 코드 스타일 검사
+- **JaCoCo** - 코드 커버리지
 
 ## 📦 설치 및 실행
 
@@ -35,8 +37,8 @@ npm start
 # 백엔드 디렉토리로 이동
 cd backend
 
-# Maven을 사용한 실행
-mvn spring-boot:run
+# Gradle을 사용한 실행
+./gradlew bootRun
 ```
 
 ### 빌드
@@ -47,7 +49,7 @@ npm run build
 
 # Backend JAR 파일 빌드
 cd backend
-mvn clean package
+./gradlew bootJar
 ```
 
 ## 🎯 주요 기능
@@ -81,7 +83,9 @@ thehfpv/
 │   │   ├── repository/    # 데이터 접근 계층
 │   │   ├── model/         # 엔티티 클래스
 │   │   └── config/        # 설정 클래스
-│   └── pom.xml           # Maven 설정
+│   ├── build.gradle      # Gradle 설정
+│   ├── settings.gradle   # Gradle 프로젝트 설정
+│   └── gradle.properties # Gradle 속성
 ├── package.json          # Frontend 의존성
 └── README.md            # 프로젝트 문서
 ```
@@ -94,9 +98,11 @@ thehfpv/
 - `npm run test` - 테스트 실행
 
 ### Backend
-- `mvn spring-boot:run` - Spring Boot 애플리케이션 실행 (http://localhost:8080)
-- `mvn clean package` - JAR 파일 빌드
-- `mvn test` - 테스트 실행
+- `./gradlew bootRun` - Spring Boot 애플리케이션 실행 (http://localhost:8080)
+- `./gradlew bootJar` - JAR 파일 빌드
+- `./gradlew test` - 테스트 실행
+- `./gradlew checkstyleMain` - 코드 스타일 검사
+- `./gradlew jacocoTestReport` - 코드 커버리지 리포트 생성
 
 ## �� 라이선스
 

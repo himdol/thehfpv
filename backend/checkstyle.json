@@ -1,0 +1,84 @@
+{
+  "name": "Google Java Style",
+  "description": "Google Java Style configuration for TheHFPV project",
+  "version": "1.0.0",
+  "rules": {
+    "indentation": {
+      "type": "spaces",
+      "size": 2,
+      "continuation": 4
+    },
+    "line_length": {
+      "max": 100,
+      "ignore_pattern": "^import\\s+.*$"
+    },
+    "whitespace": {
+      "before_operators": true,
+      "after_operators": true,
+      "before_comma": false,
+      "after_comma": true,
+      "before_semicolon": false,
+      "after_semicolon": true,
+      "around_braces": true,
+      "around_brackets": false,
+      "around_parentheses": false
+    },
+    "braces": {
+      "style": "same_line",
+      "allow_single_line": true
+    },
+    "imports": {
+      "order": [
+        "java",
+        "javax",
+        "org",
+        "com",
+        "static"
+      ],
+      "group_separator": "blank_line",
+      "static_imports": "bottom"
+    },
+    "annotations": {
+      "style": "same_line",
+      "allow_single_line": true
+    },
+    "modifiers": {
+      "order": [
+        "public",
+        "protected",
+        "private",
+        "abstract",
+        "static",
+        "final",
+        "transient",
+        "volatile",
+        "synchronized",
+        "native",
+        "strictfp"
+      ]
+    },
+    "naming": {
+      "classes": "PascalCase",
+      "interfaces": "PascalCase",
+      "methods": "camelCase",
+      "variables": "camelCase",
+      "constants": "UPPER_SNAKE_CASE",
+      "packages": "lowercase"
+    },
+    "comments": {
+      "javadoc": {
+        "required": true,
+        "public_methods": true,
+        "public_classes": true,
+        "public_fields": true
+      },
+      "line_length": 100
+    }
+  },
+  "excludes": [
+    "**/target/**",
+    "**/build/**",
+    "**/.idea/**",
+    "**/node_modules/**"
+  ]
+}

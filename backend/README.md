@@ -9,7 +9,9 @@ Spring Boot 기반의 백엔드 API 서버입니다.
 - Spring Security
 - Spring Data JPA
 - MySQL
-- Maven
+- Gradle
+- Checkstyle (Google Java Style)
+- JaCoCo (Code Coverage)
 
 ## 프로젝트 구조
 
@@ -50,28 +52,28 @@ CREATE DATABASE thehfpv_db;
 ```
 
 ### 2. 애플리케이션 설정
-`src/main/resources/application.properties` 파일에서 데이터베이스 연결 정보를 수정하세요.
+`src/main/resources/application.yml` 파일에서 데이터베이스 연결 정보를 수정하세요.
 
 ### 3. 애플리케이션 실행
 
-#### Maven을 사용한 실행
+#### Gradle을 사용한 실행
 ```bash
 cd backend
-mvn spring-boot:run
+./gradlew bootRun
 ```
 
 #### JAR 파일로 실행
 ```bash
 cd backend
-mvn clean package
-java -jar target/thehfpv-backend-1.0.0.jar
+./gradlew bootJar
+java -jar build/libs/thehfpv-backend-1.0.0.jar
 ```
 
 ## 개발 환경 설정
 
 ### 필요한 도구
 - Java 17 이상
-- Maven 3.6 이상
+- Gradle 8.5 이상
 - MySQL 8.0 이상
 
 ### IDE 설정
@@ -84,6 +86,16 @@ java -jar target/thehfpv-backend-1.0.0.jar
 
 - http://localhost:8080/api/test/hello
 - http://localhost:8080/api/test/health
+
+## 🔧 스크립트
+
+### Gradle 명령어
+- `./gradlew bootRun` - Spring Boot 애플리케이션 실행 (http://localhost:8080)
+- `./gradlew bootJar` - JAR 파일 빌드
+- `./gradlew test` - 테스트 실행
+- `./gradlew checkstyleMain` - 코드 스타일 검사
+- `./gradlew jacocoTestReport` - 코드 커버리지 리포트 생성
+- `./gradlew buildWithChecks` - 코드 품질 검사와 함께 빌드
 
 ## 개발 가이드
 
