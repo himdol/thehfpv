@@ -18,47 +18,51 @@ public class User implements UserDetails {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @Column(name = "user_id")
+    private Long userId;
     
     @NotBlank
     @Size(max = 50)
-    @Column(unique = true)
+    @Column(name = "username", unique = true)
     private String username;
     
     @NotBlank
     @Size(max = 100)
     @Email
-    @Column(unique = true)
+    @Column(name = "email", unique = true)
     private String email;
     
     @NotBlank
     @Size(max = 100)
+    @Column(name = "password")
     private String password;
     
     @Size(max = 100)
+    @Column(name = "first_name")
     private String firstName;
     
     @Size(max = 100)
+    @Column(name = "last_name")
     private String lastName;
     
-    @Enumerated(EnumType.STRING)
-    private Role role = Role.USER;
+    @Column(name = "user_status")
+    private Integer userStatus = 1; // 1=ACTIVE, 0=INACTIVE
     
-    @Column(name = "created_at")
-    private LocalDateTime createdAt;
+    @Column(name = "create_date")
+    private LocalDateTime createDate;
     
-    @Column(name = "updated_at")
-    private LocalDateTime updatedAt;
+    @Column(name = "update_date")
+    private LocalDateTime updateDate;
     
     @PrePersist
     protected void onCreate() {
-        createdAt = LocalDateTime.now();
-        updatedAt = LocalDateTime.now();
+        createDate = LocalDateTime.now();
+        updateDate = LocalDateTime.now();
     }
     
     @PreUpdate
     protected void onUpdate() {
-        updatedAt = LocalDateTime.now();
+        updateDate = LocalDateTime.now();
     }
     
     // Constructors
@@ -71,12 +75,12 @@ public class User implements UserDetails {
     }
     
     // Getters and Setters
-    public Long getId() {
-        return id;
+    public Long getUserId() {
+        return userId;
     }
     
-    public void setId(Long id) {
-        this.id = id;
+    public void setUserId(Long userId) {
+        this.userId = userId;
     }
     
     public String getUsername() {
@@ -119,34 +123,36 @@ public class User implements UserDetails {
         this.lastName = lastName;
     }
     
-    public Role getRole() {
-        return role;
+    public Integer getUserStatus() {
+        return userStatus;
     }
     
-    public void setRole(Role role) {
-        this.role = role;
+    public void setUserStatus(Integer userStatus) {
+        this.userStatus = userStatus;
     }
     
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
+    public LocalDateTime getCreateDate() {
+        return createDate;
     }
     
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
+    public void setCreateDate(LocalDateTime createDate) {
+        this.createDate = createDate;
     }
     
-    public LocalDateTime getUpdatedAt() {
-        return updatedAt;
+    public LocalDateTime getUpdateDate() {
+        return updateDate;
     }
     
-    public void setUpdatedAt(LocalDateTime updatedAt) {
-        this.updatedAt = updatedAt;
+    public void setUpdateDate(LocalDateTime updateDate) {
+        this.updateDate = updateDate;
     }
     
     // UserDetails implementation
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return Collections.singletonList(new SimpleGrantedAuthority("ROLE_" + role.name()));
+        // user_status가 1이면 USER 권한, 2면 ADMIN 권한
+        String role = userStatus == 2 ? "ADMIN" : "USER";
+        return Collections.singletonList(new SimpleGrantedAuthority("ROLE_" + role));
     }
     
     @Override
@@ -166,10 +172,6 @@ public class User implements UserDetails {
     
     @Override
     public boolean isEnabled() {
-        return true;
-    }
-    
-    public enum Role {
-        USER, ADMIN
+        return userStatus == 1 || userStatus == 2; // 1=ACTIVE, 2=ADMIN
     }
 }

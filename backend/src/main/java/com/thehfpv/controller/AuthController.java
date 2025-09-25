@@ -75,12 +75,12 @@ public class AuthController {
             Map<String, Object> response = new HashMap<>();
             response.put("message", "Login successful");
             response.put("user", Map.of(
-                "id", user.getId(),
+                "userId", user.getUserId(),
                 "username", user.getUsername(),
                 "email", user.getEmail(),
                 "firstName", user.getFirstName(),
                 "lastName", user.getLastName(),
-                "role", user.getRole()
+                "userStatus", user.getUserStatus()
             ));
             
             return ResponseEntity.ok(response);
