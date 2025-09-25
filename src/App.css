@@ -1632,6 +1632,7 @@
   box-shadow: 0 2px 6px rgba(239, 68, 68, 0.2);
 }
 
+
 /* Dark mode styles for new components */
 .App.dark .blog-loading {
   color: #9ca3af;
@@ -1641,6 +1642,7 @@
 .App.dark .blog-featured-checkbox {
   color: #f9fafb;
 }
+
 
 .App.dark .blog-tag-filter-btn {
   background: #374151;
