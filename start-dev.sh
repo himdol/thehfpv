@@ -1,0 +1,72 @@
+#!/bin/bash
+
+# TheHFPV Full Stack Development Server Startup Script
+
+echo "🚀 Starting TheHFPV Full Stack Development Environment..."
+echo ""
+
+# Check if Node.js is installed
+if ! command -v node &> /dev/null; then
+    echo "❌ Node.js is not installed. Please install Node.js first."
+    exit 1
+fi
+
+# Check if Java is installed
+if ! command -v java &> /dev/null; then
+    echo "❌ Java is not installed. Please install Java 17 first."
+    exit 1
+fi
+
+# Function to cleanup background processes
+cleanup() {
+    echo ""
+    echo "🛑 Shutting down servers..."
+    kill $BACKEND_PID $FRONTEND_PID 2>/dev/null
+    exit 0
+}
+
+# Set up signal handlers
+trap cleanup SIGINT SIGTERM
+
+# Install dependencies if needed
+echo "📦 Checking dependencies..."
+
+# Install frontend dependencies
+if [ ! -d "node_modules" ]; then
+    echo "Installing frontend dependencies..."
+    npm install
+fi
+
+# Install backend dependencies
+if [ ! -d "backend/.gradle" ]; then
+    echo "Installing backend dependencies..."
+    cd backend
+    ./gradlew build --no-daemon
+    cd ..
+fi
+
+echo ""
+echo "🔧 Starting backend server..."
+cd backend
+./gradlew bootRun &
+BACKEND_PID=$!
+cd ..
+
+# Wait a moment for backend to start
+sleep 5
+
+echo "🎨 Starting frontend server..."
+npm start &
+FRONTEND_PID=$!
+
+echo ""
+echo "✅ Full stack development environment is running!"
+echo ""
+echo "📱 Frontend: http://localhost:3000"
+echo "🔧 Backend:  http://localhost:8080"
+echo "📚 API Docs: http://localhost:8080/api/test/hello"
+echo ""
+echo "Press Ctrl+C to stop all servers"
+
+# Wait for user to stop
+wait

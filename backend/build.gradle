@@ -4,6 +4,7 @@ plugins {
     id 'io.spring.dependency-management' version '1.1.4'
     id 'checkstyle'
     id 'jacoco'
+    id 'com.github.node-gradle.node' version '4.0.0'
 }
 
 group = 'com.thehfpv'
@@ -21,6 +22,15 @@ configurations {
 
 repositories {
     mavenCentral()
+}
+
+// Node.js configuration
+node {
+    version = '18.19.0'
+    npmVersion = '10.2.3'
+    download = true
+    workDir = file("${project.buildDir}/nodejs")
+    npmWorkDir = file("${project.buildDir}/npm")
 }
 
 dependencies {
@@ -74,6 +84,69 @@ task formatCode(type: JavaExec) {
     description = 'Format Java code using Google Java Style'
     classpath = sourceSets.main.runtimeClasspath
     mainClass = 'com.thehfpv.ThehfpvBackendApplication'
+}
+
+// Frontend tasks
+task npmInstall(type: NpmTask) {
+    group = 'frontend'
+    description = 'Install npm dependencies'
+    workingDir = file('../')
+    args = ['install']
+}
+
+task npmStart(type: NpmTask) {
+    group = 'frontend'
+    description = 'Start React development server'
+    workingDir = file('../')
+    args = ['start']
+    dependsOn npmInstall
+}
+
+task npmBuild(type: NpmTask) {
+    group = 'frontend'
+    description = 'Build React application for production'
+    workingDir = file('../')
+    args = ['run', 'build']
+    dependsOn npmInstall
+}
+
+// Combined tasks
+task startFrontend(type: Exec) {
+    group = 'application'
+    description = 'Start React frontend in background'
+    workingDir = file('../')
+    commandLine 'npm', 'start'
+    doLast {
+        println 'React development server started on http://localhost:3000'
+    }
+}
+
+task startBackend(type: JavaExec) {
+    group = 'application'
+    description = 'Start Spring Boot backend'
+    classpath = sourceSets.main.runtimeClasspath
+    mainClass = 'com.thehfpv.ThehfpvBackendApplication'
+    doLast {
+        println 'Spring Boot backend started on http://localhost:8080'
+    }
+}
+
+task startFullStack {
+    group = 'application'
+    description = 'Start both frontend and backend'
+    dependsOn startBackend
+    doLast {
+        println 'Starting React frontend...'
+        Thread.start {
+            project.exec {
+                workingDir file('../')
+                commandLine 'npm', 'start'
+            }
+        }
+        println 'Full stack application started!'
+        println 'Frontend: http://localhost:3000'
+        println 'Backend: http://localhost:8080'
+    }
 }
 
 // Build task that includes formatting and testing

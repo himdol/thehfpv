@@ -21,24 +21,33 @@
 
 ## 📦 설치 및 실행
 
-### Frontend 개발 환경 설정
+### 풀스택 개발 환경 설정
 
+#### 방법 1: 자동 스크립트 사용 (권장)
 ```bash
-# 의존성 설치
-npm install
+# Linux/Mac
+./start-dev.sh
 
-# 개발 서버 실행
-npm start
+# Windows
+start-dev.bat
 ```
 
-### Backend 개발 환경 설정
-
+#### 방법 2: npm 스크립트 사용
 ```bash
-# 백엔드 디렉토리로 이동
-cd backend
+# 의존성 설치
+npm run install:all
 
-# Gradle을 사용한 실행
-./gradlew bootRun
+# 프론트엔드와 백엔드를 동시에 실행
+npm run dev
+```
+
+#### 방법 3: 개별 실행
+```bash
+# 프론트엔드만 실행
+npm start
+
+# 백엔드만 실행
+cd backend && ./gradlew bootRun
 ```
 
 ### 빌드
@@ -92,8 +101,13 @@ thehfpv/
 
 ## 🔧 스크립트
 
+### 풀스택 실행
+- `./start-dev.sh` (Linux/Mac) 또는 `start-dev.bat` (Windows) - 프론트엔드와 백엔드 동시 실행
+- `npm run dev` - npm을 통한 풀스택 실행
+- `npm run install:all` - 모든 의존성 설치
+
 ### Frontend
-- `npm start` - 개발 서버 실행 (http://localhost:3000)
+- `npm start` - React 개발 서버 실행 (http://localhost:3000)
 - `npm run build` - 프로덕션용 빌드
 - `npm run test` - 테스트 실행
 

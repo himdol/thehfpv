@@ -25,7 +25,11 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "predeploy": "npm run build",
-    "deploy": "gh-pages -d build"
+    "deploy": "gh-pages -d build",
+    "dev": "concurrently \"npm start\" \"cd backend && ./gradlew bootRun\"",
+    "dev:backend": "cd backend && ./gradlew bootRun",
+    "dev:frontend": "npm start",
+    "install:all": "npm install && cd backend && ./gradlew build"
   },
   "eslintConfig": {
     "extends": [
@@ -47,6 +51,7 @@
   },
   "devDependencies": {
     "autoprefixer": "^10.4.21",
+    "concurrently": "^8.2.2",
     "gh-pages": "^6.3.0",
     "postcss": "^8.5.6",
     "tailwindcss": "^4.1.11"

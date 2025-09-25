@@ -97,6 +97,12 @@ java -jar build/libs/thehfpv-backend-1.0.0.jar
 - `./gradlew jacocoTestReport` - 코드 커버리지 리포트 생성
 - `./gradlew buildWithChecks` - 코드 품질 검사와 함께 빌드
 
+### 풀스택 실행
+프로젝트 루트에서 다음 명령어로 프론트엔드와 백엔드를 동시에 실행할 수 있습니다:
+- `./start-dev.sh` (Linux/Mac)
+- `start-dev.bat` (Windows)
+- `npm run dev` (npm 스크립트)
+
 ## 개발 가이드
 
 ### 새로운 API 추가
