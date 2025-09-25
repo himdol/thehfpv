@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { ThemeProvider } from './contexts/ThemeContext';
+import { AuthProvider } from './contexts/AuthContext';
 import Layout from './components/Layout';
 import Router from './components/Router';
 
@@ -16,15 +17,17 @@ function App() {
 
   return (
     <ThemeProvider>
-      <Layout 
-        currentPage={currentPage}
-        setCurrentPage={setCurrentPage}
-      >
-        <Router 
+      <AuthProvider>
+        <Layout 
           currentPage={currentPage}
           setCurrentPage={setCurrentPage}
-        />
-      </Layout>
+        >
+          <Router 
+            currentPage={currentPage}
+            setCurrentPage={setCurrentPage}
+          />
+        </Layout>
+      </AuthProvider>
     </ThemeProvider>
   );
 }

@@ -3229,3 +3229,106 @@
     justify-content: center;
   }
 }
+
+/* Login Prompt Modal */
+.login-prompt-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  backdrop-filter: blur(4px);
+}
+
+.login-prompt-modal {
+  background: white;
+  border-radius: 12px;
+  padding: 0;
+  max-width: 400px;
+  width: 90%;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+
+.login-prompt-content {
+  padding: 2rem;
+  text-align: center;
+}
+
+.login-prompt-icon {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+}
+
+.login-prompt-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #111827;
+  margin-bottom: 0.5rem;
+}
+
+.login-prompt-message {
+  color: #6b7280;
+  margin-bottom: 2rem;
+  line-height: 1.5;
+}
+
+.login-prompt-buttons {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+}
+
+.login-prompt-btn {
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.5rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: none;
+  font-size: 0.875rem;
+}
+
+.login-prompt-btn-secondary {
+  background: #f3f4f6;
+  color: #374151;
+}
+
+.login-prompt-btn-secondary:hover {
+  background: #e5e7eb;
+}
+
+.login-prompt-btn-primary {
+  background: #ef4444;
+  color: white;
+}
+
+.login-prompt-btn-primary:hover {
+  background: #dc2626;
+}
+
+/* Dark mode for login prompt */
+.App.dark .login-prompt-modal {
+  background: #1f2937;
+}
+
+.App.dark .login-prompt-title {
+  color: #f9fafb;
+}
+
+.App.dark .login-prompt-message {
+  color: #d1d5db;
+}
+
+.App.dark .login-prompt-btn-secondary {
+  background: #374151;
+  color: #f9fafb;
+}
+
+.App.dark .login-prompt-btn-secondary:hover {
+  background: #4b5563;
+}

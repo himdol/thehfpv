@@ -2,14 +2,21 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { motion } from 'framer-motion';
 import { BlogPost, BlogFilters } from '../types/blog';
 import { blogService } from '../services/blogService';
+import { useAuth } from '../contexts/AuthContext';
 
-interface BlogProps {}
+interface BlogProps {
+  setCurrentPage?: (page: string) => void;
+}
 
-const Blog: React.FC<BlogProps> = () => {
+const Blog: React.FC<BlogProps> = ({ setCurrentPage }) => {
+  // Auth context
+  const { isLoggedIn, checkAuthStatus } = useAuth();
+  
   // State management
   const [posts, setPosts] = useState<BlogPost[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [showLoginPrompt, setShowLoginPrompt] = useState(false);
   const [filters, setFilters] = useState<BlogFilters>({
     searchTerm: ''
   });
@@ -33,6 +40,12 @@ const Blog: React.FC<BlogProps> = () => {
 
   // Handle like toggle
   const handleLikeToggle = (postId: number) => {
+    // Check if user is logged in
+    if (!checkAuthStatus()) {
+      setShowLoginPrompt(true);
+      return;
+    }
+
     setPosts(prevPosts => 
       prevPosts.map(post => 
         post.id === postId 
@@ -44,6 +57,19 @@ const Blog: React.FC<BlogProps> = () => {
           : post
       )
     );
+  };
+
+  // Handle login prompt
+  const handleLoginPrompt = () => {
+    setShowLoginPrompt(false);
+    if (setCurrentPage) {
+      setCurrentPage('login');
+    }
+  };
+
+  // Close login prompt
+  const closeLoginPrompt = () => {
+    setShowLoginPrompt(false);
   };
 
   // Filter and sort posts
@@ -384,6 +410,40 @@ const Blog: React.FC<BlogProps> = () => {
           )}
         </div>
       </div>
+
+      {/* Login Prompt Modal */}
+      {showLoginPrompt && (
+        <div className="login-prompt-overlay">
+          <motion.div 
+            className="login-prompt-modal"
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.9 }}
+          >
+            <div className="login-prompt-content">
+              <div className="login-prompt-icon">🔒</div>
+              <h3 className="login-prompt-title">Login Required</h3>
+              <p className="login-prompt-message">
+                You need to be logged in to like posts. Would you like to sign in?
+              </p>
+              <div className="login-prompt-buttons">
+                <button 
+                  className="login-prompt-btn login-prompt-btn-secondary"
+                  onClick={closeLoginPrompt}
+                >
+                  Cancel
+                </button>
+                <button 
+                  className="login-prompt-btn login-prompt-btn-primary"
+                  onClick={handleLoginPrompt}
+                >
+                  Sign In
+                </button>
+              </div>
+            </div>
+          </motion.div>
+        </div>
+      )}
     </div>
   );
 };

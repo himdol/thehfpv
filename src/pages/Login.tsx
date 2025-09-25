@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { useTheme } from '../contexts/ThemeContext';
+import { useAuth } from '../contexts/AuthContext';
 
 const Login: React.FC = () => {
   const { isDarkMode } = useTheme();
+  const { login } = useAuth();
   const [isLogin, setIsLogin] = useState(true);
   const [formData, setFormData] = useState({
     email: '',
@@ -14,9 +16,18 @@ const Login: React.FC = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // TODO: API 연동
+    
+    if (isLogin) {
+      // Login logic
+      login(formData.email);
+      alert('로그인이 완료되었습니다!');
+    } else {
+      // Sign up logic
+      login(formData.email);
+      alert('회원가입이 완료되었습니다!');
+    }
+    
     console.log('Form submitted:', formData);
-    alert(`${isLogin ? '로그인' : '회원가입'}이 완료되었습니다!`);
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {

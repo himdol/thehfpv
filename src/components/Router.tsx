@@ -11,7 +11,7 @@ interface RouterProps {
 const Router: React.FC<RouterProps> = ({ currentPage, setCurrentPage }) => {
   switch (currentPage) {
     case 'blog':
-      return <Blog />;
+      return <Blog setCurrentPage={setCurrentPage} />;
     case 'login':
       return <Login />;
     default:
