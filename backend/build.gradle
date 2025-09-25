@@ -87,27 +87,27 @@ task formatCode(type: JavaExec) {
 }
 
 // Frontend tasks
-task npmInstall(type: NpmTask) {
+task npmInstallFrontend(type: NpmTask) {
     group = 'frontend'
     description = 'Install npm dependencies'
     workingDir = file('../')
     args = ['install']
 }
 
-task npmStart(type: NpmTask) {
+task npmStartFrontend(type: NpmTask) {
     group = 'frontend'
     description = 'Start React development server'
     workingDir = file('../')
     args = ['start']
-    dependsOn npmInstall
+    dependsOn npmInstallFrontend
 }
 
-task npmBuild(type: NpmTask) {
+task npmBuildFrontend(type: NpmTask) {
     group = 'frontend'
     description = 'Build React application for production'
     workingDir = file('../')
     args = ['run', 'build']
-    dependsOn npmInstall
+    dependsOn npmInstallFrontend
 }
 
 // Combined tasks
@@ -128,6 +128,40 @@ task startBackend(type: JavaExec) {
     mainClass = 'com.thehfpv.ThehfpvBackendApplication'
     doLast {
         println 'Spring Boot backend started on http://localhost:8080'
+    }
+}
+
+// Environment-specific tasks
+task startLocal(type: JavaExec) {
+    group = 'application'
+    description = 'Start Spring Boot backend with local profile'
+    classpath = sourceSets.main.runtimeClasspath
+    mainClass = 'com.thehfpv.ThehfpvBackendApplication'
+    args = ['--spring.profiles.active=local']
+    doLast {
+        println 'Spring Boot backend started with LOCAL profile on http://localhost:8080'
+    }
+}
+
+task startDev(type: JavaExec) {
+    group = 'application'
+    description = 'Start Spring Boot backend with dev profile'
+    classpath = sourceSets.main.runtimeClasspath
+    mainClass = 'com.thehfpv.ThehfpvBackendApplication'
+    args = ['--spring.profiles.active=dev']
+    doLast {
+        println 'Spring Boot backend started with DEV profile on http://localhost:8080'
+    }
+}
+
+task startPrd(type: JavaExec) {
+    group = 'application'
+    description = 'Start Spring Boot backend with production profile'
+    classpath = sourceSets.main.runtimeClasspath
+    mainClass = 'com.thehfpv.ThehfpvBackendApplication'
+    args = ['--spring.profiles.active=prd']
+    doLast {
+        println 'Spring Boot backend started with PRODUCTION profile on http://localhost:8080'
     }
 }
 
