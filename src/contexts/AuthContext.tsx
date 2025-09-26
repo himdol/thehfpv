@@ -1,12 +1,14 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import { authService, User, LoginRequest, RegisterRequest } from '../services/authService';
+import { authService, User, LoginRequest, RegisterRequest, UpdateProfileRequest } from '../services/authService';
 
 interface AuthContextType {
   isLoggedIn: boolean;
   user: User | null;
   login: (credentials: LoginRequest) => Promise<void>;
+  socialLogin: (userData: User) => Promise<void>;
   register: (userData: RegisterRequest) => Promise<void>;
   logout: () => Promise<void>;
+  updateProfile: (userData: UpdateProfileRequest) => Promise<void>;
   checkAuthStatus: () => boolean;
   loading: boolean;
   error: string | null;
@@ -48,14 +50,40 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     }
   };
 
+  const socialLogin = async (userData: User) => {
+    try {
+      console.log('=== socialLogin 함수 시작 ===');
+      console.log('받은 사용자 데이터:', userData);
+      
+      setLoading(true);
+      setError(null);
+      
+      setUser(userData);
+      setIsLoggedIn(true);
+      
+      console.log('AuthContext 상태 업데이트 완료');
+      console.log('isLoggedIn:', true);
+      console.log('user:', userData);
+    } catch (err) {
+      console.error('socialLogin 에러:', err);
+      setError(err instanceof Error ? err.message : '소셜 로그인에 실패했습니다.');
+      throw err;
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const register = async (userData: RegisterRequest) => {
     try {
       setLoading(true);
       setError(null);
       
-      await authService.register(userData);
-      // 회원가입 성공 시 사용자 정보는 저장하지 않고 메시지만 표시
-      // 이메일 인증이 필요하므로 로그인 상태로 만들지 않음
+      const response = await authService.register(userData);
+      // 회원가입 성공 시 자동으로 로그인 상태로 만들기
+      if (response && response.user) {
+        setUser(response.user);
+        setIsLoggedIn(true);
+      }
     } catch (err) {
       setError(err instanceof Error ? err.message : '회원가입에 실패했습니다.');
       throw err;
@@ -73,6 +101,21 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       setError(null);
     } catch (err) {
       setError(err instanceof Error ? err.message : '로그아웃에 실패했습니다.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const updateProfile = async (userData: UpdateProfileRequest) => {
+    try {
+      setLoading(true);
+      setError(null);
+      
+      const response = await authService.updateProfile(userData);
+      setUser(response.user);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : '프로필 수정에 실패했습니다.');
+      throw err;
     } finally {
       setLoading(false);
     }
@@ -111,8 +154,10 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     isLoggedIn,
     user,
     login,
+    socialLogin,
     register,
     logout,
+    updateProfile,
     checkAuthStatus,
     loading,
     error

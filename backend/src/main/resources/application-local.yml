@@ -1,6 +1,8 @@
 # Local Development Environment Configuration
 server:
   port: 8080
+  servlet:
+    context-path: /api
 
 spring:
   datasource:
@@ -27,6 +29,26 @@ spring:
     date-format: MM-dd-yyyy HH:mm:ss
     time-zone: UTC
 
+  # OAuth2 Configuration
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: ${GOOGLE_CLIENT_ID:your-google-client-id}
+            client-secret: ${GOOGLE_CLIENT_SECRET:your-google-client-secret}
+            scope:
+              - openid
+              - profile
+              - email
+            redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
+        provider:
+          google:
+            authorization-uri: https://accounts.google.com/o/oauth2/auth
+            token-uri: https://oauth2.googleapis.com/token
+            user-info-uri: https://www.googleapis.com/oauth2/v2/userinfo
+            user-name-attribute: sub
+
 # JWT Configuration
 jwt:
   expiration: 86400000
@@ -36,6 +58,44 @@ cors:
   allowed-origins: http://localhost:3000
   allowed-methods: GET,POST,PUT,DELETE,OPTIONS
   allowed-headers: "*"
+
+# Email Service Configuration
+email:
+  # 이메일 서비스 제공업체 선택 (smtp, sendgrid, mailgun, aws-ses)
+  provider: ${EMAIL_PROVIDER:smtp}
+
+  # SMTP 설정 (Gmail, Outlook 등)
+  smtp:
+    host: ${SMTP_HOST:smtp.gmail.com}
+    port: ${SMTP_PORT:587}
+    username: ${SMTP_USERNAME:himdol8833@gmail.com}
+    password: ${SMTP_PASSWORD:aobp ogrd kbqx uhpv}
+    auth: true
+    starttls: true
+    from: ${SMTP_FROM:himdol8833@gmail.com}
+    from-name: ${SMTP_FROM_NAME:TheHFPV}
+  
+  # SendGrid 설정
+  sendgrid:
+    api-key: ${SENDGRID_API_KEY:your-sendgrid-api-key}
+    from: ${SENDGRID_FROM:noreply@yourdomain.com}
+    from-name: ${SENDGRID_FROM_NAME:TheHFPV}
+  
+  # Mailgun 설정
+  mailgun:
+    api-key: ${MAILGUN_API_KEY:your-mailgun-api-key}
+    domain: ${MAILGUN_DOMAIN:your-domain.mailgun.org}
+    from: ${MAILGUN_FROM:noreply@yourdomain.com}
+    from-name: ${MAILGUN_FROM_NAME:TheHFPV}
+  
+  # AWS SES 설정
+  aws-ses:
+    access-key: ${AWS_ACCESS_KEY:your-aws-access-key}
+    secret-key: ${AWS_SECRET_KEY:your-aws-secret-key}
+    region: ${AWS_REGION:us-east-1}
+    from: ${AWS_SES_FROM:noreply@yourdomain.com}
+    from-name: ${AWS_SES_FROM_NAME:TheHFPV}
+
 
 # Logging Configuration
 logging:

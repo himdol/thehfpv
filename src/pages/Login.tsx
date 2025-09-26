@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useTheme } from '../contexts/ThemeContext';
 import { useAuth } from '../contexts/AuthContext';
@@ -20,6 +20,31 @@ const Login: React.FC<LoginProps> = ({ setCurrentPage, previousPage }) => {
     lastName: ''
   });
   const [submitError, setSubmitError] = useState<string | null>(null);
+
+  // URL 파라미터 제거
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const error = urlParams.get('error');
+    
+    if (error) {
+      // URL에서 파라미터 제거
+      window.history.replaceState({}, document.title, '/');
+      
+      if (error === 'oauth_failed') {
+        setSubmitError('Google 로그인이 취소되었습니다. 다시 시도해주세요.');
+        // 5초 후 에러 메시지 자동 제거
+        setTimeout(() => {
+          setSubmitError(null);
+        }, 5000);
+      } else {
+        setSubmitError('로그인 중 오류가 발생했습니다.');
+        // 5초 후 에러 메시지 자동 제거
+        setTimeout(() => {
+          setSubmitError(null);
+        }, 5000);
+      }
+    }
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -74,33 +99,50 @@ const Login: React.FC<LoginProps> = ({ setCurrentPage, previousPage }) => {
     });
   };
 
+  const handleGoogleLogin = () => {
+    // Google OAuth2 로그인 페이지로 리다이렉트
+    window.location.href = 'http://localhost:8080/api/oauth2/authorization/google';
+  };
+
   return (
     <div className={`login-container ${isDarkMode ? 'dark' : 'light'}`}>
       <div className="login-background">
         <div className="login-particles">
-          {[...Array(100)].map((_, i) => (
-            <motion.div
-              key={i}
-              className="login-particle"
-              style={{
-                left: `${Math.random() * 100}%`,
-                top: `${Math.random() * 100}%`,
-                animationDelay: `${Math.random() * 5}s`
-              }}
-              animate={{
-                x: [0, Math.random() * 200 - 100],
-                y: [0, Math.random() * 200 - 100],
-                opacity: [0.2, 0.6, 0.2],
-                scale: [0.8, 1.2, 0.8]
-              }}
-              transition={{
-                duration: Math.random() * 4 + 3,
-                repeat: Infinity,
-                repeatType: 'reverse',
-                ease: 'easeInOut'
-              }}
-            />
-          ))}
+          {[...Array(100)].map((_, i) => {
+            // 고정된 랜덤 값들을 미리 계산하여 저장
+            const fixedValues = {
+              left: (i * 7.3) % 100, // 고정된 위치 계산
+              top: (i * 11.7) % 100,
+              delay: (i * 0.05) % 5,
+              x: (i * 13.2) % 200 - 100,
+              y: (i * 8.9) % 200 - 100,
+              duration: 3 + (i * 0.04) % 4
+            };
+            
+            return (
+              <motion.div
+                key={i}
+                className="login-particle"
+                style={{
+                  left: `${fixedValues.left}%`,
+                  top: `${fixedValues.top}%`,
+                  animationDelay: `${fixedValues.delay}s`
+                }}
+                animate={{
+                  x: [0, fixedValues.x],
+                  y: [0, fixedValues.y],
+                  opacity: [0.2, 0.6, 0.2],
+                  scale: [0.8, 1.2, 0.8]
+                }}
+                transition={{
+                  duration: fixedValues.duration,
+                  repeat: Infinity,
+                  repeatType: 'reverse',
+                  ease: 'easeInOut'
+                }}
+              />
+            );
+          })}
         </div>
       </div>
 
@@ -290,6 +332,7 @@ const Login: React.FC<LoginProps> = ({ setCurrentPage, previousPage }) => {
               className="login-social-btn login-google-btn"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
+              onClick={handleGoogleLogin}
             >
               <svg className="login-social-icon" viewBox="0 0 24 24">
                 <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
@@ -297,7 +340,7 @@ const Login: React.FC<LoginProps> = ({ setCurrentPage, previousPage }) => {
                 <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
                 <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
               </svg>
-              Continue with Google
+              Google
             </motion.button>
           </div>
         </motion.div>

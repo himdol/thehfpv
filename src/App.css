@@ -276,6 +276,403 @@
   color: #ff6666;
 }
 
+/* Profile Page Styles */
+.profile-actions {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.login-cancel-btn {
+  flex: 1;
+  background: rgba(128, 128, 128, 0.1);
+  border: 1px solid rgba(128, 128, 128, 0.3);
+  color: #666;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.App.dark .login-cancel-btn {
+  background: rgba(128, 128, 128, 0.2);
+  border: 1px solid rgba(128, 128, 128, 0.4);
+  color: #ccc;
+}
+
+.login-cancel-btn:hover {
+  background: rgba(128, 128, 128, 0.2);
+  border-color: rgba(128, 128, 128, 0.5);
+  transform: translateY(-1px);
+}
+
+.App.dark .login-cancel-btn:hover {
+  background: rgba(128, 128, 128, 0.3);
+  border-color: rgba(128, 128, 128, 0.6);
+}
+
+.login-success {
+  background: rgba(34, 197, 94, 0.1);
+  border: 1px solid rgba(34, 197, 94, 0.3);
+  color: #16a34a;
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  font-size: 0.9rem;
+  text-align: center;
+  animation: slideInSuccess 0.3s ease;
+}
+
+.App.dark .login-success {
+  background: rgba(34, 197, 94, 0.2);
+  border: 1px solid rgba(34, 197, 94, 0.4);
+  color: #4ade80;
+}
+
+@keyframes slideInSuccess {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.user-info-display {
+  margin-top: 2rem;
+  padding: 1.5rem;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.App.dark .user-info-display {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.user-info-header h3 {
+  margin: 0 0 1rem 0;
+  color: #333;
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.App.dark .user-info-header h3 {
+  color: #fff;
+}
+
+.user-info-content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.user-info-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.App.dark .user-info-item {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.user-info-item:last-child {
+  border-bottom: none;
+}
+
+.user-info-label {
+  font-weight: 500;
+  color: #666;
+  font-size: 0.9rem;
+}
+
+.App.dark .user-info-label {
+  color: #ccc;
+}
+
+.user-info-value {
+  color: #333;
+  font-size: 0.9rem;
+}
+
+.App.dark .user-info-value {
+  color: #fff;
+}
+
+.user-info-value.verified {
+  color: #16a34a;
+  font-weight: 500;
+}
+
+.App.dark .user-info-value.verified {
+  color: #4ade80;
+}
+
+.user-info-value.unverified {
+  color: #dc2626;
+  font-weight: 500;
+}
+
+.App.dark .user-info-value.unverified {
+  color: #f87171;
+}
+
+/* Disabled Input Styles */
+.login-input-disabled {
+  background: rgba(128, 128, 128, 0.1) !important;
+  color: #666 !important;
+  cursor: not-allowed !important;
+  opacity: 0.7 !important;
+}
+
+.App.dark .login-input-disabled {
+  background: rgba(128, 128, 128, 0.2) !important;
+  color: #999 !important;
+}
+
+.login-input-disabled:hover {
+  background: rgba(128, 128, 128, 0.1) !important;
+  transform: none !important;
+}
+
+.App.dark .login-input-disabled:hover {
+  background: rgba(128, 128, 128, 0.2) !important;
+}
+
+/* User Info Disabled Text */
+.user-info-value span[style*="color: #666"] {
+  color: #666 !important;
+}
+
+.App.dark .user-info-value span[style*="color: #666"] {
+  color: #999 !important;
+}
+
+/* Profile Avatar Styles */
+.profile-avatar {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #ff0000, #ff6666);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: bold;
+  font-size: 2rem;
+  box-shadow: 0 4px 12px rgba(255, 0, 0, 0.3);
+  transition: all 0.3s ease;
+  border: 3px solid rgba(255, 255, 255, 0.2);
+  margin: 0 auto 1rem auto;
+}
+
+/* Password Match Error Styles */
+.password-match-error {
+  color: #ef4444;
+  font-size: 0.875rem;
+  margin-top: 0.25rem;
+  margin-left: 0.5rem;
+  animation: slideInError 0.3s ease;
+}
+
+.App.dark .password-match-error {
+  color: #f87171;
+}
+
+@keyframes slideInError {
+  from {
+    opacity: 0;
+    transform: translateY(-5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Input Error Styles */
+.login-input.error {
+  border-color: #ef4444;
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
+}
+
+.App.dark .login-input.error {
+  border-color: #f87171;
+  box-shadow: 0 0 0 3px rgba(248, 113, 113, 0.1);
+}
+
+/* OAuth2 Callback Loading Styles */
+.login-loading {
+  text-align: center;
+  padding: 2rem;
+}
+
+.login-spinner {
+  width: 50px;
+  height: 50px;
+  border: 4px solid rgba(255, 255, 255, 0.3);
+  border-top: 4px solid #ff4444;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin: 0 auto 1.5rem;
+}
+
+.App.dark .login-spinner {
+  border: 4px solid rgba(255, 255, 255, 0.1);
+  border-top: 4px solid #ff6666;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.login-loading h2 {
+  color: #333;
+  margin-bottom: 0.5rem;
+  font-size: 1.5rem;
+}
+
+.App.dark .login-loading h2 {
+  color: #fff;
+}
+
+.login-loading p {
+  color: #666;
+  font-size: 1rem;
+}
+
+.App.dark .login-loading p {
+  color: #ccc;
+}
+
+/* Profile Button Styles */
+.profile-cancel-btn {
+  flex: 1;
+  background: linear-gradient(135deg, rgba(107, 114, 128, 0.1), rgba(75, 85, 99, 0.1));
+  border: 1px solid rgba(107, 114, 128, 0.3);
+  color: #6b7280;
+  padding: 0.75rem 1.5rem;
+  border-radius: 12px;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: 600;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  min-height: 48px;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.profile-cancel-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.5s;
+}
+
+.profile-cancel-btn:hover::before {
+  left: 100%;
+}
+
+.App.dark .profile-cancel-btn {
+  background: linear-gradient(135deg, rgba(75, 85, 99, 0.2), rgba(55, 65, 81, 0.2));
+  border: 1px solid rgba(75, 85, 99, 0.4);
+  color: #d1d5db;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.profile-cancel-btn:hover {
+  background: linear-gradient(135deg, rgba(107, 114, 128, 0.2), rgba(75, 85, 99, 0.2));
+  border-color: rgba(107, 114, 128, 0.5);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(107, 114, 128, 0.2);
+  color: #374151;
+}
+
+.App.dark .profile-cancel-btn:hover {
+  background: linear-gradient(135deg, rgba(75, 85, 99, 0.3), rgba(55, 65, 81, 0.3));
+  border-color: rgba(75, 85, 99, 0.6);
+  box-shadow: 0 4px 12px rgba(75, 85, 99, 0.3);
+  color: #f3f4f6;
+}
+
+.profile-cancel-btn:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 4px rgba(107, 114, 128, 0.1);
+}
+
+.App.dark .profile-cancel-btn:active {
+  box-shadow: 0 2px 4px rgba(75, 85, 99, 0.2);
+}
+
+.profile-submit-btn {
+  flex: 1;
+  background: linear-gradient(135deg, #ff0000, #cc0000);
+  border: none;
+  color: white;
+  padding: 0.75rem 1.5rem;
+  border-radius: 12px;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: 600;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  min-height: 48px;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 2px 4px rgba(255, 0, 0, 0.2);
+}
+
+.profile-submit-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+  transition: left 0.5s;
+}
+
+.profile-submit-btn:hover:not(:disabled)::before {
+  left: 100%;
+}
+
+.profile-submit-btn:hover:not(:disabled) {
+  background: linear-gradient(135deg, #cc0000, #990000);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(255, 0, 0, 0.4);
+}
+
+.profile-submit-btn:active:not(:disabled) {
+  transform: translateY(0);
+  box-shadow: 0 2px 4px rgba(255, 0, 0, 0.3);
+}
+
+.profile-submit-btn:disabled {
+  background: linear-gradient(135deg, rgba(128, 128, 128, 0.3), rgba(96, 96, 96, 0.3));
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: 0 2px 4px rgba(128, 128, 128, 0.1);
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.profile-submit-btn:disabled::before {
+  display: none;
+}
+
 .main {
   padding-top: 80px;
   max-width: 100%;

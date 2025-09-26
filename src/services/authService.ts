@@ -21,6 +21,14 @@ export interface RegisterRequest {
   lastName: string;
 }
 
+export interface UpdateProfileRequest {
+  firstName?: string;
+  lastName?: string;
+  email?: string;
+  currentPassword?: string;
+  newPassword?: string;
+}
+
 export interface AuthResponse {
   token: string;
   user: User;
@@ -43,21 +51,46 @@ class AuthService {
 
   async login(credentials: LoginRequest): Promise<AuthResponse> {
     try {
+      console.log('Login request:', credentials);
+      console.log('API URL:', `${API_BASE_URL}/auth/login`);
+      
       const response = await fetch(`${API_BASE_URL}/auth/login`, {
         method: 'POST',
         headers: this.getAuthHeaders(),
         body: JSON.stringify(credentials),
       });
 
-      const data = await response.json();
+      console.log('Response status:', response.status);
+      console.log('Response headers:', response.headers);
+
+      // 응답이 비어있는지 확인
+      const responseText = await response.text();
+      console.log('Response text:', responseText);
+      
+      if (!responseText) {
+        throw new Error('서버에서 응답을 받지 못했습니다.');
+      }
+
+      let data;
+      try {
+        data = JSON.parse(responseText);
+      } catch (parseError) {
+        console.error('JSON parse error:', parseError);
+        console.error('Response text:', responseText);
+        throw new Error('서버 응답을 처리할 수 없습니다.');
+      }
 
       if (!response.ok) {
-        throw new Error(data.message || '로그인에 실패했습니다.');
+        throw new Error(data.message || `로그인에 실패했습니다. (${response.status})`);
       }
 
       // 토큰을 localStorage에 저장
-      localStorage.setItem('authToken', data.token);
-      localStorage.setItem('user', JSON.stringify(data.user));
+      if (data.token) {
+        localStorage.setItem('authToken', data.token);
+      }
+      if (data.user) {
+        localStorage.setItem('user', JSON.stringify(data.user));
+      }
 
       return data;
     } catch (error) {
@@ -74,10 +107,24 @@ class AuthService {
         body: JSON.stringify(userData),
       });
 
-      const data = await response.json();
+      // 응답이 비어있는지 확인
+      const responseText = await response.text();
+      
+      if (!responseText) {
+        throw new Error('서버에서 응답을 받지 못했습니다.');
+      }
+
+      let data;
+      try {
+        data = JSON.parse(responseText);
+      } catch (parseError) {
+        console.error('JSON parse error:', parseError);
+        console.error('Response text:', responseText);
+        throw new Error('서버 응답을 처리할 수 없습니다.');
+      }
 
       if (!response.ok) {
-        throw new Error(data.message || '회원가입에 실패했습니다.');
+        throw new Error(data.message || `회원가입에 실패했습니다. (${response.status})`);
       }
 
       return data;
@@ -94,6 +141,46 @@ class AuthService {
       localStorage.removeItem('user');
     } catch (error) {
       console.error('Logout error:', error);
+      throw error;
+    }
+  }
+
+  async updateProfile(userData: UpdateProfileRequest): Promise<AuthResponse> {
+    try {
+      const response = await fetch(`${API_BASE_URL}/auth/profile`, {
+        method: 'PUT',
+        headers: this.getAuthHeaders(),
+        body: JSON.stringify(userData),
+      });
+
+      // 응답이 비어있는지 확인
+      const responseText = await response.text();
+      
+      if (!responseText) {
+        throw new Error('서버에서 응답을 받지 못했습니다.');
+      }
+
+      let data;
+      try {
+        data = JSON.parse(responseText);
+      } catch (parseError) {
+        console.error('JSON parse error:', parseError);
+        console.error('Response text:', responseText);
+        throw new Error('서버 응답을 처리할 수 없습니다.');
+      }
+
+      if (!response.ok) {
+        throw new Error(data.message || `프로필 수정에 실패했습니다. (${response.status})`);
+      }
+
+      // 업데이트된 사용자 정보를 localStorage에 저장
+      if (data.user) {
+        localStorage.setItem('user', JSON.stringify(data.user));
+      }
+
+      return data;
+    } catch (error) {
+      console.error('Update profile error:', error);
       throw error;
     }
   }

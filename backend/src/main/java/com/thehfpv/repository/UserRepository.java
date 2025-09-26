@@ -16,4 +16,9 @@ public interface UserRepository extends JpaRepository<User, Long> {
     
     // 활성 사용자만 조회
     List<User> findByUserStatus(Integer userStatus);
+    
+    // 소셜 로그인 관련 메서드
+    Optional<User> findByProviderAndProviderId(String provider, String providerId);
+    
+    Optional<User> findByEmailAndProvider(String email, String provider);
 }

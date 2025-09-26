@@ -112,7 +112,13 @@ const Header: React.FC<HeaderProps> = ({
                   </div>
                 </div>
                 <div className="user-menu-actions">
-                  <button className="user-menu-item" onClick={() => setShowUserMenu(false)}>
+                  <button 
+                    className="user-menu-item" 
+                    onClick={() => {
+                      setShowUserMenu(false);
+                      setCurrentPage('profile');
+                    }}
+                  >
                     내 정보
                   </button>
                   <button className="user-menu-item" onClick={handleLogout}>

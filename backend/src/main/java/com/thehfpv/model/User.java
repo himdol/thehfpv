@@ -52,6 +52,16 @@ public class User implements UserDetails {
     @Column(name = "user_status")
     private Integer userStatus = 1; // 1=ACTIVE, 0=INACTIVE
     
+    // 소셜 로그인 관련 필드
+    @Column(name = "provider")
+    private String provider; // GOOGLE, GITHUB 등
+    
+    @Column(name = "provider_id")
+    private String providerId; // 소셜 로그인 제공자의 사용자 ID
+    
+    @Column(name = "profile_image_url")
+    private String profileImageUrl; // 프로필 이미지 URL
+    
     @JsonFormat(pattern = "MM-dd-yyyy HH:mm:ss")
     @Column(name = "create_date")
     private LocalDateTime createDate;
@@ -160,6 +170,31 @@ public class User implements UserDetails {
     
     public void setUpdateDate(LocalDateTime updateDate) {
         this.updateDate = updateDate;
+    }
+    
+    // 소셜 로그인 관련 getter/setter
+    public String getProvider() {
+        return provider;
+    }
+    
+    public void setProvider(String provider) {
+        this.provider = provider;
+    }
+    
+    public String getProviderId() {
+        return providerId;
+    }
+    
+    public void setProviderId(String providerId) {
+        this.providerId = providerId;
+    }
+    
+    public String getProfileImageUrl() {
+        return profileImageUrl;
+    }
+    
+    public void setProfileImageUrl(String profileImageUrl) {
+        this.profileImageUrl = profileImageUrl;
     }
     
     // UserDetails implementation
