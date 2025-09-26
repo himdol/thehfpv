@@ -23,6 +23,9 @@ const Profile: React.FC<ProfileProps> = ({ setCurrentPage }) => {
   const [isPasswordChange, setIsPasswordChange] = useState(false);
   const [passwordMatchError, setPasswordMatchError] = useState<string | null>(null);
 
+  // OAuth 사용자인지 확인 (provider가 'google'이면 OAuth 사용자)
+  const isOAuthUser = user?.provider === 'google';
+
   // 사용자 정보로 폼 초기화
   useEffect(() => {
     if (user) {
@@ -130,8 +133,10 @@ const Profile: React.FC<ProfileProps> = ({ setCurrentPage }) => {
     setCurrentPage('about');
   };
 
-  const getUserInitials = (firstName: string, lastName: string) => {
-    return `${firstName.charAt(0)}${lastName.charAt(0)}`.toUpperCase();
+  const getUserInitials = (firstName: string | null | undefined, lastName: string | null | undefined) => {
+    const firstInitial = firstName && firstName.length > 0 ? firstName.charAt(0) : '';
+    const lastInitial = lastName && lastName.length > 0 ? lastName.charAt(0) : '';
+    return `${firstInitial}${lastInitial}`.toUpperCase() || 'U';
   };
 
   // 비밀번호 일치 여부 실시간 확인
@@ -201,7 +206,7 @@ const Profile: React.FC<ProfileProps> = ({ setCurrentPage }) => {
           <p className="login-subtitle">개인정보를 수정하거나 비밀번호를 변경하세요</p>
         </div>
 
-        {/* Toggle Buttons */}
+        {/* Toggle Buttons - OAuth 사용자가 아닐 때만 비밀번호 수정 버튼 표시 */}
         <div className="login-toggle">
           <button
             className={`login-toggle-btn ${!isPasswordChange ? 'active' : ''}`}
@@ -209,12 +214,14 @@ const Profile: React.FC<ProfileProps> = ({ setCurrentPage }) => {
           >
             개인정보
           </button>
-          <button
-            className={`login-toggle-btn ${isPasswordChange ? 'active' : ''}`}
-            onClick={() => setIsPasswordChange(true)}
-          >
-            비밀번호
-          </button>
+          {!isOAuthUser && (
+            <button
+              className={`login-toggle-btn ${isPasswordChange ? 'active' : ''}`}
+              onClick={() => setIsPasswordChange(true)}
+            >
+              비밀번호
+            </button>
+          )}
         </div>
 
         {/* Form */}
@@ -261,7 +268,7 @@ const Profile: React.FC<ProfileProps> = ({ setCurrentPage }) => {
                 />
               </div>
             </>
-          ) : (
+          ) : !isOAuthUser ? (
             <>
               <div className="login-input-group">
                 <input
@@ -302,6 +309,11 @@ const Profile: React.FC<ProfileProps> = ({ setCurrentPage }) => {
                 )}
               </div>
             </>
+          ) : (
+            <div className="oauth-user-message">
+              <p>구글 계정으로 로그인한 사용자는 비밀번호를 변경할 수 없습니다.</p>
+              <p>비밀번호 변경이 필요하시면 구글 계정 설정에서 변경해주세요.</p>
+            </div>
           )}
 
           {/* Success Message */}

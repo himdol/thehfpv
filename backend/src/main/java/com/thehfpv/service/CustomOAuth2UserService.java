@@ -14,6 +14,7 @@ import org.springframework.security.web.authentication.AuthenticationSuccessHand
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.stereotype.Service;
 
+import jakarta.servlet.http.HttpSession;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.Collections;
@@ -69,14 +70,52 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
             System.out.println("JWT 토큰 생성 완료: " + jwtToken);
             
             // 세션에 사용자 정보 저장
-            request.getSession().setAttribute("user", user);
-            request.getSession().setAttribute("jwtToken", jwtToken);
-            request.getSession().setAttribute("isAuthenticated", true);
+            HttpSession session = request.getSession();
+            session.setAttribute("user", user);
+            session.setAttribute("jwtToken", jwtToken);
+            session.setAttribute("isAuthenticated", true);
             
             System.out.println("세션에 사용자 정보 저장 완료: " + user.getEmail());
+            System.out.println("세션 ID: " + session.getId());
             
-            // 프론트엔드로 리다이렉트 (토큰은 세션에만 저장)
-            String redirectUrl = "http://localhost:3000/?oauth_success=true";
+            // 세션 저장 확인
+            User savedUser = (User) session.getAttribute("user");
+            String savedToken = (String) session.getAttribute("jwtToken");
+            Boolean savedAuth = (Boolean) session.getAttribute("isAuthenticated");
+            
+            System.out.println("세션 저장 확인:");
+            System.out.println("- user: " + (savedUser != null ? savedUser.getEmail() : "null"));
+            System.out.println("- jwtToken: " + (savedToken != null ? "있음" : "없음"));
+            System.out.println("- isAuthenticated: " + savedAuth);
+            
+            // Spring Security 컨텍스트에 JWT 인증 정보 설정
+            org.springframework.security.core.userdetails.UserDetails userDetails = 
+                org.springframework.security.core.userdetails.User.builder()
+                    .username(user.getEmail())
+                    .password("") // OAuth2에서는 패스워드가 없음
+                    .authorities("ROLE_USER")
+                    .build();
+            
+            org.springframework.security.authentication.UsernamePasswordAuthenticationToken authToken = 
+                new org.springframework.security.authentication.UsernamePasswordAuthenticationToken(
+                    userDetails, null, userDetails.getAuthorities());
+            
+            // SecurityContext 생성 및 설정
+            org.springframework.security.core.context.SecurityContext securityContext = 
+                org.springframework.security.core.context.SecurityContextHolder.createEmptyContext();
+            securityContext.setAuthentication(authToken);
+            
+            // 세션에 SecurityContext 저장 (OAuth2 인증을 완전히 대체)
+            session.setAttribute("SPRING_SECURITY_CONTEXT", securityContext);
+            
+            // 현재 스레드의 SecurityContext도 설정
+            org.springframework.security.core.context.SecurityContextHolder.setContext(securityContext);
+            
+            System.out.println("Spring Security 컨텍스트에 JWT 인증 정보 설정 완료");
+            System.out.println("새로운 인증 정보: " + authToken.getPrincipal());
+            
+            // 프론트엔드로 리다이렉트 (JWT 토큰을 URL 파라미터로 전달)
+            String redirectUrl = "http://localhost:3000/?oauth_success=true&token=" + jwtToken;
 
             System.out.println("리다이렉트 URL: " + redirectUrl);
             response.sendRedirect(redirectUrl);

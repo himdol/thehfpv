@@ -81,6 +81,11 @@ public class SecurityConfig {
             )
             .exceptionHandling(exceptions -> exceptions
                 .authenticationEntryPoint((request, response, authException) -> {
+                    System.out.println("=== AuthenticationEntryPoint 호출됨 ===");
+                    System.out.println("Request URI: " + request.getRequestURI());
+                    System.out.println("Content-Type: " + request.getHeader("Content-Type"));
+                    System.out.println("X-Requested-With: " + request.getHeader("X-Requested-With"));
+                    
                     // API 요청인 경우 JSON 응답 반환
                     if (request.getRequestURI().startsWith("/api/") || 
                         "application/json".equals(request.getHeader("Content-Type")) ||

@@ -20,6 +20,48 @@ function AppContent() {
     const handleOAuthCallback = async () => {
       console.log('=== OAuth2 콜백 처리 시작 ===');
       
+      // URL에서 토큰 파라미터 확인
+      const urlParams = new URLSearchParams(window.location.search);
+      const token = urlParams.get('token');
+      const oauthSuccess = urlParams.get('oauth_success');
+      
+      if (oauthSuccess === 'true' && token) {
+        console.log('OAuth2 토큰 받음:', token);
+        
+        // 토큰을 localStorage에 저장
+        localStorage.setItem('token', token);
+        
+        // URL에서 파라미터 제거
+        window.history.replaceState({}, document.title, '/');
+        
+        // 백엔드에서 사용자 정보 가져오기
+        try {
+          const response = await fetch('http://localhost:8080/api/auth/profile', {
+            method: 'GET',
+            headers: {
+              'Authorization': `Bearer ${token}`,
+              'Content-Type': 'application/json',
+            },
+          });
+          
+          if (response.ok) {
+            const data = await response.json();
+            console.log('OAuth2 사용자 정보:', data);
+            
+            // 사용자 정보를 localStorage에 저장
+            localStorage.setItem('user', JSON.stringify(data.user));
+            localStorage.setItem('isAuthenticated', 'true');
+            
+            // 페이지 새로고침하여 인증 상태 업데이트
+            window.location.reload();
+            return;
+          }
+        } catch (error) {
+          console.error('OAuth2 사용자 정보 가져오기 실패:', error);
+        }
+      }
+      
+      // 기존 세션 방식으로 폴백
       // URL에서 파라미터 제거
       window.history.replaceState({}, document.title, '/');
       
@@ -34,6 +76,9 @@ function AppContent() {
           const response = await fetch('http://localhost:8080/api/session/user', {
             method: 'GET',
             credentials: 'include',
+            headers: {
+              'Content-Type': 'application/json',
+            },
           });
           
           console.log('세션 응답 상태:', response.status);

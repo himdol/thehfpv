@@ -122,7 +122,8 @@ public class AuthController {
                 "firstName", user.getFirstName(),
                 "lastName", user.getLastName(),
                 "userRole", user.getUserRole().getCode(),
-                "emailVerified", user.getEmailVerified()
+                "emailVerified", user.getEmailVerified(),
+                "provider", user.getProvider()
             ));
             
             return ResponseEntity.ok(response);
@@ -153,7 +154,8 @@ public class AuthController {
                 "firstName", currentUser.getFirstName(),
                 "lastName", currentUser.getLastName(),
                 "userRole", currentUser.getUserRole().getCode(),
-                "emailVerified", currentUser.getEmailVerified()
+                "emailVerified", currentUser.getEmailVerified(),
+                "provider", currentUser.getProvider()
             ));
             
             return ResponseEntity.ok(response);

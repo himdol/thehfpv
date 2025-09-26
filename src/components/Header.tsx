@@ -39,8 +39,10 @@ const Header: React.FC<HeaderProps> = ({
     setCurrentPage('login');
   };
 
-  const getUserInitials = (firstName: string, lastName: string) => {
-    return `${firstName.charAt(0)}${lastName.charAt(0)}`.toUpperCase();
+  const getUserInitials = (firstName: string | null | undefined, lastName: string | null | undefined) => {
+    const firstInitial = firstName && firstName.length > 0 ? firstName.charAt(0) : '';
+    const lastInitial = lastName && lastName.length > 0 ? lastName.charAt(0) : '';
+    return `${firstInitial}${lastInitial}`.toUpperCase() || 'U';
   };
 
   // 외부 클릭 시 사용자 메뉴 닫기
@@ -93,7 +95,7 @@ const Header: React.FC<HeaderProps> = ({
             <button
               className="user-profile-btn"
               onClick={() => setShowUserMenu(!showUserMenu)}
-              title={`${user.firstName} ${user.lastName}`}
+              title={`${user.firstName || ''} ${user.lastName || ''}`.trim() || user.email}
             >
               <div className="user-avatar">
                 {getUserInitials(user.firstName, user.lastName)}
@@ -106,7 +108,7 @@ const Header: React.FC<HeaderProps> = ({
                     {getUserInitials(user.firstName, user.lastName)}
                   </div>
                   <div className="user-details">
-                    <div className="user-name">{user.firstName} {user.lastName}</div>
+                    <div className="user-name">{`${user.firstName || ''} ${user.lastName || ''}`.trim() || user.email}</div>
                     <div className="user-email">{user.email}</div>
                     <div className="user-role">{user.userRole}</div>
                   </div>

@@ -3,10 +3,11 @@ const API_BASE_URL = 'http://localhost:8080/api';
 export interface User {
   userId: number;
   email: string;
-  firstName: string;
-  lastName: string;
+  firstName: string | null;
+  lastName: string | null;
   userRole: 'PUBLIC' | 'ADMIN' | 'ROOT';
   emailVerified: boolean;
+  provider?: string | null;
 }
 
 export interface LoginRequest {

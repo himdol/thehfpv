@@ -3941,3 +3941,29 @@
 .App.dark .login-prompt-btn-secondary:hover {
   background: #4b5563;
 }
+
+/* OAuth 사용자 메시지 스타일 */
+.oauth-user-message {
+  text-align: center;
+  padding: 2rem;
+  background: rgba(255, 193, 7, 0.1);
+  border: 1px solid rgba(255, 193, 7, 0.3);
+  border-radius: 8px;
+  margin: 1rem 0;
+}
+
+.oauth-user-message p {
+  margin: 0.5rem 0;
+  color: #856404;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+.App.dark .oauth-user-message {
+  background: rgba(255, 193, 7, 0.1);
+  border-color: rgba(255, 193, 7, 0.3);
+}
+
+.App.dark .oauth-user-message p {
+  color: #ffc107;
+}
