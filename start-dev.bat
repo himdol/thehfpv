@@ -23,6 +23,22 @@ for /f "tokens=5" %%a in ('netstat -aon ^| findstr :8080') do (
     )
 )
 
+REM Kill processes on port 8081
+for /f "tokens=5" %%a in ('netstat -aon ^| findstr :8081') do (
+    if not "%%a"=="0" (
+        echo 🛑 Killing process on port 8081: %%a
+        taskkill /F /PID %%a >nul 2>&1
+    )
+)
+
+REM Kill processes on port 8082
+for /f "tokens=5" %%a in ('netstat -aon ^| findstr :8082') do (
+    if not "%%a"=="0" (
+        echo 🛑 Killing process on port 8082: %%a
+        taskkill /F /PID %%a >nul 2>&1
+    )
+)
+
 timeout /t 2 /nobreak >nul
 echo.
 

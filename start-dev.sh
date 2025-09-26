@@ -31,6 +31,8 @@ kill_port() {
 echo "🧹 Cleaning up existing processes..."
 kill_port 3000
 kill_port 8080
+kill_port 8081
+kill_port 8082
 echo ""
 
 # Check if Node.js is installed

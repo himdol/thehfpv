@@ -107,6 +107,175 @@
   background: rgba(255, 255, 255, 0.1);
 }
 
+/* Header Actions */
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+/* User Profile */
+.user-profile-container {
+  position: relative;
+}
+
+.user-profile-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  border-radius: 50%;
+  transition: all 0.3s ease;
+}
+
+.user-profile-btn:hover {
+  transform: scale(1.1);
+}
+
+.user-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #ff0000, #ff6666);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: bold;
+  font-size: 1rem;
+  box-shadow: 0 2px 8px rgba(255, 0, 0, 0.3);
+  transition: all 0.3s ease;
+}
+
+.user-avatar:hover {
+  box-shadow: 0 4px 12px rgba(255, 0, 0, 0.4);
+  transform: translateY(-2px);
+}
+
+/* User Menu */
+.user-menu {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  margin-top: 0.5rem;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  border-radius: 12px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  min-width: 280px;
+  z-index: 1000;
+  animation: slideDown 0.3s ease;
+}
+
+.App.dark .user-menu {
+  background: rgba(26, 26, 26, 0.95);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.user-info {
+  padding: 1.5rem;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.App.dark .user-info {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.user-avatar-large {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #ff0000, #ff6666);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: bold;
+  font-size: 1.5rem;
+  box-shadow: 0 4px 12px rgba(255, 0, 0, 0.3);
+}
+
+.user-details {
+  flex: 1;
+  text-align: left;
+}
+
+.user-name {
+  font-size: 1.1rem;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 0.25rem;
+}
+
+.App.dark .user-name {
+  color: #fff;
+}
+
+.user-email {
+  font-size: 0.9rem;
+  color: #666;
+  margin-bottom: 0.25rem;
+}
+
+.App.dark .user-email {
+  color: #ccc;
+}
+
+.user-role {
+  font-size: 0.8rem;
+  color: #ff0000;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.user-menu-actions {
+  padding: 0.5rem;
+}
+
+.user-menu-item {
+  width: 100%;
+  background: none;
+  border: none;
+  padding: 0.75rem 1rem;
+  text-align: left;
+  color: #333;
+  cursor: pointer;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  font-size: 0.9rem;
+}
+
+.App.dark .user-menu-item {
+  color: #fff;
+}
+
+.user-menu-item:hover {
+  background: rgba(255, 0, 0, 0.1);
+  color: #ff0000;
+}
+
+.App.dark .user-menu-item:hover {
+  background: rgba(255, 0, 0, 0.2);
+  color: #ff6666;
+}
+
 .main {
   padding-top: 80px;
   max-width: 100%;
@@ -1087,6 +1256,26 @@
     justify-content: center;
   }
   
+  .header-actions {
+    gap: 0.5rem;
+  }
+  
+  .user-menu {
+    right: -50px;
+    min-width: 250px;
+  }
+  
+  .user-info {
+    padding: 1rem;
+    flex-direction: column;
+    text-align: center;
+    gap: 0.5rem;
+  }
+  
+  .user-details {
+    text-align: center;
+  }
+  
   .home-page h1 {
     font-size: 2rem;
   }
@@ -1920,6 +2109,29 @@
 .login-submit-btn:hover {
   background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
   box-shadow: 0 6px 16px rgba(239, 68, 68, 0.4);
+}
+
+.login-submit-btn:disabled {
+  background: linear-gradient(135deg, #9ca3af 0%, #6b7280 100%);
+  cursor: not-allowed;
+  box-shadow: 0 4px 12px rgba(156, 163, 175, 0.3);
+}
+
+.login-error {
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  color: #dc2626;
+  padding: 0.75rem 1rem;
+  border-radius: 0.5rem;
+  font-size: 0.875rem;
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+.login-container.dark .login-error {
+  background: #1f2937;
+  border-color: #374151;
+  color: #fca5a5;
 }
 
 .login-social {

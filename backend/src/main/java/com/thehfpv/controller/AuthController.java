@@ -1,13 +1,18 @@
 package com.thehfpv.controller;
 
 import com.thehfpv.model.User;
+import com.thehfpv.model.UserRole;
 import com.thehfpv.repository.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.thehfpv.service.JwtService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import jakarta.validation.Valid;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -16,38 +21,60 @@ import java.util.Map;
 @CrossOrigin(origins = "http://localhost:3000")
 public class AuthController {
     
-    @Autowired
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
+    private final JwtService jwtService;
+    private final AuthenticationManager authenticationManager;
     
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+    public AuthController(UserRepository userRepository, PasswordEncoder passwordEncoder, 
+                         JwtService jwtService, AuthenticationManager authenticationManager) {
+        this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
+        this.jwtService = jwtService;
+        this.authenticationManager = authenticationManager;
+    }
     
     @PostMapping("/register")
-    public ResponseEntity<?> registerUser(@Valid @RequestBody User user) {
+    public ResponseEntity<?> registerUser(@Valid @RequestBody Map<String, String> registerRequest) {
         try {
-            // Check if username already exists
-            if (userRepository.existsByUsername(user.getUsername())) {
-                return ResponseEntity.badRequest()
-                    .body(createErrorResponse("Error: Username is already taken!"));
-            }
+            String email = registerRequest.get("email");
+            String password = registerRequest.get("password");
+            String firstName = registerRequest.get("firstName");
+            String lastName = registerRequest.get("lastName");
             
-            // Check if email already exists
-            if (userRepository.existsByEmail(user.getEmail())) {
+            // 이메일 중복 확인
+            if (userRepository.existsByEmail(email)) {
                 return ResponseEntity.badRequest()
                     .body(createErrorResponse("Error: Email is already in use!"));
             }
             
-            // Create new user
+            // 새 사용자 생성
             User newUser = new User();
-            newUser.setUsername(user.getUsername());
-            newUser.setEmail(user.getEmail());
-            newUser.setPassword(passwordEncoder.encode(user.getPassword()));
-            newUser.setFirstName(user.getFirstName());
-            newUser.setLastName(user.getLastName());
+            newUser.setEmail(email);
+            newUser.setPassword(passwordEncoder.encode(password)); // 비밀번호 해시화
+            newUser.setFirstName(firstName);
+            newUser.setLastName(lastName);
+            newUser.setUserRole(UserRole.PUBLIC); // 기본 권한은 PUBLIC
+            newUser.setEmailVerified(false); // 이메일 인증 필요
             
-            userRepository.save(newUser);
+            User savedUser = userRepository.save(newUser);
             
-            return ResponseEntity.ok(createSuccessResponse("User registered successfully!"));
+            // 응답에 사용자 정보와 날짜 포함
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM-dd-yyyy HH:mm:ss");
+            Map<String, Object> response = new HashMap<>();
+            response.put("message", "User registered successfully! Please verify your email.");
+            response.put("user", Map.of(
+                "userId", savedUser.getUserId(),
+                "email", savedUser.getEmail(),
+                "firstName", savedUser.getFirstName(),
+                "lastName", savedUser.getLastName(),
+                "userRole", savedUser.getUserRole().getCode(),
+                "emailVerified", savedUser.getEmailVerified(),
+                "createDate", savedUser.getCreateDate().format(formatter),
+                "updateDate", savedUser.getUpdateDate().format(formatter)
+            ));
+            
+            return ResponseEntity.ok(response);
             
         } catch (Exception e) {
             return ResponseEntity.badRequest()
@@ -58,34 +85,44 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<?> loginUser(@RequestBody Map<String, String> loginRequest) {
         try {
-            String username = loginRequest.get("username");
+            String email = loginRequest.get("email");
             String password = loginRequest.get("password");
             
-            // Find user by username
-            User user = userRepository.findByUsername(username)
+            // 인증 처리
+            authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(email, password)
+            );
+            
+            // 사용자 정보 조회
+            User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("User not found"));
             
-            // Check password
-            if (!passwordEncoder.matches(password, user.getPassword())) {
-                return ResponseEntity.badRequest()
-                    .body(createErrorResponse("Invalid password"));
+            // 개발 단계에서는 이메일 인증을 건너뛰고, 자동으로 인증 완료 처리
+            if (!user.getEmailVerified()) {
+                user.setEmailVerified(true);
+                userRepository.save(user);
             }
             
-            // Create response
+            // JWT 토큰 생성
+            String jwtToken = jwtService.generateToken(user);
+            
+            // 응답 생성
             Map<String, Object> response = new HashMap<>();
             response.put("message", "Login successful");
+            response.put("token", jwtToken);
             response.put("user", Map.of(
                 "userId", user.getUserId(),
-                "username", user.getUsername(),
                 "email", user.getEmail(),
                 "firstName", user.getFirstName(),
                 "lastName", user.getLastName(),
-                "userStatus", user.getUserStatus()
+                "userRole", user.getUserRole().getCode(),
+                "emailVerified", user.getEmailVerified()
             ));
             
             return ResponseEntity.ok(response);
             
         } catch (Exception e) {
+            e.printStackTrace(); // 스택 트레이스 출력
             return ResponseEntity.badRequest()
                 .body(createErrorResponse("Error: " + e.getMessage()));
         }

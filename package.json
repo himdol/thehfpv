@@ -26,7 +26,7 @@
     "eject": "react-scripts eject",
     "predeploy": "npm run build",
     "deploy": "gh-pages -d build",
-    "kill-ports": "npx kill-port 3000 8080",
+    "kill-ports": "npx kill-port 3000 8080 8081 8082",
     "dev": "npm run kill-ports && concurrently \"npm start\" \"cd backend && ./gradlew bootRun\"",
     "dev:backend": "cd backend && ./gradlew bootRun",
     "dev:frontend": "npm start",

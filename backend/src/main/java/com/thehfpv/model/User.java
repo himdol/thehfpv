@@ -1,12 +1,14 @@
 package com.thehfpv.model;
 
 import jakarta.persistence.*;
+import jakarta.persistence.Transient;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 import java.time.LocalDateTime;
 import java.util.Collection;
@@ -20,11 +22,6 @@ public class User implements UserDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id")
     private Long userId;
-    
-    @NotBlank
-    @Size(max = 50)
-    @Column(name = "username", unique = true)
-    private String username;
     
     @NotBlank
     @Size(max = 100)
@@ -45,14 +42,24 @@ public class User implements UserDetails {
     @Column(name = "last_name")
     private String lastName;
     
+    @Enumerated(EnumType.STRING)
+    @Column(name = "user_role", nullable = false)
+    private UserRole userRole = UserRole.PUBLIC;
+    
+    @Column(name = "email_verified", nullable = false)
+    private Boolean emailVerified = false;
+    
     @Column(name = "user_status")
     private Integer userStatus = 1; // 1=ACTIVE, 0=INACTIVE
     
+    @JsonFormat(pattern = "MM-dd-yyyy HH:mm:ss")
     @Column(name = "create_date")
     private LocalDateTime createDate;
     
+    @JsonFormat(pattern = "MM-dd-yyyy HH:mm:ss")
     @Column(name = "update_date")
     private LocalDateTime updateDate;
+    
     
     @PrePersist
     protected void onCreate() {
@@ -68,10 +75,10 @@ public class User implements UserDetails {
     // Constructors
     public User() {}
     
-    public User(String username, String email, String password) {
-        this.username = username;
+    public User(String email, String password, UserRole userRole) {
         this.email = email;
         this.password = password;
+        this.userRole = userRole;
     }
     
     // Getters and Setters
@@ -81,14 +88,6 @@ public class User implements UserDetails {
     
     public void setUserId(Long userId) {
         this.userId = userId;
-    }
-    
-    public String getUsername() {
-        return username;
-    }
-    
-    public void setUsername(String username) {
-        this.username = username;
     }
     
     public String getEmail() {
@@ -131,6 +130,22 @@ public class User implements UserDetails {
         this.userStatus = userStatus;
     }
     
+    public UserRole getUserRole() {
+        return userRole;
+    }
+    
+    public void setUserRole(UserRole userRole) {
+        this.userRole = userRole;
+    }
+    
+    public Boolean getEmailVerified() {
+        return emailVerified;
+    }
+    
+    public void setEmailVerified(Boolean emailVerified) {
+        this.emailVerified = emailVerified;
+    }
+    
     public LocalDateTime getCreateDate() {
         return createDate;
     }
@@ -149,10 +164,13 @@ public class User implements UserDetails {
     
     // UserDetails implementation
     @Override
+    public String getUsername() {
+        return email; // email을 username으로 사용
+    }
+    
+    @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        // user_status가 1이면 USER 권한, 2면 ADMIN 권한
-        String role = userStatus == 2 ? "ADMIN" : "USER";
-        return Collections.singletonList(new SimpleGrantedAuthority("ROLE_" + role));
+        return Collections.singletonList(new SimpleGrantedAuthority("ROLE_" + userRole.getCode()));
     }
     
     @Override
@@ -172,6 +190,6 @@ public class User implements UserDetails {
     
     @Override
     public boolean isEnabled() {
-        return userStatus == 1 || userStatus == 2; // 1=ACTIVE, 2=ADMIN
+        return true; // 개발 단계에서는 항상 활성
     }
 }

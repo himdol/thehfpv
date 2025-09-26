@@ -3,31 +3,68 @@ import { motion } from 'framer-motion';
 import { useTheme } from '../contexts/ThemeContext';
 import { useAuth } from '../contexts/AuthContext';
 
-const Login: React.FC = () => {
+interface LoginProps {
+  setCurrentPage: (page: string) => void;
+  previousPage?: string;
+}
+
+const Login: React.FC<LoginProps> = ({ setCurrentPage, previousPage }) => {
   const { isDarkMode } = useTheme();
-  const { login } = useAuth();
+  const { login, register, loading, error } = useAuth();
   const [isLogin, setIsLogin] = useState(true);
   const [formData, setFormData] = useState({
     email: '',
     password: '',
     confirmPassword: '',
-    name: ''
+    firstName: '',
+    lastName: ''
   });
+  const [submitError, setSubmitError] = useState<string | null>(null);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setSubmitError(null);
     
-    if (isLogin) {
-      // Login logic
-      login(formData.email);
-      alert('로그인이 완료되었습니다!');
-    } else {
-      // Sign up logic
-      login(formData.email);
-      alert('회원가입이 완료되었습니다!');
+    try {
+      if (isLogin) {
+        // Login logic
+        await login({
+          email: formData.email,
+          password: formData.password
+        });
+        
+        // 로그인 성공 후 이전 페이지로 이동
+        const targetPage = previousPage || 'about';
+        alert('로그인이 완료되었습니다!');
+        setCurrentPage(targetPage);
+      } else {
+        // Sign up logic
+        if (formData.password !== formData.confirmPassword) {
+          setSubmitError('비밀번호가 일치하지 않습니다.');
+          return;
+        }
+        
+        await register({
+          email: formData.email,
+          password: formData.password,
+          firstName: formData.firstName,
+          lastName: formData.lastName
+        });
+        alert('회원가입이 완료되었습니다! 이메일 인증을 확인해주세요.');
+        
+        // 회원가입 성공 후 로그인 폼으로 전환
+        setIsLogin(true);
+        setFormData({
+          email: '',
+          password: '',
+          confirmPassword: '',
+          firstName: '',
+          lastName: ''
+        });
+      }
+    } catch (err) {
+      setSubmitError(err instanceof Error ? err.message : '오류가 발생했습니다.');
     }
-    
-    console.log('Form submitted:', formData);
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -129,17 +166,30 @@ const Login: React.FC = () => {
           transition={{ delay: 0.3, duration: 0.5 }}
         >
           {!isLogin && (
-            <div className="login-input-group">
-              <input
-                type="text"
-                name="name"
-                value={formData.name}
-                onChange={handleChange}
-                className="login-input"
-                placeholder="Enter your full name"
-                required={!isLogin}
-              />
-            </div>
+            <>
+              <div className="login-input-group">
+                <input
+                  type="text"
+                  name="firstName"
+                  value={formData.firstName}
+                  onChange={handleChange}
+                  className="login-input"
+                  placeholder="Enter your first name"
+                  required={!isLogin}
+                />
+              </div>
+              <div className="login-input-group">
+                <input
+                  type="text"
+                  name="lastName"
+                  value={formData.lastName}
+                  onChange={handleChange}
+                  className="login-input"
+                  placeholder="Enter your last name"
+                  required={!isLogin}
+                />
+              </div>
+            </>
           )}
 
           <div className="login-input-group">
@@ -198,16 +248,29 @@ const Login: React.FC = () => {
             </motion.div>
           )}
 
+          {/* Error Message */}
+          {(error || submitError) && (
+            <motion.div
+              className="login-error"
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.3 }}
+            >
+              {error || submitError}
+            </motion.div>
+          )}
+
           <motion.button
             type="submit"
             className="login-submit-btn"
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
+            disabled={loading}
+            whileHover={{ scale: loading ? 1 : 1.02 }}
+            whileTap={{ scale: loading ? 1 : 0.98 }}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.8 }}
           >
-            {isLogin ? 'Sign In' : 'Create Account'}
+            {loading ? '처리 중...' : (isLogin ? 'Sign In' : 'Create Account')}
           </motion.button>
         </motion.form>
 

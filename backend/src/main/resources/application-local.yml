@@ -1,11 +1,11 @@
 # Local Development Environment Configuration
 server:
-  port: 8081
+  port: 8080
 
 spring:
   datasource:
-    url: jdbc:mysql://himchan.synology.me:30005/dev_thefpv?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true&characterEncoding=UTF-8
-    username: dev_thefpv_admin
+    url: jdbc:mysql://himchan.synology.me:30005/dev_thehfpv?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true&characterEncoding=UTF-8
+    username: dev_thehfpv_admin
     password: Devthehfpv12!@
     driver-class-name: com.mysql.cj.jdbc.Driver
   
@@ -21,10 +21,14 @@ spring:
         naming:
           physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
           implicit-strategy: org.hibernate.boot.model.naming.ImplicitNamingStrategyLegacyJpaImpl
+  
+  # Jackson Configuration for Date Format
+  jackson:
+    date-format: MM-dd-yyyy HH:mm:ss
+    time-zone: UTC
 
 # JWT Configuration
 jwt:
-  secret: mySecretKey
   expiration: 86400000
 
 # CORS Configuration
