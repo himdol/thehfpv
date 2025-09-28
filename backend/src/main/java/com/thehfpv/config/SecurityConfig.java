@@ -53,10 +53,9 @@ public class SecurityConfig {
             .csrf(csrf -> csrf.disable())
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED))
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/api/session/**").permitAll() // 세션 관련 경로 허용 (최우선)
-                .requestMatchers("/session/**").permitAll() // 세션 관련 경로 허용 (컨텍스트 경로 없이)
+                .requestMatchers("/api/visitor/**").permitAll() // 방문자 통계 API 허용
+                .requestMatchers("/api/session/**").permitAll() // 세션 관련 경로 허용
                 .requestMatchers("/api/auth/register", "/api/auth/login").permitAll()
-                .requestMatchers("/auth/register", "/auth/login").permitAll() // 컨텍스트 경로 없이도 허용
                 .requestMatchers("/api/auth/profile").authenticated() // 프로필 수정은 인증 필요
                 .requestMatchers("/api/oauth2/**", "/api/login/oauth2/**", "/login/oauth2/**").permitAll() // OAuth2 경로 허용
                 .requestMatchers("/public/**").permitAll()

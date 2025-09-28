@@ -2,6 +2,7 @@ import React, { useRef, useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useTheme } from '../contexts/ThemeContext';
 import { useCounter } from '../hooks/useCounter';
+import visitorService, { VisitorStats } from '../services/visitorService';
 
 const About: React.FC = () => {
   const { isDarkMode } = useTheme();
@@ -16,10 +17,38 @@ const About: React.FC = () => {
     message: ''
   });
 
-  // Counter animations
+  // 방문자 통계 상태
+  const [visitorStats, setVisitorStats] = useState<VisitorStats>({
+    todayVisitors: 0,
+    totalVisitors: 0,
+    lastUpdated: new Date().toISOString(),
+    status: 'loading'
+  });
+
+  // Counter animations - 실제 데이터 사용
   const totalPostCount = useCounter({ end: 156, duration: 1500 });
-  const todayVisitorCount = useCounter({ end: 2847, duration: 2500 });
-  const totalVisitorCount = useCounter({ end: 15200, suffix: 'K', duration: 3000 });
+  const todayVisitorCount = useCounter({ end: visitorStats.todayVisitors, duration: 2500 });
+  const totalVisitorCount = useCounter({ end: visitorStats.totalVisitors, duration: 3000 });
+
+  // 방문자 추적 및 통계 로드
+  useEffect(() => {
+    const trackVisitorAndLoadStats = async () => {
+      try {
+        console.log('=== About 페이지 방문자 추적 시작 ===');
+        await visitorService.trackVisitor();
+        console.log('방문자 추적 완료');
+        
+        // 통계 데이터 로드
+        const stats = await visitorService.getVisitorStats();
+        setVisitorStats(stats);
+        console.log('방문자 통계 로드 완료:', stats);
+      } catch (error) {
+        console.error('방문자 추적 또는 통계 로드 실패:', error);
+      }
+    };
+
+    trackVisitorAndLoadStats();
+  }, []);
 
   const skills = [
     { name: 'Filming', icon: '🎥' },
