@@ -64,9 +64,12 @@ const Header: React.FC<HeaderProps> = ({
 
   return (
     <header className="header">
-      <div className="logo" onClick={() => setCurrentPage('about')} style={{ cursor: 'pointer' }}>
-        <span className="logo-h">H</span>
+      <div className="header-left">
+        <div className="logo" onClick={() => setCurrentPage('about')} style={{ cursor: 'pointer' }}>
+          <span className="logo-h">H</span>
+        </div>
       </div>
+      
       <nav className="nav">
         {navItems.map((item) => (
           <button
@@ -77,60 +80,63 @@ const Header: React.FC<HeaderProps> = ({
             {item.label}
           </button>
         ))}
-        {!isLoggedIn && (
-          <button
-            onClick={handleLoginClick}
-            className={currentPage === 'login' ? 'nav-item active' : 'nav-item'}
-          >
-            SIGN IN
-          </button>
-        )}
       </nav>
-      <div className="header-actions">
-        <button className="theme-toggle" onClick={toggleTheme}>
-          {isDarkMode ? '☀️' : '🌙'}
-        </button>
-        {isLoggedIn && user && (
-          <div className="user-profile-container" ref={userMenuRef}>
+      
+      <div className="header-right">
+        <div className="header-actions">
+          <button className="theme-toggle" onClick={toggleTheme}>
+            {isDarkMode ? '☀️' : '🌙'}
+          </button>
+          {!isLoggedIn && (
             <button
-              className="user-profile-btn"
-              onClick={() => setShowUserMenu(!showUserMenu)}
-              title={`${user.firstName || ''} ${user.lastName || ''}`.trim() || user.email}
+              onClick={handleLoginClick}
+              className={currentPage === 'login' ? 'nav-item active' : 'nav-item'}
             >
-              <div className="user-avatar">
-                {getUserInitials(user.firstName, user.lastName)}
-              </div>
+              SIGN IN
             </button>
-            {showUserMenu && (
-              <div className="user-menu">
-                <div className="user-info">
-                  <div className="user-avatar-large">
-                    {getUserInitials(user.firstName, user.lastName)}
+          )}
+          {isLoggedIn && user && (
+            <div className="user-profile-container" ref={userMenuRef}>
+              <button
+                className="user-profile-btn"
+                onClick={() => setShowUserMenu(!showUserMenu)}
+                title={`${user.firstName || ''} ${user.lastName || ''}`.trim() || user.email}
+              >
+                <div className="user-avatar">
+                  {getUserInitials(user.firstName, user.lastName)}
+                </div>
+              </button>
+              {showUserMenu && (
+                <div className="user-menu">
+                  <div className="user-info">
+                    <div className="user-avatar-large">
+                      {getUserInitials(user.firstName, user.lastName)}
+                    </div>
+                    <div className="user-details">
+                      <div className="user-name">{`${user.firstName || ''} ${user.lastName || ''}`.trim() || user.email}</div>
+                      <div className="user-email">{user.email}</div>
+                      <div className="user-role">{user.userRole}</div>
+                    </div>
                   </div>
-                  <div className="user-details">
-                    <div className="user-name">{`${user.firstName || ''} ${user.lastName || ''}`.trim() || user.email}</div>
-                    <div className="user-email">{user.email}</div>
-                    <div className="user-role">{user.userRole}</div>
+                  <div className="user-menu-actions">
+                    <button 
+                      className="user-menu-item" 
+                      onClick={() => {
+                        setShowUserMenu(false);
+                        setCurrentPage('profile');
+                      }}
+                    >
+                      내 정보
+                    </button>
+                    <button className="user-menu-item" onClick={handleLogout}>
+                      로그아웃
+                    </button>
                   </div>
                 </div>
-                <div className="user-menu-actions">
-                  <button 
-                    className="user-menu-item" 
-                    onClick={() => {
-                      setShowUserMenu(false);
-                      setCurrentPage('profile');
-                    }}
-                  >
-                    내 정보
-                  </button>
-                  <button className="user-menu-item" onClick={handleLogout}>
-                    로그아웃
-                  </button>
-                </div>
-              </div>
-            )}
-          </div>
-        )}
+              )}
+            </div>
+          )}
+        </div>
       </div>
     </header>
   );

@@ -28,20 +28,22 @@ function AppContent() {
       if (oauthSuccess === 'true' && token) {
         console.log('OAuth2 토큰 받음:', token);
         
-        // 토큰을 localStorage에 저장
-        localStorage.setItem('token', token);
+        // 토큰을 localStorage에 저장 (authService와 일관성 유지)
+        localStorage.setItem('authToken', token);
         
         // URL에서 파라미터 제거
         window.history.replaceState({}, document.title, '/');
         
         // 백엔드에서 사용자 정보 가져오기
         try {
+          console.log('JWT 토큰으로 프로필 요청:', token);
           const response = await fetch('http://localhost:8080/api/auth/profile', {
             method: 'GET',
             headers: {
               'Authorization': `Bearer ${token}`,
               'Content-Type': 'application/json',
             },
+            credentials: 'include',
           });
           
           if (response.ok) {
@@ -52,8 +54,14 @@ function AppContent() {
             localStorage.setItem('user', JSON.stringify(data.user));
             localStorage.setItem('isAuthenticated', 'true');
             
-            // 페이지 새로고침하여 인증 상태 업데이트
-            window.location.reload();
+            // AuthContext의 socialLogin 함수 호출하여 상태 업데이트
+            await socialLogin(data.user);
+            
+            // About 페이지로 이동 (일반 로그인과 동일하게)
+            setCurrentPage('about');
+            
+            // 성공 메시지 표시
+            alert('Google 로그인이 완료되었습니다!');
             return;
           }
         } catch (error) {

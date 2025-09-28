@@ -116,15 +116,18 @@ public class AuthController {
             Map<String, Object> response = new HashMap<>();
             response.put("message", "Login successful");
             response.put("token", jwtToken);
-            response.put("user", Map.of(
-                "userId", user.getUserId(),
-                "email", user.getEmail(),
-                "firstName", user.getFirstName(),
-                "lastName", user.getLastName(),
-                "userRole", user.getUserRole().getCode(),
-                "emailVerified", user.getEmailVerified(),
-                "provider", user.getProvider()
-            ));
+            
+            // user 정보를 안전하게 생성 (null 값 허용)
+            Map<String, Object> userInfo = new HashMap<>();
+            userInfo.put("userId", user.getUserId());
+            userInfo.put("email", user.getEmail());
+            userInfo.put("firstName", user.getFirstName());
+            userInfo.put("lastName", user.getLastName());
+            userInfo.put("userRole", user.getUserRole().getCode());
+            userInfo.put("emailVerified", user.getEmailVerified());
+            userInfo.put("provider", user.getProvider());
+            
+            response.put("user", userInfo);
             
             return ResponseEntity.ok(response);
             
@@ -142,21 +145,35 @@ public class AuthController {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             String currentUserEmail = authentication.getName();
             
+            System.out.println("=== AuthController.getProfile 호출됨 ===");
+            System.out.println("현재 사용자 이메일: " + currentUserEmail);
+            
+            // 사용자 조회 (이메일로 먼저 시도)
             User currentUser = userRepository.findByEmail(currentUserEmail)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElse(null);
+            
+            if (currentUser == null) {
+                System.out.println("이메일로 사용자를 찾을 수 없음: " + currentUserEmail);
+                throw new RuntimeException("User not found with email: " + currentUserEmail);
+            }
+            
+            System.out.println("사용자 조회 성공: " + currentUser.getEmail() + ", Provider: " + currentUser.getProvider());
             
             // 응답 생성
             Map<String, Object> response = new HashMap<>();
             response.put("message", "프로필 정보 조회 성공");
-            response.put("user", Map.of(
-                "userId", currentUser.getUserId(),
-                "email", currentUser.getEmail(),
-                "firstName", currentUser.getFirstName(),
-                "lastName", currentUser.getLastName(),
-                "userRole", currentUser.getUserRole().getCode(),
-                "emailVerified", currentUser.getEmailVerified(),
-                "provider", currentUser.getProvider()
-            ));
+            
+            // user 정보를 안전하게 생성 (null 값 허용)
+            Map<String, Object> userInfo = new HashMap<>();
+            userInfo.put("userId", currentUser.getUserId());
+            userInfo.put("email", currentUser.getEmail());
+            userInfo.put("firstName", currentUser.getFirstName());
+            userInfo.put("lastName", currentUser.getLastName());
+            userInfo.put("userRole", currentUser.getUserRole().getCode());
+            userInfo.put("emailVerified", currentUser.getEmailVerified());
+            userInfo.put("provider", currentUser.getProvider());
+            
+            response.put("user", userInfo);
             
             return ResponseEntity.ok(response);
             
