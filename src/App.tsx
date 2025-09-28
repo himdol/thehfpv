@@ -31,7 +31,7 @@ function AppContent() {
         // 토큰을 localStorage에 저장 (authService와 일관성 유지)
         localStorage.setItem('authToken', token);
         
-        // URL에서 파라미터 제거
+        // URL에서 파라미터 제거 (무한루프 방지)
         window.history.replaceState({}, document.title, '/');
         
         // 백엔드에서 사용자 정보 가져오기

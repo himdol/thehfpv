@@ -57,7 +57,7 @@ public class SecurityConfig {
                 .requestMatchers("/api/session/**").permitAll() // 세션 관련 경로 허용
                 .requestMatchers("/api/auth/register", "/api/auth/login").permitAll()
                 .requestMatchers("/api/auth/profile").authenticated() // 프로필 수정은 인증 필요
-                .requestMatchers("/api/oauth2/**", "/api/login/oauth2/**", "/login/oauth2/**").permitAll() // OAuth2 경로 허용
+                .requestMatchers("/oauth2/**", "/login/oauth2/**", "/api/oauth2/**", "/api/login/oauth2/**").permitAll() // OAuth2 경로 허용
                 .requestMatchers("/public/**").permitAll()
                 .requestMatchers("/database/**").permitAll()
                 .requestMatchers("/test/**").permitAll()
@@ -94,7 +94,7 @@ public class SecurityConfig {
                         response.getWriter().write("{\"error\":\"Unauthorized\",\"message\":\"Authentication required\"}");
                     } else {
                         // 웹 요청인 경우 OAuth2로 리다이렉트
-                        response.sendRedirect("/api/oauth2/authorization/google");
+                        response.sendRedirect("/oauth2/authorization/google");
                     }
                 })
             );

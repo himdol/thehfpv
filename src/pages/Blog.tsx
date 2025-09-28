@@ -10,7 +10,7 @@ interface BlogProps {
 
 const Blog: React.FC<BlogProps> = ({ setCurrentPage }) => {
   // Auth context
-  const { checkAuthStatus } = useAuth();
+  const { checkAuthStatus, user } = useAuth();
   
   // State management
   const [posts, setPosts] = useState<BlogPost[]>([]);
@@ -261,6 +261,25 @@ const Blog: React.FC<BlogProps> = ({ setCurrentPage }) => {
 
           {/* Blog Posts */}
           <div className="blog-posts-container">
+            {/* Write Blog Button - ROOT 권한만 표시 */}
+            {user?.userRole === 'ROOT' && (
+              <div className="blog-write-btn-container">
+                <button 
+                  className="blog-write-btn"
+                  onClick={() => {
+                    console.log('Write blog button clicked');
+                    if (setCurrentPage) {
+                      setCurrentPage('write-blog');
+                    }
+                  }}
+                >
+                  <svg className="blog-write-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <path d="M12 5v14M5 12h14"/>
+                  </svg>
+                  Write Blog
+                </button>
+              </div>
+            )}
             {filteredAndSortedPosts.length === 0 ? (
               <div className="blog-empty-state">
                 <svg className="blog-empty-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">

@@ -1,6 +1,7 @@
 import React from 'react';
 import About from '../pages/About';
 import Blog from '../pages/Blog';
+import WriteBlog from '../pages/WriteBlog';
 import Login from '../pages/Login';
 import Profile from '../pages/Profile';
 import AuthCallback from '../pages/AuthCallback';
@@ -15,6 +16,8 @@ const Router: React.FC<RouterProps> = ({ currentPage, setCurrentPage, previousPa
   switch (currentPage) {
     case 'blog':
       return <Blog setCurrentPage={setCurrentPage} />;
+    case 'write-blog':
+      return <WriteBlog setCurrentPage={setCurrentPage} />;
     case 'login':
       return <Login setCurrentPage={setCurrentPage} previousPage={previousPage} />;
     case 'profile':

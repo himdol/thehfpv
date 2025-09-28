@@ -1200,6 +1200,411 @@
   .landing-pad {
     text-align: center;
   }
+
+  /* Blog Write Button Responsive */
+  .blog-write-btn-container {
+    justify-content: center;
+    margin-bottom: 1.5rem;
+  }
+
+  .blog-write-btn {
+    padding: 0.625rem 1.25rem;
+    font-size: 0.9rem;
+  }
+}
+
+/* Write Blog Page Styles */
+.write-blog-layout {
+  min-height: 100vh;
+  background: white;
+  padding: 2rem 0;
+}
+
+.App.dark .write-blog-layout {
+  background: #1a1a1a;
+}
+
+.write-blog-main {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+.write-blog-container {
+  background: white;
+  border-radius: 1rem;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+.App.dark .write-blog-container {
+  background: #1a1a1a;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+}
+
+.write-blog-header {
+  background: linear-gradient(135deg, #374151 0%, #1f2937 100%);
+  backdrop-filter: blur(10px);
+  color: white;
+  padding: 2rem;
+  text-align: center;
+  border-radius: 1rem 1rem 0 0;
+}
+
+.App.dark .write-blog-header {
+  background: linear-gradient(135deg, #1f2937 0%, #111827 100%);
+  backdrop-filter: blur(10px);
+}
+
+.write-blog-title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin: 0 0 0.5rem 0;
+}
+
+.write-blog-subtitle {
+  font-size: 1.1rem;
+  opacity: 0.9;
+  margin: 0;
+}
+
+.write-blog-form {
+  padding: 2rem;
+}
+
+.form-group {
+  margin-bottom: 1.5rem;
+  width: 100%;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.form-input,
+.form-select,
+.form-textarea {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: 2px solid #e5e7eb;
+  border-radius: 0.5rem;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  background: white;
+  color: #374151;
+  box-sizing: border-box;
+}
+
+.App.dark .form-input,
+.App.dark .form-select,
+.App.dark .form-textarea {
+  background: #2d3748;
+  border-color: #4a5568;
+  color: #e5e7eb;
+}
+
+.form-input:focus,
+.form-select:focus,
+.form-textarea:focus {
+  outline: none;
+  border-color: #ef4444;
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
+}
+
+.App.dark .form-input:focus,
+.App.dark .form-select:focus,
+.App.dark .form-textarea:focus {
+  border-color: #ef4444;
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.2);
+}
+
+.form-textarea {
+  resize: vertical;
+  min-height: 300px;
+  font-family: inherit;
+  line-height: 1.6;
+}
+
+/* Publish Options */
+.publish-options {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.radio-group {
+  display: flex;
+  gap: 1.5rem;
+}
+
+.radio-label {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  font-weight: 500;
+  color: #374151;
+}
+
+.App.dark .radio-label {
+  color: #e5e7eb;
+}
+
+.radio-input {
+  margin-right: 0.5rem;
+  width: 1.2rem;
+  height: 1.2rem;
+  accent-color: #ef4444;
+}
+
+.radio-text {
+  user-select: none;
+}
+
+.schedule-inputs {
+  display: flex;
+  gap: 1rem;
+  margin-top: 0.5rem;
+}
+
+.schedule-date,
+.schedule-time {
+  flex: 1;
+}
+
+.form-buttons {
+  display: flex;
+  gap: 1rem;
+  justify-content: flex-end;
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid #e5e7eb;
+}
+
+.App.dark .form-buttons {
+  border-top-color: #4a5568;
+}
+
+.btn-cancel,
+.btn-submit {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  border-radius: 2rem;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: none;
+}
+
+.btn-cancel {
+  background: linear-gradient(135deg, #6b7280 0%, #4b5563 100%);
+  color: white;
+}
+
+.btn-cancel:hover {
+  background: linear-gradient(135deg, #4b5563 0%, #374151 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(107, 114, 128, 0.3);
+}
+
+.App.dark .btn-cancel {
+  background: linear-gradient(135deg, #6b7280 0%, #4b5563 100%);
+  color: white;
+}
+
+.App.dark .btn-cancel:hover {
+  background: linear-gradient(135deg, #4b5563 0%, #374151 100%);
+  box-shadow: 0 4px 12px rgba(107, 114, 128, 0.4);
+}
+
+.btn-submit {
+  background: linear-gradient(135deg, #ff4444 0%, #ff0000 100%);
+  color: white;
+}
+
+.btn-submit:hover:not(:disabled) {
+  background: linear-gradient(135deg, #ff0000 0%, #cc0000 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(255, 0, 0, 0.3);
+}
+
+.App.dark .btn-submit {
+  background: linear-gradient(135deg, #ff4444 0%, #ff0000 100%);
+  color: white;
+}
+
+.App.dark .btn-submit:hover:not(:disabled) {
+  background: linear-gradient(135deg, #ff0000 0%, #cc0000 100%);
+  box-shadow: 0 4px 12px rgba(255, 0, 0, 0.4);
+}
+
+.btn-submit:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+/* Write Blog Responsive */
+@media (max-width: 768px) {
+  .write-blog-layout {
+    padding: 1rem 0;
+  }
+  
+  .write-blog-main {
+    padding: 0 0.5rem;
+  }
+  
+  .write-blog-header {
+    padding: 1.5rem;
+  }
+  
+  .write-blog-title {
+    font-size: 2rem;
+  }
+  
+  .write-blog-form {
+    padding: 1.5rem;
+  }
+  
+  .form-row {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  
+  .radio-group {
+    flex-direction: column;
+    gap: 1rem;
+  }
+  
+  .schedule-inputs {
+    flex-direction: column;
+  }
+  
+  .form-buttons {
+    flex-direction: column;
+  }
+  
+  .btn-cancel,
+  .btn-submit {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+/* TinyMCE Editor Styles */
+.tinymce-editor {
+  width: 100%;
+  border: 2px solid #e5e7eb;
+  border-radius: 0.5rem;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.tinymce-editor:focus-within {
+  border-color: #ef4444;
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
+}
+
+.App.dark .tinymce-editor {
+  border-color: #4a5568;
+}
+
+.App.dark .tinymce-editor:focus-within {
+  border-color: #ef4444;
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.2);
+}
+
+/* TinyMCE Toolbar Customization */
+.tox .tox-toolbar__primary {
+  background: #f9fafb;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.App.dark .tox .tox-toolbar__primary {
+  background: #374151;
+  border-bottom-color: #4a5568;
+}
+
+.tox .tox-tbtn {
+  color: #374151;
+}
+
+.App.dark .tox .tox-tbtn {
+  color: #e5e7eb;
+}
+
+.tox .tox-tbtn:hover {
+  background: #e5e7eb;
+}
+
+.App.dark .tox .tox-tbtn:hover {
+  background: #4a5568;
+}
+
+.tox .tox-tbtn--enabled {
+  background: #ef4444;
+  color: white;
+}
+
+.tox .tox-tbtn--enabled:hover {
+  background: #dc2626;
+}
+
+/* TinyMCE Content Area */
+.tox .tox-edit-area__iframe {
+  background: white;
+}
+
+.App.dark .tox .tox-edit-area__iframe {
+  background: #1a1a1a;
+}
+
+/* TinyMCE Status Bar */
+.tox .tox-statusbar {
+  background: #f9fafb;
+  border-top: 1px solid #e5e7eb;
+  color: #6b7280;
+}
+
+.App.dark .tox .tox-statusbar {
+  background: #374151;
+  border-top-color: #4a5568;
+  color: #9ca3af;
+}
+
+/* TinyMCE Menu */
+.tox .tox-menu {
+  background: white;
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.App.dark .tox .tox-menu {
+  background: #374151;
+  border-color: #4a5568;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
+}
+
+.tox .tox-collection__item {
+  color: #374151;
+}
+
+.App.dark .tox .tox-collection__item {
+  color: #e5e7eb;
+}
+
+.tox .tox-collection__item:hover {
+  background: #f3f4f6;
+}
+
+.App.dark .tox .tox-collection__item:hover {
+  background: #4a5568;
 }
 
 /* Nomad Coders 스타일 유틸리티 클래스 */
@@ -1844,6 +2249,40 @@
   width: 20px;
   height: 20px;
   fill: currentColor;
+}
+
+/* Blog Write Button - YouTube 버튼과 동일한 스타일 */
+.blog-write-btn-container {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 2rem;
+}
+
+.blog-write-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: linear-gradient(135deg, #ff4444 0%, #ff0000 100%);
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 2rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 1rem;
+}
+
+.blog-write-btn:hover {
+  background: linear-gradient(135deg, #ff0000 0%, #cc0000 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(255, 0, 0, 0.3);
+}
+
+.blog-write-icon {
+  width: 20px;
+  height: 20px;
+  stroke: currentColor;
 }
 
 .footer-bottom {
@@ -3821,6 +4260,17 @@
 .App.dark .blog-like-btn.liked:hover {
   background: transparent;
   color: #dc2626;
+}
+
+/* Blog Write Button Dark Mode */
+.App.dark .blog-write-btn {
+  background: linear-gradient(135deg, #ff4444 0%, #ff0000 100%);
+  color: white;
+}
+
+.App.dark .blog-write-btn:hover {
+  background: linear-gradient(135deg, #ff0000 0%, #cc0000 100%);
+  box-shadow: 0 4px 12px rgba(255, 0, 0, 0.4);
 }
 
 
