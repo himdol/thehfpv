@@ -62,8 +62,9 @@ public class SecurityConfig {
                 .requestMatchers("/blog/posts/featured", "/blog/posts/category/**", 
                                "/blog/posts/search", "/blog/posts/recent", "/blog/posts/popular",
                                "/blog/posts/slug/**").permitAll() // 블로그 공개 API 허용
-                .requestMatchers("/blog/posts", "/blog/my-posts/**", "/blog/posts/*/publish", 
-                               "/blog/stats").authenticated() // 블로그 작성/관리 API는 인증 필요
+                .requestMatchers("/blog/posts").permitAll() // 임시로 블로그 작성 허용
+                .requestMatchers("/blog/my-posts/**", "/blog/posts/*/publish", 
+                               "/blog/stats").authenticated() // 블로그 관리 API는 인증 필요
                 .requestMatchers("/oauth2/**", "/login/oauth2/**").permitAll() // OAuth2 경로 허용
                 .requestMatchers("/public/**").permitAll()
                 .requestMatchers("/database/**").permitAll()

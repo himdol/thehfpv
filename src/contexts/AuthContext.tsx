@@ -4,6 +4,7 @@ import { authService, User, LoginRequest, RegisterRequest, UpdateProfileRequest 
 interface AuthContextType {
   isLoggedIn: boolean;
   user: User | null;
+  token: string | null;
   login: (credentials: LoginRequest) => Promise<void>;
   socialLogin: (userData: User) => Promise<void>;
   register: (userData: RegisterRequest) => Promise<void>;
@@ -31,6 +32,7 @@ interface AuthProviderProps {
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
   const [user, setUser] = useState<User | null>(null);
+  const [token, setToken] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -41,6 +43,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       
       const response = await authService.login(credentials);
       setUser(response.user);
+      setToken(response.token);
       setIsLoggedIn(true);
     } catch (err) {
       setError(err instanceof Error ? err.message : '로그인에 실패했습니다.');
@@ -97,6 +100,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       setLoading(true);
       await authService.logout();
       setUser(null);
+      setToken(null);
       setIsLoggedIn(false);
       setError(null);
     } catch (err) {
@@ -153,6 +157,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const value: AuthContextType = {
     isLoggedIn,
     user,
+    token,
     login,
     socialLogin,
     register,

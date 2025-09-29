@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import TinyMCEEditor from '../components/TinyMCEEditor';
+import { useAuth } from '../contexts/AuthContext';
 
 interface WriteBlogProps {
   setCurrentPage?: (page: string) => void;
 }
 
 const WriteBlog: React.FC<WriteBlogProps> = ({ setCurrentPage }) => {
+  const { token } = useAuth();
   const [formData, setFormData] = useState({
     title: '',
     content: '',
@@ -38,19 +40,40 @@ const WriteBlog: React.FC<WriteBlogProps> = ({ setCurrentPage }) => {
       console.log('전송할 데이터:', formData);
       
       // 백엔드 API 호출
-           const response = await fetch('http://localhost:8080/blog/posts', {
+      const headers: Record<string, string> = {
+        'Content-Type': 'application/json',
+      };
+      
+      // JWT 토큰이 있으면 Authorization 헤더 추가
+      if (token) {
+        headers['Authorization'] = `Bearer ${token}`;
+      }
+      
+      const response = await fetch('http://localhost:8080/blog/posts', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers,
         credentials: 'include', // 쿠키 포함
         body: JSON.stringify(formData)
       });
 
+      console.log('응답 상태:', response.status);
       const result = await response.json();
+      console.log('응답 데이터:', result);
 
       if (result.success) {
         alert('블로그 작성이 완료되었습니다!');
+        
+        // 폼 초기화
+        setFormData({
+          title: '',
+          content: '',
+          category: 'filming',
+          tags: '',
+          featured: false,
+          publishType: 'immediate',
+          scheduledDate: '',
+          scheduledTime: ''
+        });
         
         // 블로그 목록으로 이동
         if (setCurrentPage) {
@@ -61,7 +84,7 @@ const WriteBlog: React.FC<WriteBlogProps> = ({ setCurrentPage }) => {
       }
     } catch (error) {
       console.error('블로그 작성 중 오류:', error);
-      alert('블로그 작성 중 오류가 발생했습니다.');
+      alert('블로그 작성 중 오류가 발생했습니다. 네트워크 연결을 확인해주세요.');
     } finally {
       setIsSubmitting(false);
     }
