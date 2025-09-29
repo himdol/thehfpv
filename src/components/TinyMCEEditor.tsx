@@ -22,42 +22,62 @@ const TinyMCEEditor: React.FC<TinyMCEEditorProps> = ({
 
   const handleImageUpload = (blobInfo: any, progress: any) => {
     return new Promise((resolve, reject) => {
-      // 임시로 base64로 변환하여 사용 (실제 프로젝트에서는 서버에 업로드)
-      const reader = new FileReader();
-      reader.onload = () => {
-        resolve(reader.result);
-      };
-      reader.onerror = () => {
-        reject('Image upload failed');
-      };
-      reader.readAsDataURL(blobInfo.blob());
+      const formData = new FormData();
+      formData.append('file', blobInfo.blob(), blobInfo.filename());
+
+      fetch('http://localhost:8080/api/upload/image', {
+        method: 'POST',
+        body: formData,
+        credentials: 'include'
+      })
+      .then(response => response.json())
+      .then(result => {
+        if (result.success) {
+          resolve(result.url);
+        } else {
+          reject('Image upload failed: ' + result.message);
+        }
+      })
+      .catch(error => {
+        console.error('Image upload error:', error);
+        // 서버 업로드 실패 시 base64로 폴백
+        const reader = new FileReader();
+        reader.onload = () => {
+          resolve(reader.result);
+        };
+        reader.onerror = () => {
+          reject('Image upload failed');
+        };
+        reader.readAsDataURL(blobInfo.blob());
+      });
     });
   };
 
   return (
     <div className="tinymce-editor">
       <Editor
+        apiKey='j69hl3kl4gbjuz66p7jhgwqjepwnukqeyujfgdxwteu8jdpn'
         onInit={(evt, editor) => editorRef.current = editor}
         value={value}
         onEditorChange={handleEditorChange}
         init={{
-          apiKey: 'j69hl3kl4gbjuz66p7jhgwqjepwnukqeyujfgdxwteu8jdpn',
           height: height,
-          menubar: false,
-          promotion: false,
-          branding: false,
           plugins: [
-            'advlist', 'autolink', 'lists', 'link', 'image', 'charmap', 'preview',
-            'anchor', 'searchreplace', 'visualblocks', 'code', 'fullscreen',
-            'insertdatetime', 'media', 'table', 'help', 'wordcount', 'emoticons',
-            'textcolor', 'colorpicker', 'textpattern', 'nonbreaking', 'pagebreak',
-            'save', 'directionality', 'paste', 'textcolor', 'colorpicker'
+            // Core editing features
+            'anchor', 'autolink', 'charmap', 'codesample', 'emoticons', 'link', 'lists', 'media', 'searchreplace', 'table', 'visualblocks', 'wordcount',
+            // Your account includes a free trial of TinyMCE premium features
+            // Try the most popular premium features until Oct 12, 2025:
+            'checklist', 'mediaembed', 'casechange', 'formatpainter', 'pageembed', 'a11ychecker', 'tinymcespellchecker', 'permanentpen', 'powerpaste', 'advtable', 'advcode', 'advtemplate', 'ai', 'uploadcare', 'mentions', 'tinycomments', 'tableofcontents', 'footnotes', 'mergetags', 'autocorrect', 'typography', 'inlinecss', 'markdown','importword', 'exportword', 'exportpdf'
           ],
-          toolbar: 'undo redo | blocks | ' +
-            'bold italic forecolor backcolor | alignleft aligncenter ' +
-            'alignright alignjustify | bullist numlist outdent indent | ' +
-            'removeformat | help | image | link | code | emoticons | ' +
-            'insertdatetime | table | charmap | preview | fullscreen',
+          toolbar: 'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link media table mergetags | addcomment showcomments | spellcheckdialog a11ycheck typography uploadcare | align lineheight | checklist numlist bullist indent outdent | emoticons charmap | removeformat',
+          tinycomments_mode: 'embedded',
+          tinycomments_author: 'Author name',
+          mergetags_list: [
+            { value: 'First.Name', title: 'First Name' },
+            { value: 'Email', title: 'Email' },
+          ],
+          ai_request: (request: any, respondWith: any) => respondWith.string(() => Promise.reject('See docs to implement AI Assistant')),
+          uploadcare_public_key: '1c6a463b9fe8a0af4e5e',
           content_style: `
             body { 
               font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; 
@@ -134,13 +154,7 @@ const TinyMCEEditor: React.FC<TinyMCEEditorProps> = ({
           paste_data_images: true,
           automatic_uploads: true,
           file_picker_types: 'image',
-          images_upload_handler: handleImageUpload,
-          setup: (editor: any) => {
-            editor.on('init', () => {
-              // 에디터 초기화 완료
-              console.log('TinyMCE Editor initialized');
-            });
-          }
+          images_upload_handler: handleImageUpload
         }}
       />
     </div>

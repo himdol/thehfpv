@@ -1506,6 +1506,8 @@
   transition: all 0.3s ease;
 }
 
+/* TinyMCE Self-hosted 모드에서는 설정 모달이 나타나지 않음 */
+
 .tinymce-editor:focus-within {
   border-color: #ef4444;
   box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
