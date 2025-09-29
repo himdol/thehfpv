@@ -14,7 +14,7 @@ export interface TrackVisitorResponse {
 
 // 방문자 통계 서비스
 class VisitorService {
-  private baseUrl = 'http://localhost:8080/api';
+  private baseUrl = 'http://localhost:8080';
 
   /**
    * 방문자 통계 조회

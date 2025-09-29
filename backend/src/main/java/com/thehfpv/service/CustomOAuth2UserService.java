@@ -134,7 +134,18 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
                                       throws java.io.IOException, jakarta.servlet.ServletException {
         System.err.println("=== OAuth2 인증 실패 ===");
         System.err.println("에러: " + exception.getMessage());
-        response.sendRedirect("http://localhost:3000/login?error=oauth_failed");
+        System.err.println("에러 타입: " + exception.getClass().getSimpleName());
+        
+        // OAuth 취소 상황 감지
+        String errorMessage = exception.getMessage();
+        if (errorMessage != null && (errorMessage.contains("access_denied") || 
+                                   errorMessage.contains("user_cancelled") ||
+                                   errorMessage.contains("cancelled"))) {
+            System.err.println("사용자가 OAuth 인증을 취소했습니다.");
+            response.sendRedirect("http://localhost:3000/login?error=oauth_cancelled");
+        } else {
+            response.sendRedirect("http://localhost:3000/login?error=oauth_failed");
+        }
     }
 
     private User processOAuth2User(org.springframework.security.oauth2.core.user.OAuth2User oauth2User) {

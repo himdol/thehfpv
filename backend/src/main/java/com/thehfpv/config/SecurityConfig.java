@@ -53,13 +53,18 @@ public class SecurityConfig {
             .csrf(csrf -> csrf.disable())
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED))
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/api/visitor/**").permitAll() // 방문자 통계 API 허용
-                .requestMatchers("/api/session/**").permitAll() // 세션 관련 경로 허용
-                .requestMatchers("/api/auth/register", "/api/auth/login").permitAll()
-                .requestMatchers("/api/auth/profile").authenticated() // 프로필 수정은 인증 필요
-                .requestMatchers("/api/upload/**").authenticated() // 이미지 업로드는 인증 필요
+                .requestMatchers("/visitor/**").permitAll() // 방문자 통계 API 허용
+                .requestMatchers("/session/**").permitAll() // 세션 관련 경로 허용
+                .requestMatchers("/auth/register", "/auth/login").permitAll()
+                .requestMatchers("/auth/profile").authenticated() // 프로필 수정은 인증 필요
+                .requestMatchers("/upload/**").authenticated() // 이미지 업로드는 인증 필요
                 .requestMatchers("/uploads/**").permitAll() // 업로드된 이미지 파일 접근 허용
-                .requestMatchers("/oauth2/**", "/login/oauth2/**", "/api/oauth2/**", "/api/login/oauth2/**").permitAll() // OAuth2 경로 허용
+                .requestMatchers("/blog/posts/featured", "/blog/posts/category/**", 
+                               "/blog/posts/search", "/blog/posts/recent", "/blog/posts/popular",
+                               "/blog/posts/slug/**").permitAll() // 블로그 공개 API 허용
+                .requestMatchers("/blog/posts", "/blog/my-posts/**", "/blog/posts/*/publish", 
+                               "/blog/stats").authenticated() // 블로그 작성/관리 API는 인증 필요
+                .requestMatchers("/oauth2/**", "/login/oauth2/**").permitAll() // OAuth2 경로 허용
                 .requestMatchers("/public/**").permitAll()
                 .requestMatchers("/database/**").permitAll()
                 .requestMatchers("/test/**").permitAll()
@@ -88,8 +93,7 @@ public class SecurityConfig {
                     System.out.println("X-Requested-With: " + request.getHeader("X-Requested-With"));
                     
                     // API 요청인 경우 JSON 응답 반환
-                    if (request.getRequestURI().startsWith("/api/") || 
-                        "application/json".equals(request.getHeader("Content-Type")) ||
+                    if ("application/json".equals(request.getHeader("Content-Type")) ||
                         "XMLHttpRequest".equals(request.getHeader("X-Requested-With"))) {
                         response.setStatus(401);
                         response.setContentType("application/json");

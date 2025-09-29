@@ -20,12 +20,12 @@ const TinyMCEEditor: React.FC<TinyMCEEditorProps> = ({
     onChange(content);
   };
 
-  const handleImageUpload = (blobInfo: any, progress: any) => {
-    return new Promise((resolve, reject) => {
+  const handleImageUpload = (blobInfo: any, progress: any): Promise<string> => {
+    return new Promise<string>((resolve, reject) => {
       const formData = new FormData();
       formData.append('file', blobInfo.blob(), blobInfo.filename());
 
-      fetch('http://localhost:8080/api/upload/image', {
+        fetch('http://localhost:8080/upload/image', {
         method: 'POST',
         body: formData,
         credentials: 'include'
@@ -43,7 +43,11 @@ const TinyMCEEditor: React.FC<TinyMCEEditorProps> = ({
         // 서버 업로드 실패 시 base64로 폴백
         const reader = new FileReader();
         reader.onload = () => {
-          resolve(reader.result);
+          if (reader.result && typeof reader.result === 'string') {
+            resolve(reader.result);
+          } else {
+            reject('Failed to read image data');
+          }
         };
         reader.onerror = () => {
           reject('Image upload failed');

@@ -3,6 +3,15 @@
 # 이메일 서비스 환경 변수 설정 스크립트
 # 사용법: source setup-env.sh
 
+echo "환경 변수를 설정합니다..."
+
+# Google OAuth 설정
+echo "Google OAuth 설정을 입력하세요:"
+echo -n "Google Client ID: "
+read GOOGLE_CLIENT_ID
+echo -n "Google Client Secret: "
+read GOOGLE_CLIENT_SECRET
+
 echo "이메일 서비스 환경 변수를 설정합니다..."
 
 # 이메일 서비스 제공업체 선택
@@ -119,5 +128,12 @@ case $EMAIL_PROVIDER in
         ;;
 esac
 
+# Google OAuth 환경변수 export
+export GOOGLE_CLIENT_ID=$GOOGLE_CLIENT_ID
+export GOOGLE_CLIENT_SECRET=$GOOGLE_CLIENT_SECRET
+
 echo "환경 변수가 설정되었습니다."
+echo "Google OAuth 설정:"
+echo "  Client ID: $GOOGLE_CLIENT_ID"
+echo "  Client Secret: ${GOOGLE_CLIENT_SECRET:0:10}..."
 echo "백엔드를 재시작하세요: cd backend && ./gradlew bootRun"

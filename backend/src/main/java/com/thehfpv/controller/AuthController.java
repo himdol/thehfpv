@@ -17,6 +17,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/auth")
@@ -100,8 +101,12 @@ public class AuthController {
             );
             
             // 사용자 정보 조회
-            User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+            Optional<User> userOpt = userRepository.findByEmail(email);
+            if (!userOpt.isPresent()) {
+                return ResponseEntity.badRequest()
+                    .body(createErrorResponse("User not found"));
+            }
+            User user = userOpt.get();
             
             // 개발 단계에서는 이메일 인증을 건너뛰고, 자동으로 인증 완료 처리
             if (!user.getEmailVerified()) {

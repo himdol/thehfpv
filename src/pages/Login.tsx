@@ -30,8 +30,14 @@ const Login: React.FC<LoginProps> = ({ setCurrentPage, previousPage }) => {
       // URL에서 파라미터 제거
       window.history.replaceState({}, document.title, '/');
       
-      if (error === 'oauth_failed') {
+      if (error === 'oauth_cancelled') {
         setSubmitError('Google 로그인이 취소되었습니다. 다시 시도해주세요.');
+        // 5초 후 에러 메시지 자동 제거
+        setTimeout(() => {
+          setSubmitError(null);
+        }, 5000);
+      } else if (error === 'oauth_failed') {
+        setSubmitError('Google 로그인 중 오류가 발생했습니다. 다시 시도해주세요.');
         // 5초 후 에러 메시지 자동 제거
         setTimeout(() => {
           setSubmitError(null);
@@ -101,7 +107,7 @@ const Login: React.FC<LoginProps> = ({ setCurrentPage, previousPage }) => {
 
   const handleGoogleLogin = () => {
     // Google OAuth2 로그인 페이지로 리다이렉트
-    window.location.href = 'http://localhost:8080/api/oauth2/authorization/google';
+    window.location.href = 'http://localhost:8080/oauth2/authorization/google';
   };
 
   return (

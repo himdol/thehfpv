@@ -10,8 +10,9 @@ const WriteBlog: React.FC<WriteBlogProps> = ({ setCurrentPage }) => {
   const [formData, setFormData] = useState({
     title: '',
     content: '',
-    category: 'development',
+    category: 'filming',
     tags: '',
+    featured: false, // Featured post option
     publishType: 'immediate', // 'immediate' or 'scheduled'
     scheduledDate: '',
     scheduledTime: ''
@@ -23,7 +24,8 @@ const WriteBlog: React.FC<WriteBlogProps> = ({ setCurrentPage }) => {
     const { name, value, type } = e.target;
     setFormData(prev => ({
       ...prev,
-      [name]: type === 'radio' ? (e.target as HTMLInputElement).value : value
+      [name]: type === 'checkbox' ? (e.target as HTMLInputElement).checked : 
+              type === 'radio' ? (e.target as HTMLInputElement).value : value
     }));
   };
 
@@ -32,15 +34,30 @@ const WriteBlog: React.FC<WriteBlogProps> = ({ setCurrentPage }) => {
     setIsSubmitting(true);
 
     try {
-      // TODO: 백엔드 API 호출
-      console.log('블로그 작성 데이터:', formData);
+      // 폼 데이터 확인
+      console.log('전송할 데이터:', formData);
       
-      // 임시로 성공 메시지 표시
-      alert('블로그 작성이 완료되었습니다!');
-      
-      // 블로그 목록으로 이동
-      if (setCurrentPage) {
-        setCurrentPage('blog');
+      // 백엔드 API 호출
+           const response = await fetch('http://localhost:8080/blog/posts', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include', // 쿠키 포함
+        body: JSON.stringify(formData)
+      });
+
+      const result = await response.json();
+
+      if (result.success) {
+        alert('블로그 작성이 완료되었습니다!');
+        
+        // 블로그 목록으로 이동
+        if (setCurrentPage) {
+          setCurrentPage('blog');
+        }
+      } else {
+        alert('블로그 작성 중 오류가 발생했습니다: ' + result.message);
       }
     } catch (error) {
       console.error('블로그 작성 중 오류:', error);
@@ -87,7 +104,7 @@ const WriteBlog: React.FC<WriteBlogProps> = ({ setCurrentPage }) => {
               />
             </div>
 
-            {/* Category and Tags Row */}
+            {/* Category, Tags and Featured Row */}
             <div className="form-row">
               <select
                 name="category"
@@ -95,11 +112,10 @@ const WriteBlog: React.FC<WriteBlogProps> = ({ setCurrentPage }) => {
                 onChange={handleInputChange}
                 className="form-select"
               >
-                <option value="development">Development</option>
-                <option value="daily">Daily Life</option>
-                <option value="tech">Technology</option>
-                <option value="tutorial">Tutorial</option>
-                <option value="review">Review</option>
+                <option value="filming">Filming</option>
+                <option value="production">Production</option>
+                <option value="running">Running</option>
+                <option value="travel">Travel</option>
               </select>
               
               <input
@@ -110,6 +126,20 @@ const WriteBlog: React.FC<WriteBlogProps> = ({ setCurrentPage }) => {
                 className="form-input"
                 placeholder="Tags (comma separated)"
               />
+
+              <div className="form-checkbox-container">
+                <input
+                  type="checkbox"
+                  name="featured"
+                  checked={formData.featured}
+                  onChange={handleInputChange}
+                  className="form-checkbox-small"
+                  id="featured-checkbox"
+                />
+                <label htmlFor="featured-checkbox" className="form-checkbox-label-small">
+                  ⭐
+                </label>
+              </div>
             </div>
 
             {/* Content */}

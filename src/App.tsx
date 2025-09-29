@@ -37,7 +37,7 @@ function AppContent() {
         // 백엔드에서 사용자 정보 가져오기
         try {
           console.log('JWT 토큰으로 프로필 요청:', token);
-          const response = await fetch('http://localhost:8080/api/auth/profile', {
+          const response = await fetch('http://localhost:8080/auth/profile', {
             method: 'GET',
             headers: {
               'Authorization': `Bearer ${token}`,
@@ -81,7 +81,7 @@ function AppContent() {
         try {
           console.log(`세션 정보 요청 시도 ${retryCount + 1}/${maxRetries}`);
           
-          const response = await fetch('http://localhost:8080/api/session/user', {
+          const response = await fetch('http://localhost:8080/session/user', {
             method: 'GET',
             credentials: 'include',
             headers: {

@@ -28,7 +28,7 @@ const AuthCallback: React.FC<AuthCallbackProps> = ({ setCurrentPage }) => {
 
         // 백엔드 세션에서 사용자 정보 가져오기
         console.log('세션 정보 요청 중...');
-        const response = await fetch('http://localhost:8080/api/session/user', {
+        const response = await fetch('http://localhost:8080/session/user', {
           method: 'GET',
           credentials: 'include', // 쿠키 포함
         });
