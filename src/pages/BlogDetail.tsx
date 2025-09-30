@@ -93,7 +93,7 @@ const BlogDetail: React.FC = () => {
           
           <h1 className="blog-detail-title">{post.title}</h1>
           
-          {post.author && post.author.trim() && (
+          {post.author && post.author.trim() && post.author !== 'Unknown' && (
             <div className="blog-detail-author">
               <span>작성자: {post.author}</span>
             </div>
