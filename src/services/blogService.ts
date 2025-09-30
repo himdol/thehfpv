@@ -41,6 +41,21 @@ class BlogService {
     }
   }
 
+  // Get related posts (random 3 posts excluding current post)
+  async getRelatedPosts(currentPostId: number, limit: number = 3): Promise<BlogPost[]> {
+    try {
+      const response = await apiService.getBlogPosts(1, 100);
+      const allPosts = response.posts.filter(post => post.id !== currentPostId);
+      
+      // Shuffle array and take first 'limit' posts
+      const shuffled = allPosts.sort(() => 0.5 - Math.random());
+      return shuffled.slice(0, limit);
+    } catch (error) {
+      console.error('Error fetching related posts:', error);
+      return [];
+    }
+  }
+
   // Get all posts (for client-side filtering)
   async getAllPosts(): Promise<BlogPost[]> {
     try {

@@ -10,9 +10,11 @@ export interface BlogPost {
   tags: string[];
   featured?: boolean;
   image?: string;
+  featuredImageUrl?: string;
   slug?: string;
   likes: number;
   isLiked: boolean;
+  viewCount?: number;
 }
 
 export interface BlogCategory {

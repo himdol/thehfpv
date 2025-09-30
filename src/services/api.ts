@@ -81,13 +81,9 @@ class ApiService {
           excerpt: post.excerpt || post.content?.substring(0, 150) + '...' || '',
           content: post.content,
           category: post.category,
-          date: new Date(post.publishedAt || post.createdAt).toLocaleDateString('en-US', {
-            year: 'numeric',
-            month: '2-digit',
-            day: '2-digit'
-          }).replace(/\//g, '-'),
+          date: post.createdAt,
           readTime: this.calculateReadTime(post.content),
-          author: post.author?.firstName + ' ' + post.author?.lastName || 'Unknown',
+          author: post.author?.firstName + (post.author?.lastName ? ' ' + post.author.lastName : '') || 'Unknown',
           tags: post.tags ? post.tags.split(',').map((tag: string) => tag.trim()) : [],
           featured: post.featured || false,
           image: post.featuredImageUrl || this.generateDefaultImage(post.title),
@@ -182,32 +178,60 @@ class ApiService {
     return canvas.toDataURL();
   }
 
+  // Get blog post by ID
   async getBlogPostById(id: number): Promise<ApiResponse<BlogPost>> {
-    await this.delay();
-    
-    // Mock single post data
-    const mockPost: BlogPost = {
-      id,
-      title: "React 19 New Features",
-      excerpt: "Explore the new features and improvements in React 19, and learn how to apply them in your projects.",
-      content: "This is the full content of the blog post...",
-      category: "Tech",
-      date: "01-15-2024",
-      readTime: "5 min",
-      author: "H",
-      tags: ["React", "JavaScript", "Frontend"],
-      featured: true,
-      image: "https://images.unsplash.com/photo-1633356122544-f134324a6cee?w=800",
-      slug: "react-19-new-features",
-      likes: 24,
-      isLiked: false
-    };
+    try {
+      const response = await fetch(`${this.baseURL}/blog/posts/${id}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        }
+      });
 
-    return {
-      data: mockPost,
-      message: 'Post retrieved successfully',
-      success: true
-    };
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const result = await response.json();
+      
+      if (result.success) {
+        // Transform backend data to frontend format
+        const transformedPost: BlogPost = {
+          id: result.postId,
+          title: result.title,
+          excerpt: result.excerpt || result.content?.substring(0, 150) + '...' || '',
+          content: result.content,
+          category: result.category,
+          date: result.createdAt,
+          readTime: this.calculateReadTime(result.content),
+          author: result.author?.firstName + ' ' + result.author?.lastName || 'Unknown',
+          tags: result.tags ? result.tags.split(',').map((tag: string) => tag.trim()) : [],
+          featured: result.featured || false,
+          image: result.featuredImageUrl || this.generateDefaultImage(result.title),
+          slug: result.slug,
+          likes: result.viewCount || 0,
+          isLiked: false,
+          viewCount: result.viewCount || 0
+        };
+
+        return {
+          data: transformedPost,
+          message: 'Post retrieved successfully',
+          success: true
+        };
+      } else {
+        throw new Error(result.message || 'Failed to fetch post');
+      }
+    } catch (error) {
+      console.error('Error fetching blog post by ID:', error);
+      
+      // Return error response
+      return {
+        data: {} as BlogPost,
+        message: 'Failed to fetch post',
+        success: false
+      };
+    }
   }
 
   async getBlogCategories(): Promise<ApiResponse<string[]>> {
@@ -259,13 +283,9 @@ class ApiService {
           excerpt: post.excerpt || post.content?.substring(0, 150) + '...' || '',
           content: post.content,
           category: post.category,
-          date: new Date(post.publishedAt || post.createdAt).toLocaleDateString('en-US', {
-            year: 'numeric',
-            month: '2-digit',
-            day: '2-digit'
-          }).replace(/\//g, '-'),
+          date: post.createdAt,
           readTime: this.calculateReadTime(post.content),
-          author: post.author?.firstName + ' ' + post.author?.lastName || 'Unknown',
+          author: post.author?.firstName + (post.author?.lastName ? ' ' + post.author.lastName : '') || 'Unknown',
           tags: post.tags ? post.tags.split(',').map((tag: string) => tag.trim()) : [],
           featured: post.featured || false,
           image: post.featuredImageUrl || this.generateDefaultImage(post.title),
@@ -322,13 +342,9 @@ class ApiService {
           excerpt: post.excerpt || post.content?.substring(0, 150) + '...' || '',
           content: post.content,
           category: post.category,
-          date: new Date(post.publishedAt || post.createdAt).toLocaleDateString('en-US', {
-            year: 'numeric',
-            month: '2-digit',
-            day: '2-digit'
-          }).replace(/\//g, '-'),
+          date: post.createdAt,
           readTime: this.calculateReadTime(post.content),
-          author: post.author?.firstName + ' ' + post.author?.lastName || 'Unknown',
+          author: post.author?.firstName + (post.author?.lastName ? ' ' + post.author.lastName : '') || 'Unknown',
           tags: post.tags ? post.tags.split(',').map((tag: string) => tag.trim()) : [],
           featured: post.featured || false,
           image: post.featuredImageUrl || this.generateDefaultImage(post.title),

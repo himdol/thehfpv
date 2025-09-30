@@ -143,6 +143,58 @@ public class BlogController {
                 .body(Map.of("success", false, "message", "Error fetching posts: " + e.getMessage()));
         }
     }
+
+    // Get a specific blog post by ID
+    @GetMapping("/posts/{id}")
+    public ResponseEntity<?> getPostById(@PathVariable Long id) {
+        try {
+            System.out.println("=== getPostById called ===");
+            System.out.println("Post ID: " + id);
+            
+            Optional<BlogPost> postOpt = blogService.getPostById(id);
+            
+            if (!postOpt.isPresent()) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(Map.of("success", false, "message", "Post not found"));
+            }
+            
+            BlogPost post = postOpt.get();
+            
+            // Check if post is published
+            if (!"PUBLISHED".equals(post.getStatus())) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(Map.of("success", false, "message", "Post not found"));
+            }
+            
+            System.out.println("Found post: " + post.getTitle() + " by " + 
+                             (post.getAuthor() != null ? post.getAuthor().getFirstName() : "Unknown"));
+            
+            Map<String, Object> response = new HashMap<>();
+            response.put("postId", post.getPostId());
+            response.put("title", post.getTitle());
+            response.put("content", post.getContent());
+            response.put("excerpt", post.getExcerpt());
+            response.put("category", post.getCategory());
+            response.put("tags", post.getTags());
+            response.put("featured", post.getFeatured());
+            response.put("featuredImageUrl", post.getFeaturedImageUrl());
+            response.put("slug", post.getSlug());
+            response.put("status", post.getStatus());
+            response.put("createdAt", post.getCreatedAt());
+            response.put("publishedAt", post.getPublishedAt());
+            response.put("updatedAt", post.getUpdatedAt());
+            response.put("viewCount", post.getViewCount());
+            response.put("author", post.getAuthor());
+            response.put("success", true);
+            
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            System.err.println("Error in getPostById: " + e.getMessage());
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(Map.of("success", false, "message", "Failed to fetch post: " + e.getMessage()));
+        }
+    }
     
     // Get post by slug (public)
     @GetMapping("/posts/slug/{slug}")
