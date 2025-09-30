@@ -558,4 +558,74 @@ public class BlogController {
                 .body(Map.of("success", false, "message", "Error fetching blog stats: " + e.getMessage()));
         }
     }
+
+    // Toggle like for a blog post
+    @PostMapping("/posts/{id}/like")
+    public ResponseEntity<?> toggleLike(@PathVariable Long id) {
+        try {
+            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+            if (auth == null || !auth.isAuthenticated()) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(Map.of("success", false, "message", "Authentication required"));
+            }
+            
+            String email = auth.getName();
+            Optional<User> userOpt = userRepository.findByEmail(email);
+            if (!userOpt.isPresent()) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(Map.of("success", false, "message", "User not found"));
+            }
+            User user = userOpt.get();
+            
+            boolean isLiked = blogService.toggleLike(id, user.getUserId());
+            int likeCount = blogService.getLikeCount(id);
+            
+            Map<String, Object> response = new HashMap<>();
+            response.put("success", true);
+            response.put("isLiked", isLiked);
+            response.put("likeCount", likeCount);
+            
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            System.err.println("Error in toggleLike: " + e.getMessage());
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(Map.of("success", false, "message", "Failed to toggle like: " + e.getMessage()));
+        }
+    }
+
+    // Get like status for a blog post
+    @GetMapping("/posts/{id}/like-status")
+    public ResponseEntity<?> getLikeStatus(@PathVariable Long id) {
+        try {
+            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+            if (auth == null || !auth.isAuthenticated()) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(Map.of("success", false, "message", "Authentication required"));
+            }
+            
+            String email = auth.getName();
+            Optional<User> userOpt = userRepository.findByEmail(email);
+            if (!userOpt.isPresent()) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(Map.of("success", false, "message", "User not found"));
+            }
+            User user = userOpt.get();
+            
+            boolean isLiked = blogService.isLikedByUser(id, user.getUserId());
+            int likeCount = blogService.getLikeCount(id);
+            
+            Map<String, Object> response = new HashMap<>();
+            response.put("success", true);
+            response.put("isLiked", isLiked);
+            response.put("likeCount", likeCount);
+            
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            System.err.println("Error in getLikeStatus: " + e.getMessage());
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(Map.of("success", false, "message", "Failed to get like status: " + e.getMessage()));
+        }
+    }
 }

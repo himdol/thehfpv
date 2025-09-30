@@ -1,14 +1,19 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { BlogPost, BlogFilters } from '../types/blog';
 import { blogService } from '../services/blogService';
 import { useAuth } from '../contexts/AuthContext';
+import { getRelativeTime } from '../utils/timeUtils';
 
 interface BlogProps {
   setCurrentPage?: (page: string) => void;
 }
 
 const Blog: React.FC<BlogProps> = ({ setCurrentPage: setAppCurrentPage }) => {
+  // Navigation
+  const navigate = useNavigate();
+  
   // Auth context
   const { checkAuthStatus, user } = useAuth();
   
@@ -26,18 +31,49 @@ const Blog: React.FC<BlogProps> = ({ setCurrentPage: setAppCurrentPage }) => {
     try {
       setLoading(true);
       const posts = await blogService.getAllPosts();
-      setAllPosts(posts);
+      
+      // Load like status for each post if user is logged in
+      if (checkAuthStatus()) {
+        const postsWithLikeStatus = await Promise.all(
+          posts.map(async (post) => {
+            try {
+              const likeStatus = await blogService.getLikeStatus(post.id);
+              return {
+                ...post,
+                isLiked: likeStatus.isLiked,
+                likes: likeStatus.likeCount
+              };
+            } catch (error) {
+              console.error(`Error loading like status for post ${post.id}:`, error);
+              return post; // Return original post if like status fails
+            }
+          })
+        );
+        setAllPosts(postsWithLikeStatus);
+      } else {
+        setAllPosts(posts);
+      }
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to load blog data');
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [checkAuthStatus]);
 
   // Load initial data
   useEffect(() => {
     loadAllPosts();
   }, [loadAllPosts]);
+
+  // Update relative time every minute
+  useEffect(() => {
+    const interval = setInterval(() => {
+      // Force re-render to update relative time
+      setAllPosts(prev => [...prev]);
+    }, 60000); // Update every minute
+
+    return () => clearInterval(interval);
+  }, []);
 
   // Client-side filtering using useMemo for performance
   const filteredAndSortedPosts = useMemo(() => {
@@ -82,24 +118,33 @@ const Blog: React.FC<BlogProps> = ({ setCurrentPage: setAppCurrentPage }) => {
 
 
   // Handle like toggle
-  const handleLikeToggle = (postId: number) => {
+  const handleLikeToggle = async (postId: number) => {
     // Check if user is logged in
     if (!checkAuthStatus()) {
       setShowLoginPrompt(true);
       return;
     }
 
-    setAllPosts(prevPosts => 
-      prevPosts.map(post => 
-        post.id === postId 
-          ? { 
-              ...post, 
-              isLiked: !post.isLiked,
-              likes: post.isLiked ? post.likes - 1 : post.likes + 1
-            }
-          : post
-      )
-    );
+    try {
+      // Call API to toggle like
+      const result = await blogService.toggleLike(postId);
+      
+      // Update local state with API response
+      setAllPosts(prevPosts =>
+        prevPosts.map(post =>
+          post.id === postId
+            ? { 
+                ...post, 
+                isLiked: result.isLiked,
+                likes: result.likeCount
+              }
+            : post
+        )
+      );
+    } catch (error) {
+      console.error('Error toggling like:', error);
+      // Optionally show error message to user
+    }
   };
 
   // Handle login prompt
@@ -165,9 +210,8 @@ const Blog: React.FC<BlogProps> = ({ setCurrentPage: setAppCurrentPage }) => {
     const post = allPosts.find((p: BlogPost) => p.id === postId);
     if (post) {
       console.log(`Blog post ${postId} clicked:`, post);
-      // In a real app, you would navigate to the post detail page
-      // navigate(`/blog/${post.slug || post.id}`);
-      alert(`Blog post "${post.title}" clicked!`);
+      // Navigate to the post detail page
+      navigate(`/blog/${post.id}`);
     }
   };
 
@@ -300,9 +344,7 @@ const Blog: React.FC<BlogProps> = ({ setCurrentPage: setAppCurrentPage }) => {
                   className="blog-write-btn"
                   onClick={() => {
                     console.log('Write blog button clicked');
-                    if (setAppCurrentPage) {
-                      setAppCurrentPage('write-blog');
-                    }
+                    navigate('/write-blog');
                   }}
                 >
                   ✍️
@@ -360,9 +402,8 @@ const Blog: React.FC<BlogProps> = ({ setCurrentPage: setAppCurrentPage }) => {
                               ⭐
                             </span>
                           )}
-                          <span className="text-sm text-gray-500">{post.readTime}</span>
                         </div>
-                        <span className="text-sm text-gray-500">{post.date}</span>
+                        <span className="text-sm text-gray-500">{getRelativeTime(post.date)}</span>
                       </div>
                       <h2 className="blog-title">
                         {post.title}

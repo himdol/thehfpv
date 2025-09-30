@@ -376,6 +376,84 @@ class ApiService {
       };
     }
   }
+
+  // Toggle like for a blog post
+  async toggleLike(postId: number): Promise<ApiResponse<{ isLiked: boolean; likeCount: number }>> {
+    try {
+      const response = await fetch(`${this.baseURL}/blog/posts/${postId}/like`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include'
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const result = await response.json();
+
+      if (result.success) {
+        return {
+          data: {
+            isLiked: result.isLiked,
+            likeCount: result.likeCount
+          },
+          message: 'Like toggled successfully',
+          success: true
+        };
+      } else {
+        throw new Error(result.message || 'Failed to toggle like');
+      }
+    } catch (error) {
+      console.error('Error toggling like:', error);
+      return {
+        data: { isLiked: false, likeCount: 0 },
+        message: 'Failed to toggle like',
+        success: false
+      };
+    }
+  }
+
+  // Get like status for a blog post
+  async getLikeStatus(postId: number): Promise<ApiResponse<{ isLiked: boolean; likeCount: number }>> {
+    try {
+      const response = await fetch(`${this.baseURL}/blog/posts/${postId}/like-status`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include'
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const result = await response.json();
+
+      if (result.success) {
+        return {
+          data: {
+            isLiked: result.isLiked,
+            likeCount: result.likeCount
+          },
+          message: 'Like status retrieved successfully',
+          success: true
+        };
+      } else {
+        throw new Error(result.message || 'Failed to get like status');
+      }
+    } catch (error) {
+      console.error('Error getting like status:', error);
+      return {
+        data: { isLiked: false, likeCount: 0 },
+        message: 'Failed to get like status',
+        success: false
+      };
+    }
+  }
 }
 
 // Export singleton instance

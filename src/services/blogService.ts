@@ -305,11 +305,33 @@ class BlogService {
     }
   }
 
-  // Update post like
+  // Toggle like for a blog post
+  async toggleLike(postId: number): Promise<{ isLiked: boolean; likeCount: number }> {
+    try {
+      const response = await apiService.toggleLike(postId);
+      return response.data;
+    } catch (error) {
+      console.error('Error toggling like:', error);
+      return { isLiked: false, likeCount: 0 };
+    }
+  }
+
+  // Get like status for a blog post
+  async getLikeStatus(postId: number): Promise<{ isLiked: boolean; likeCount: number }> {
+    try {
+      const response = await apiService.getLikeStatus(postId);
+      return response.data;
+    } catch (error) {
+      console.error('Error getting like status:', error);
+      return { isLiked: false, likeCount: 0 };
+    }
+  }
+
+  // Update post like (legacy method - now uses toggleLike)
   async updatePostLike(id: number, isLiked: boolean): Promise<{ likes: number; isLiked: boolean } | null> {
     try {
-      const response = await apiService.updatePostLike(id, isLiked);
-      return response.data;
+      const result = await this.toggleLike(id);
+      return { likes: result.likeCount, isLiked: result.isLiked };
     } catch (error) {
       console.error('Error updating post like:', error);
       return null;

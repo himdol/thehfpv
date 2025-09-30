@@ -336,4 +336,92 @@ public class BlogService {
         
         return slug;
     }
+
+    // Toggle like for a blog post
+    public boolean toggleLike(Long postId, Long userId) {
+        Optional<BlogPost> postOpt = blogPostRepository.findById(postId);
+        if (!postOpt.isPresent()) {
+            throw new RuntimeException("Post not found");
+        }
+        
+        BlogPost post = postOpt.get();
+        String likedUsers = post.getLikedUsers();
+        
+        if (likedUsers == null || likedUsers.isEmpty()) {
+            // No likes yet, add user
+            post.setLikedUsers(userId.toString());
+            post.setViewCount((post.getViewCount() != null ? post.getViewCount() : 0L) + 1);
+            blogPostRepository.save(post);
+            return true;
+        } else {
+            // Check if user already liked
+            String[] userIds = likedUsers.split(",");
+            List<String> userIdList = new ArrayList<>();
+            boolean userLiked = false;
+            
+            for (String id : userIds) {
+                if (id.trim().equals(userId.toString())) {
+                    userLiked = true;
+                } else {
+                    userIdList.add(id.trim());
+                }
+            }
+            
+            if (userLiked) {
+                // Remove like
+                post.setLikedUsers(String.join(",", userIdList));
+                post.setViewCount(Math.max(0, (post.getViewCount() != null ? post.getViewCount() : 0L) - 1));
+                blogPostRepository.save(post);
+                return false;
+            } else {
+                // Add like
+                userIdList.add(userId.toString());
+                post.setLikedUsers(String.join(",", userIdList));
+                post.setViewCount((post.getViewCount() != null ? post.getViewCount() : 0L) + 1);
+                blogPostRepository.save(post);
+                return true;
+            }
+        }
+    }
+
+    // Check if user liked a post
+    public boolean isLikedByUser(Long postId, Long userId) {
+        Optional<BlogPost> postOpt = blogPostRepository.findById(postId);
+        if (!postOpt.isPresent()) {
+            return false;
+        }
+        
+        BlogPost post = postOpt.get();
+        String likedUsers = post.getLikedUsers();
+        
+        if (likedUsers == null || likedUsers.isEmpty()) {
+            return false;
+        }
+        
+        String[] userIds = likedUsers.split(",");
+        for (String id : userIds) {
+            if (id.trim().equals(userId.toString())) {
+                return true;
+            }
+        }
+        
+        return false;
+    }
+
+    // Get like count for a post
+    public int getLikeCount(Long postId) {
+        Optional<BlogPost> postOpt = blogPostRepository.findById(postId);
+        if (!postOpt.isPresent()) {
+            return 0;
+        }
+        
+        BlogPost post = postOpt.get();
+        String likedUsers = post.getLikedUsers();
+        
+        if (likedUsers == null || likedUsers.isEmpty()) {
+            return 0;
+        }
+        
+        return likedUsers.split(",").length;
+    }
 }

@@ -50,6 +50,9 @@ public class BlogPost {
     @Column(name = "view_count")
     private Long viewCount = 0L;
     
+    @Column(name = "liked_users", columnDefinition = "TEXT")
+    private String likedUsers;
+    
     @Column(name = "slug", unique = true, length = 255)
     private String slug;
     
@@ -185,6 +188,14 @@ public class BlogPost {
     
     public void setViewCount(Long viewCount) {
         this.viewCount = viewCount;
+    }
+    
+    public String getLikedUsers() {
+        return likedUsers;
+    }
+    
+    public void setLikedUsers(String likedUsers) {
+        this.likedUsers = likedUsers;
     }
     
     public String getSlug() {
