@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { motion } from 'framer-motion';
 import { BlogPost, BlogFilters } from '../types/blog';
 import { blogService } from '../services/blogService';
@@ -8,12 +8,12 @@ interface BlogProps {
   setCurrentPage?: (page: string) => void;
 }
 
-const Blog: React.FC<BlogProps> = ({ setCurrentPage }) => {
+const Blog: React.FC<BlogProps> = ({ setCurrentPage: setAppCurrentPage }) => {
   // Auth context
   const { checkAuthStatus, user } = useAuth();
   
   // State management
-  const [posts, setPosts] = useState<BlogPost[]>([]);
+  const [allPosts, setAllPosts] = useState<BlogPost[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [showLoginPrompt, setShowLoginPrompt] = useState(false);
@@ -21,22 +21,65 @@ const Blog: React.FC<BlogProps> = ({ setCurrentPage }) => {
     searchTerm: ''
   });
 
+  // Load all posts once on component mount
+  const loadAllPosts = useCallback(async () => {
+    try {
+      setLoading(true);
+      const posts = await blogService.getAllPosts();
+      setAllPosts(posts);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to load blog data');
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
   // Load initial data
   useEffect(() => {
-    const loadData = async () => {
-      try {
-        setLoading(true);
-        const postsData = await blogService.getAllPosts();
-        setPosts(postsData.posts);
-      } catch (err) {
-        setError(err instanceof Error ? err.message : 'Failed to load blog data');
-      } finally {
-        setLoading(false);
-      }
-    };
+    loadAllPosts();
+  }, [loadAllPosts]);
 
-    loadData();
-  }, []);
+  // Client-side filtering using useMemo for performance
+  const filteredAndSortedPosts = useMemo(() => {
+    let filtered = [...allPosts];
+
+    // Apply search filter
+    if (filters.searchTerm) {
+      const searchLower = filters.searchTerm.toLowerCase();
+      filtered = filtered.filter(post => 
+        post.title.toLowerCase().includes(searchLower) ||
+        post.excerpt.toLowerCase().includes(searchLower) ||
+        post.tags.some((tag: string) => tag.toLowerCase().includes(searchLower))
+      );
+    }
+
+    // Apply category filter
+    if (filters.category) {
+      console.log('Filtering by category:', filters.category);
+      console.log('Posts before category filter:', filtered.length);
+      filtered = filtered.filter(post => {
+        console.log('Post category:', post.category, 'Filter category:', filters.category, 'Match:', post.category === filters.category);
+        return post.category === filters.category;
+      });
+      console.log('Posts after category filter:', filtered.length);
+    }
+
+    // Apply featured filter
+    if (filters.featured !== undefined) {
+      filtered = filtered.filter(post => !!post.featured === filters.featured);
+    }
+
+    // Sort: featured posts first, then by date
+    filtered.sort((a, b) => {
+      if (a.featured && !b.featured) return -1;
+      if (!a.featured && b.featured) return 1;
+      return new Date(b.date).getTime() - new Date(a.date).getTime();
+    });
+
+    return filtered;
+  }, [allPosts, filters]);
+
+
 
   // Handle like toggle
   const handleLikeToggle = (postId: number) => {
@@ -46,7 +89,7 @@ const Blog: React.FC<BlogProps> = ({ setCurrentPage }) => {
       return;
     }
 
-    setPosts(prevPosts => 
+    setAllPosts(prevPosts => 
       prevPosts.map(post => 
         post.id === postId 
           ? { 
@@ -62,8 +105,8 @@ const Blog: React.FC<BlogProps> = ({ setCurrentPage }) => {
   // Handle login prompt
   const handleLoginPrompt = () => {
     setShowLoginPrompt(false);
-    if (setCurrentPage) {
-      setCurrentPage('login');
+    if (setAppCurrentPage) {
+      setAppCurrentPage('login');
     }
   };
 
@@ -72,43 +115,33 @@ const Blog: React.FC<BlogProps> = ({ setCurrentPage }) => {
     setShowLoginPrompt(false);
   };
 
-  // Filter and sort posts
-  const filteredAndSortedPosts = useMemo(() => {
-    let filtered = posts.filter(post => {
-      const matchesSearch = !filters.searchTerm || 
-        post.title.toLowerCase().includes(filters.searchTerm.toLowerCase()) ||
-        post.excerpt.toLowerCase().includes(filters.searchTerm.toLowerCase()) ||
-        post.tags.some(tag => tag.toLowerCase().includes(filters.searchTerm.toLowerCase()));
-      
-      const matchesCategory = !filters.category || post.category === filters.category;
-      const matchesFeatured = filters.featured === undefined || !!post.featured === filters.featured;
-      
-      return matchesSearch && matchesCategory && matchesFeatured;
-    });
-
-    // Sort: featured posts first, then by date
-    filtered.sort((a, b) => {
-      if (a.featured && !b.featured) return -1;
-      if (!a.featured && b.featured) return 1;
-      return new Date(b.date).getTime() - new Date(a.date).getTime();
-    });
-
-    return filtered;
-  }, [posts, filters]);
+  // Use filtered posts for rendering (no pagination)
+  const displayPosts = filteredAndSortedPosts;
 
   // Handle search
   const handleSearchChange = (value: string) => {
-    setFilters(prev => ({ ...prev, searchTerm: value }));
+    setFilters(prev => ({ 
+      ...prev, 
+      searchTerm: value,
+      category: undefined // Clear category when searching
+    }));
   };
 
   // Handle category filter
   const handleCategoryChange = (category: string) => {
-    setFilters(prev => ({ ...prev, category: category || undefined }));
+    setFilters(prev => ({ 
+      ...prev, 
+      category: prev.category === category ? undefined : category,
+      searchTerm: '' // Clear search when changing category
+    }));
   };
 
   // Handle featured filter
   const handleFeaturedChange = (featured: boolean) => {
-    setFilters(prev => ({ ...prev, featured: featured }));
+    setFilters(prev => ({
+      ...prev,
+      featured: featured ? true : undefined
+    }));
   };
 
   // Clear all filters
@@ -119,18 +152,17 @@ const Blog: React.FC<BlogProps> = ({ setCurrentPage }) => {
   // Convert category to display name
   const getCategoryDisplayName = (category: string) => {
     const categoryMap: { [key: string]: string } = {
-      'Tech': 'Tech',
-      'Life': 'Vlog',
-      'Travel': 'Travel',
-      'Food': 'Food',
-      'Book': 'Book'
+      'filming': 'Filming',
+      'production': 'Production',
+      'running': 'Running',
+      'travel': 'Travel'
     };
     return categoryMap[category] || category;
   };
 
   // Handle post click
   const handlePostClick = (postId: number) => {
-    const post = posts.find(p => p.id === postId);
+    const post = allPosts.find((p: BlogPost) => p.id === postId);
     if (post) {
       console.log(`Blog post ${postId} clicked:`, post);
       // In a real app, you would navigate to the post detail page
@@ -213,33 +245,33 @@ const Blog: React.FC<BlogProps> = ({ setCurrentPage }) => {
             <div className="blog-tag-filters">
               <button
                 className={`blog-tag-filter-btn ${filters.featured ? 'active' : ''}`}
-                onClick={() => handleFeaturedChange(!filters.featured)}
+                onClick={() => handleFeaturedChange(filters.featured !== true)}
               >
                 ⭐ Featured
               </button>
               <button
-                className={`blog-tag-filter-btn ${filters.category === 'Tech' ? 'active' : ''}`}
-                onClick={() => handleCategoryChange(filters.category === 'Tech' ? '' : 'Tech')}
+                className={`blog-tag-filter-btn ${filters.category === 'filming' ? 'active' : ''}`}
+                onClick={() => handleCategoryChange('filming')}
               >
-                💻 Tech
+                🎬 Filming
               </button>
               <button
-                className={`blog-tag-filter-btn ${filters.category === 'Life' ? 'active' : ''}`}
-                onClick={() => handleCategoryChange(filters.category === 'Life' ? '' : 'Life')}
+                className={`blog-tag-filter-btn ${filters.category === 'production' ? 'active' : ''}`}
+                onClick={() => handleCategoryChange('production')}
               >
-                📝 Vlog
+                🎥 Production
               </button>
               <button
-                className={`blog-tag-filter-btn ${filters.category === 'Travel' ? 'active' : ''}`}
-                onClick={() => handleCategoryChange(filters.category === 'Travel' ? '' : 'Travel')}
+                className={`blog-tag-filter-btn ${filters.category === 'running' ? 'active' : ''}`}
+                onClick={() => handleCategoryChange('running')}
+              >
+                🏃 Running
+              </button>
+              <button
+                className={`blog-tag-filter-btn ${filters.category === 'travel' ? 'active' : ''}`}
+                onClick={() => handleCategoryChange('travel')}
               >
                 ✈️ Travel
-              </button>
-              <button
-                className={`blog-tag-filter-btn ${filters.category === 'Food' ? 'active' : ''}`}
-                onClick={() => handleCategoryChange(filters.category === 'Food' ? '' : 'Food')}
-              >
-                🍕 Food
               </button>
             </div>
 
@@ -268,19 +300,16 @@ const Blog: React.FC<BlogProps> = ({ setCurrentPage }) => {
                   className="blog-write-btn"
                   onClick={() => {
                     console.log('Write blog button clicked');
-                    if (setCurrentPage) {
-                      setCurrentPage('write-blog');
+                    if (setAppCurrentPage) {
+                      setAppCurrentPage('write-blog');
                     }
                   }}
                 >
-                  <svg className="blog-write-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                    <path d="M12 5v14M5 12h14"/>
-                  </svg>
-                  Write Blog
+                  ✍️
                 </button>
               </div>
             )}
-            {filteredAndSortedPosts.length === 0 ? (
+            {displayPosts.length === 0 ? (
               <div className="blog-empty-state">
                 <svg className="blog-empty-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.172 16.172a4 4 0 015.656 0M9 12h6m-6-4h6m2 5.291A7.962 7.962 0 0112 15c-2.34 0-4.29-1.009-5.824-2.709M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
@@ -298,7 +327,7 @@ const Blog: React.FC<BlogProps> = ({ setCurrentPage }) => {
                 </div>
               </div>
             ) : (
-              filteredAndSortedPosts.map((post, index) => (
+              displayPosts.map((post, index) => (
                 <motion.article
                   key={post.id}
                   initial={{ opacity: 0, y: 20 }}
@@ -319,11 +348,10 @@ const Blog: React.FC<BlogProps> = ({ setCurrentPage }) => {
                       <div className="blog-post-header">
                         <div className="blog-post-meta">
                           <span className={`blog-category ${
-                            post.category === 'Tech' ? 'tech' :
-                            post.category === 'Life' ? 'life' :
-                            post.category === 'Travel' ? 'travel' :
-                            post.category === 'Food' ? 'food' :
-                            post.category === 'Book' ? 'book' : ''
+                            post.category === 'filming' ? 'filming' :
+                            post.category === 'production' ? 'production' :
+                            post.category === 'running' ? 'running' :
+                            post.category === 'travel' ? 'travel' : ''
                           }`}>
                             {getCategoryDisplayName(post.category)}
                           </span>
@@ -385,48 +413,6 @@ const Blog: React.FC<BlogProps> = ({ setCurrentPage }) => {
             )}
           </div>
 
-          {/* Pagination */}
-          {filteredAndSortedPosts.length > 0 && (
-            <div className="blog-pagination">
-              <nav className="blog-pagination-nav">
-                <motion.button
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  className="blog-pagination-btn disabled"
-                >
-                  Previous
-                </motion.button>
-                <motion.button
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  className="blog-pagination-btn active"
-                >
-                  1
-                </motion.button>
-                <motion.button
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  className="blog-pagination-btn"
-                >
-                  2
-                </motion.button>
-                <motion.button
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  className="blog-pagination-btn"
-                >
-                  3
-                </motion.button>
-                <motion.button
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  className="blog-pagination-btn"
-                >
-                  Next
-                </motion.button>
-              </nav>
-            </div>
-          )}
         </div>
       </div>
 

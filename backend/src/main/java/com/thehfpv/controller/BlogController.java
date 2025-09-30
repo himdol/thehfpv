@@ -92,21 +92,53 @@ public class BlogController {
         }
     }
     
+    // Test endpoint
+    @GetMapping("/test")
+    public ResponseEntity<?> testEndpoint() {
+        return ResponseEntity.ok(Map.of("success", true, "message", "Test endpoint works"));
+    }
+
     // Get all published posts (public)
     @GetMapping("/posts")
     public ResponseEntity<?> getAllPublishedPosts(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size) {
+        
+        // Convert 1-based page to 0-based page for frontend compatibility
+        if (page > 0) {
+            page = page - 1;
+        }
         try {
+            System.out.println("=== getAllPublishedPosts called ===");
+            System.out.println("Page: " + page + ", Size: " + size);
+            
             Page<BlogPost> posts = blogService.getPublishedPosts(page, size);
-            return ResponseEntity.ok(Map.of(
+            System.out.println("Found " + posts.getTotalElements() + " posts");
+            System.out.println("Posts content size: " + posts.getContent().size());
+            System.out.println("Posts content: " + posts.getContent());
+            
+            // Debug: Check individual posts
+            for (BlogPost post : posts.getContent()) {
+                System.out.println("Post ID: " + post.getPostId() + 
+                    ", Title: " + post.getTitle() + 
+                    ", Status: " + post.getStatus() + 
+                    ", PublishedAt: " + post.getPublishedAt() +
+                    ", Author: " + (post.getAuthor() != null ? post.getAuthor().getFirstName() : "null"));
+            }
+            
+            Map<String, Object> response = Map.of(
                 "success", true,
                 "posts", posts.getContent(),
                 "totalPages", posts.getTotalPages(),
                 "totalElements", posts.getTotalElements(),
                 "currentPage", posts.getNumber()
-            ));
+            );
+            
+            System.out.println("Response: " + response);
+            return ResponseEntity.ok(response);
         } catch (Exception e) {
+            System.out.println("Error in getAllPublishedPosts: " + e.getMessage());
+            e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body(Map.of("success", false, "message", "Error fetching posts: " + e.getMessage()));
         }
@@ -151,12 +183,23 @@ public class BlogController {
     
     // Get posts by category (public)
     @GetMapping("/posts/category/{category}")
-    public ResponseEntity<?> getPostsByCategory(@PathVariable String category) {
+    public ResponseEntity<?> getPostsByCategory(
+            @PathVariable String category,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
         try {
-            List<BlogPost> posts = blogService.getPostsByCategory(category);
+            // Convert 1-based page to 0-based page for frontend compatibility
+            if (page > 0) {
+                page = page - 1;
+            }
+            
+            Page<BlogPost> posts = blogService.getPostsByCategory(category, page, size);
             return ResponseEntity.ok(Map.of(
                 "success", true,
-                "posts", posts
+                "posts", posts.getContent(),
+                "totalPages", posts.getTotalPages(),
+                "totalElements", posts.getTotalElements(),
+                "currentPage", posts.getNumber()
             ));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)

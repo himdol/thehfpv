@@ -2307,16 +2307,18 @@
 .blog-write-btn {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  justify-content: center;
   background: linear-gradient(135deg, #ff4444 0%, #ff0000 100%);
   color: white;
   border: none;
-  padding: 0.75rem 1.5rem;
-  border-radius: 2rem;
+  padding: 0.75rem;
+  border-radius: 50%;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
-  font-size: 1rem;
+  font-size: 1.5rem;
+  width: 3rem;
+  height: 3rem;
 }
 
 .blog-write-btn:hover {
@@ -4214,12 +4216,17 @@
   font-weight: 500;
 }
 
-.blog-category.tech {
-  color: #2563eb;
-  background-color: #dbeafe;
+.blog-category.filming {
+  color: #dc2626;
+  background-color: #fecaca;
 }
 
-.blog-category.life {
+.blog-category.production {
+  color: #7c2d12;
+  background-color: #fed7aa;
+}
+
+.blog-category.running {
   color: #059669;
   background-color: #d1fae5;
 }
@@ -4227,16 +4234,6 @@
 .blog-category.travel {
   color: #7c3aed;
   background-color: #ede9fe;
-}
-
-.blog-category.food {
-  color: #ea580c;
-  background-color: #fed7aa;
-}
-
-.blog-category.book {
-  color: #4f46e5;
-  background-color: #e0e7ff;
 }
 
 .blog-featured {

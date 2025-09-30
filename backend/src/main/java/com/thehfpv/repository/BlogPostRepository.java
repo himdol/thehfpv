@@ -22,11 +22,22 @@ public interface BlogPostRepository extends JpaRepository<BlogPost, Long> {
     // Find published posts with pagination
     Page<BlogPost> findByStatusOrderByPublishedAtDesc(String status, Pageable pageable);
     
+    // Find posts by status ordered by created_at (fallback for null published_at)
+    List<BlogPost> findByStatusOrderByCreatedAtDesc(String status);
+    
+    // Find posts by status ordered by created_at with pagination
+    @Query("SELECT bp FROM BlogPost bp LEFT JOIN FETCH bp.author WHERE bp.status = :status ORDER BY bp.createdAt DESC")
+    Page<BlogPost> findByStatusOrderByCreatedAtDesc(@Param("status") String status, Pageable pageable);
+    
     // Find featured posts
     List<BlogPost> findByFeaturedAndStatusOrderByPublishedAtDesc(Boolean featured, String status);
     
     // Find posts by category
     List<BlogPost> findByCategoryAndStatusOrderByPublishedAtDesc(String category, String status);
+    
+    // Find posts by category with pagination
+    @Query("SELECT bp FROM BlogPost bp LEFT JOIN FETCH bp.author WHERE bp.category = :category AND bp.status = :status ORDER BY bp.publishedAt DESC")
+    Page<BlogPost> findByCategoryAndStatusOrderByPublishedAtDesc(@Param("category") String category, @Param("status") String status, Pageable pageable);
     
     // Find posts by author
     List<BlogPost> findByAuthorOrderByCreatedAtDesc(User author);

@@ -18,6 +18,7 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.http.HttpMethod;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.Arrays;
@@ -59,12 +60,9 @@ public class SecurityConfig {
                 .requestMatchers("/auth/profile").authenticated() // 프로필 수정은 인증 필요
                 .requestMatchers("/upload/**").authenticated() // 이미지 업로드는 인증 필요
                 .requestMatchers("/uploads/**").permitAll() // 업로드된 이미지 파일 접근 허용
-                .requestMatchers("/blog/posts/featured", "/blog/posts/category/**", 
-                               "/blog/posts/search", "/blog/posts/recent", "/blog/posts/popular",
-                               "/blog/posts/slug/**").permitAll() // 블로그 공개 API 허용
-                .requestMatchers("/blog/posts").permitAll() // 임시로 블로그 작성 허용
-                .requestMatchers("/blog/my-posts/**", "/blog/posts/*/publish", 
-                               "/blog/stats").authenticated() // 블로그 관리 API는 인증 필요
+                .requestMatchers("/blog/posts").permitAll() // 블로그 포스트 조회 허용
+                .requestMatchers("/blog/posts/**").permitAll() // 블로그 포스트 관련 모든 API 허용
+                .requestMatchers("/blog/**").permitAll() // 블로그 관련 모든 API 허용
                 .requestMatchers("/oauth2/**", "/login/oauth2/**").permitAll() // OAuth2 경로 허용
                 .requestMatchers("/public/**").permitAll()
                 .requestMatchers("/database/**").permitAll()

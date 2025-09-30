@@ -5,6 +5,7 @@ import com.thehfpv.model.User;
 import com.thehfpv.repository.BlogPostRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -12,8 +13,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import java.util.UUID;
 
 @Service
@@ -100,9 +103,21 @@ public class BlogService {
     // Get published posts with pagination
     @Transactional(readOnly = true)
     public Page<BlogPost> getPublishedPosts(int page, int size) {
-        Pageable pageable = PageRequest.of(page, size, Sort.by("publishedAt").descending());
-        return blogPostRepository.findByStatusOrderByPublishedAtDesc("PUBLISHED", pageable);
+        // Use created_at as fallback when published_at is null
+        Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());
+        
+        // Get published posts with pagination directly from repository
+        Page<BlogPost> result = blogPostRepository.findByStatusOrderByCreatedAtDesc("PUBLISHED", pageable);
+        
+        System.out.println("=== DEBUG: Published posts ===");
+        System.out.println("Found " + result.getTotalElements() + " total published posts");
+        System.out.println("Page content size: " + result.getContent().size());
+        
+        return result;
     }
+    
+    
+    
     
     // Get featured posts
     @Transactional(readOnly = true)
@@ -114,6 +129,22 @@ public class BlogService {
     @Transactional(readOnly = true)
     public List<BlogPost> getPostsByCategory(String category) {
         return blogPostRepository.findByCategoryAndStatusOrderByPublishedAtDesc(category, "PUBLISHED");
+    }
+    
+    // Get posts by category with pagination
+    @Transactional(readOnly = true)
+    public Page<BlogPost> getPostsByCategory(String category, int page, int size) {
+        // Use created_at as fallback when published_at is null
+        Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());
+
+        // Get posts by category with pagination directly from repository
+        Page<BlogPost> result = blogPostRepository.findByCategoryAndStatusOrderByPublishedAtDesc(category, "PUBLISHED", pageable);
+        
+        System.out.println("=== DEBUG: Category posts ===");
+        System.out.println("Found " + result.getTotalElements() + " total posts in category: " + category);
+        System.out.println("Page content size: " + result.getContent().size());
+
+        return result;
     }
     
     // Get posts by author
@@ -144,8 +175,17 @@ public class BlogService {
     // Search published posts with pagination
     @Transactional(readOnly = true)
     public Page<BlogPost> searchPublishedPosts(String keyword, int page, int size) {
-        Pageable pageable = PageRequest.of(page, size, Sort.by("publishedAt").descending());
-        return blogPostRepository.searchPublishedPosts(keyword, pageable);
+        // Use created_at as fallback when published_at is null
+        Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());
+
+        // Use repository search method with pagination
+        Page<BlogPost> result = blogPostRepository.searchPublishedPosts(keyword, pageable);
+        
+        System.out.println("=== DEBUG: Search results ===");
+        System.out.println("Found " + result.getTotalElements() + " posts matching keyword: " + keyword);
+        System.out.println("Page content size: " + result.getContent().size());
+
+        return result;
     }
     
     // Get recent posts

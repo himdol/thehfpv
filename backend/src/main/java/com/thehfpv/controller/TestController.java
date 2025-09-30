@@ -26,4 +26,13 @@ public class TestController {
         response.put("service", "TheHFPV Backend API");
         return ResponseEntity.ok(response);
     }
+    
+    @GetMapping("/blog")
+    public ResponseEntity<Map<String, Object>> testBlog() {
+        Map<String, Object> response = new HashMap<>();
+        response.put("success", true);
+        response.put("message", "Blog test endpoint works");
+        response.put("posts", new Object[0]);
+        return ResponseEntity.ok(response);
+    }
 }
