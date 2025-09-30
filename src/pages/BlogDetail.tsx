@@ -87,7 +87,7 @@ const BlogDetail: React.FC = () => {
         <header className="blog-detail-post-header">
           <div className="blog-detail-meta">
             <span className="blog-detail-category">{post.category}</span>
-            {post.featured && <span className="blog-detail-featured">⭐ Featured</span>}
+            {post.featured && <span className="blog-detail-featured">⭐</span>}
             <span className="blog-detail-date">{formatDate(post.date)}</span>
           </div>
           

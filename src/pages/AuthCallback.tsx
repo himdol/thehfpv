@@ -1,12 +1,14 @@
 import React, { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { useTheme } from '../contexts/ThemeContext';
 
 interface AuthCallbackProps {
-  setCurrentPage: (page: string) => void;
+  setCurrentPage?: (page: string) => void;
 }
 
 const AuthCallback: React.FC<AuthCallbackProps> = ({ setCurrentPage }) => {
+  const navigate = useNavigate();
   const { isDarkMode } = useTheme();
   const { socialLogin } = useAuth();
 
@@ -22,7 +24,7 @@ const AuthCallback: React.FC<AuthCallbackProps> = ({ setCurrentPage }) => {
         if (error) {
           console.error('OAuth 에러:', error);
           alert('소셜 로그인에 실패했습니다: ' + error);
-          setCurrentPage('login');
+          navigate('/login');
           return;
         }
 
@@ -57,23 +59,23 @@ const AuthCallback: React.FC<AuthCallbackProps> = ({ setCurrentPage }) => {
           // URL을 루트 경로로 변경하고 About 페이지로 이동
           window.history.replaceState({}, document.title, '/');
           alert('Google 로그인이 완료되었습니다!');
-          setCurrentPage('about');
+          navigate('/');
         } else {
           console.error('세션 데이터가 올바르지 않음:', data);
           window.history.replaceState({}, document.title, '/');
           alert('세션에서 사용자 정보를 가져올 수 없습니다.');
-          setCurrentPage('login');
+          navigate('/login');
         }
       } catch (error) {
         console.error('OAuth 콜백 처리 실패:', error);
         window.history.replaceState({}, document.title, '/');
         alert('로그인 정보를 확인하는 중 오류가 발생했습니다.');
-        setCurrentPage('login');
+        setCurrentPage?.('login');
       }
     };
 
     handleOAuthCallback();
-  }, [setCurrentPage, socialLogin]);
+  }, [navigate, socialLogin, setCurrentPage]);
 
   return (
     <div className={`login-container ${isDarkMode ? 'dark' : 'light'}`}>

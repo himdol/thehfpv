@@ -23,7 +23,7 @@ class VisitorService {
     try {
       console.log('=== 방문자 통계 조회 시작 ===');
       
-      const response = await fetch(`${this.baseUrl}/visitor/stats`, {
+      const response = await fetch(`${this.baseUrl}/api/visitor/stats`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -60,7 +60,7 @@ class VisitorService {
     try {
       console.log('=== 방문자 추적 시작 ===');
       
-      const response = await fetch(`${this.baseUrl}/visitor/track`, {
+      const response = await fetch(`${this.baseUrl}/api/visitor/track`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -93,7 +93,7 @@ class VisitorService {
     try {
       console.log('=== 통계 초기화 시작 ===');
       
-      const response = await fetch(`${this.baseUrl}/visitor/reset`, {
+      const response = await fetch(`${this.baseUrl}/api/visitor/reset`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',

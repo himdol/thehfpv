@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import TinyMCEEditor from '../components/TinyMCEEditor';
 import { useAuth } from '../contexts/AuthContext';
@@ -8,6 +9,7 @@ interface WriteBlogProps {
 }
 
 const WriteBlog: React.FC<WriteBlogProps> = ({ setCurrentPage }) => {
+  const navigate = useNavigate();
   const { token } = useAuth();
   const [formData, setFormData] = useState({
     title: '',
@@ -76,9 +78,7 @@ const WriteBlog: React.FC<WriteBlogProps> = ({ setCurrentPage }) => {
         });
         
         // 블로그 목록으로 이동
-        if (setCurrentPage) {
-          setCurrentPage('blog');
-        }
+        navigate('/blog');
       } else {
         alert('블로그 작성 중 오류가 발생했습니다: ' + result.message);
       }
@@ -91,9 +91,7 @@ const WriteBlog: React.FC<WriteBlogProps> = ({ setCurrentPage }) => {
   };
 
   const handleCancel = () => {
-    if (setCurrentPage) {
-      setCurrentPage('blog');
-    }
+    navigate('/blog');
   };
 
   return (
@@ -171,7 +169,7 @@ const WriteBlog: React.FC<WriteBlogProps> = ({ setCurrentPage }) => {
                 value={formData.content}
                 onChange={(content) => setFormData(prev => ({ ...prev, content }))}
                 placeholder="Write your blog content here..."
-                height={500}
+                height={600}
               />
             </div>
 
@@ -232,17 +230,19 @@ const WriteBlog: React.FC<WriteBlogProps> = ({ setCurrentPage }) => {
               <button
                 type="button"
                 onClick={handleCancel}
-                className="btn-cancel"
+                className="btn-cancel youtube-style"
                 disabled={isSubmitting}
+                title="Cancel"
               >
-                Cancel
+                ←
               </button>
               <button
                 type="submit"
-                className="btn-submit"
+                className="btn-submit youtube-style"
                 disabled={isSubmitting || !formData.title.trim() || !formData.content.trim()}
+                title={isSubmitting ? 'Publishing...' : 'Publish'}
               >
-                {isSubmitting ? 'Publishing...' : 'Publish'}
+                {isSubmitting ? '⏳' : '→'}
               </button>
             </div>
           </motion.form>

@@ -1,13 +1,15 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useTheme } from '../contexts/ThemeContext';
 import { useAuth } from '../contexts/AuthContext';
 
 interface ProfileProps {
-  setCurrentPage: (page: string) => void;
+  setCurrentPage?: (page: string) => void;
 }
 
 const Profile: React.FC<ProfileProps> = ({ setCurrentPage }) => {
+  const navigate = useNavigate();
   const { isDarkMode } = useTheme();
   const { user, updateProfile, loading, error } = useAuth();
   const [formData, setFormData] = useState({
@@ -130,7 +132,7 @@ const Profile: React.FC<ProfileProps> = ({ setCurrentPage }) => {
   };
 
   const handleCancel = () => {
-    setCurrentPage('about');
+    navigate('/');
   };
 
   const getUserInitials = (firstName: string | null | undefined, lastName: string | null | undefined) => {

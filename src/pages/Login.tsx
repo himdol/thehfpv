@@ -1,14 +1,16 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useTheme } from '../contexts/ThemeContext';
 import { useAuth } from '../contexts/AuthContext';
 
 interface LoginProps {
-  setCurrentPage: (page: string) => void;
+  setCurrentPage?: (page: string) => void;
   previousPage?: string;
 }
 
 const Login: React.FC<LoginProps> = ({ setCurrentPage, previousPage }) => {
+  const navigate = useNavigate();
   const { isDarkMode } = useTheme();
   const { login, register, loading, error } = useAuth();
   const [isLogin, setIsLogin] = useState(true);
@@ -65,9 +67,9 @@ const Login: React.FC<LoginProps> = ({ setCurrentPage, previousPage }) => {
         });
         
         // 로그인 성공 후 이전 페이지로 이동
-        const targetPage = previousPage || 'about';
+        const targetPage = previousPage || '/';
         alert('로그인이 완료되었습니다!');
-        setCurrentPage(targetPage);
+        navigate(targetPage);
       } else {
         // Sign up logic
         if (formData.password !== formData.confirmPassword) {

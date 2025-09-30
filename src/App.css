@@ -4263,6 +4263,15 @@
   flex: 1;
 }
 
+.blog-post-meta > * {
+  font-size: 0.875rem !important;
+  line-height: 1.4;
+}
+
+.blog-post-meta .text-sm {
+  font-size: 0.875rem !important;
+}
+
 .blog-category {
   padding: 0.25rem 0.75rem;
   border-radius: 9999px;

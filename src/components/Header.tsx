@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useTheme } from '../contexts/ThemeContext';
 import { useAuth } from '../contexts/AuthContext';
 
@@ -15,20 +16,21 @@ const Header: React.FC<HeaderProps> = ({
   const { isLoggedIn, user, logout } = useAuth();
   const [showUserMenu, setShowUserMenu] = useState(false);
   const userMenuRef = useRef<HTMLDivElement>(null);
+  const navigate = useNavigate();
 
   const navItems = [
-    { id: 'about', label: 'About H' },
-    { id: 'blog', label: 'BLOG' },
+    { id: 'about', label: 'About H', path: '/' },
+    { id: 'blog', label: 'BLOG', path: '/blog' },
   ];
 
   const handleNavClick = (item: typeof navItems[0]) => {
-    setCurrentPage(item.id);
+    navigate(item.path);
   };
 
   const handleLogout = async () => {
     try {
       await logout();
-      setCurrentPage('about');
+      navigate('/');
       setShowUserMenu(false);
     } catch (error) {
       console.error('Logout failed:', error);
@@ -36,7 +38,7 @@ const Header: React.FC<HeaderProps> = ({
   };
 
   const handleLoginClick = () => {
-    setCurrentPage('login');
+    navigate('/login');
   };
 
   const getUserInitials = (firstName: string | null | undefined, lastName: string | null | undefined) => {
@@ -123,7 +125,7 @@ const Header: React.FC<HeaderProps> = ({
                       className="user-menu-item" 
                       onClick={() => {
                         setShowUserMenu(false);
-                        setCurrentPage('profile');
+                        navigate('/profile');
                       }}
                     >
                       내 정보

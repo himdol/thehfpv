@@ -55,14 +55,17 @@ public class SecurityConfig {
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED))
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/visitor/**").permitAll() // 방문자 통계 API 허용
+                .requestMatchers("/api/visitor/**").permitAll() // 방문자 통계 API 허용
                 .requestMatchers("/session/**").permitAll() // 세션 관련 경로 허용
                 .requestMatchers("/auth/register", "/auth/login").permitAll()
                 .requestMatchers("/auth/profile").authenticated() // 프로필 수정은 인증 필요
                 .requestMatchers("/upload/**").authenticated() // 이미지 업로드는 인증 필요
                 .requestMatchers("/uploads/**").permitAll() // 업로드된 이미지 파일 접근 허용
                 .requestMatchers("/blog/posts").permitAll() // 블로그 포스트 조회 허용
-                .requestMatchers("/blog/posts/**").permitAll() // 블로그 포스트 관련 모든 API 허용
-                .requestMatchers("/blog/**").permitAll() // 블로그 관련 모든 API 허용
+                .requestMatchers("/blog/posts/*/like").authenticated() // 좋아요 토글은 인증 필요
+                .requestMatchers("/blog/posts/*/like-status").authenticated() // 좋아요 상태 조회는 인증 필요
+                .requestMatchers("/blog/posts/**").permitAll() // 블로그 포스트 관련 다른 API 허용
+                .requestMatchers("/blog/**").permitAll() // 블로그 관련 다른 API 허용
                 .requestMatchers("/oauth2/**", "/login/oauth2/**").permitAll() // OAuth2 경로 허용
                 .requestMatchers("/public/**").permitAll()
                 .requestMatchers("/database/**").permitAll()

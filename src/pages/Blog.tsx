@@ -32,26 +32,36 @@ const Blog: React.FC<BlogProps> = ({ setCurrentPage: setAppCurrentPage }) => {
       setLoading(true);
       const posts = await blogService.getAllPosts();
       
+      // Set posts first, then load like status if user is logged in
+      setAllPosts(posts);
+      
       // Load like status for each post if user is logged in
       if (checkAuthStatus()) {
-        const postsWithLikeStatus = await Promise.all(
-          posts.map(async (post) => {
-            try {
-              const likeStatus = await blogService.getLikeStatus(post.id);
-              return {
-                ...post,
-                isLiked: likeStatus.isLiked,
-                likes: likeStatus.likeCount
-              };
-            } catch (error) {
-              console.error(`Error loading like status for post ${post.id}:`, error);
-              return post; // Return original post if like status fails
-            }
-          })
-        );
-        setAllPosts(postsWithLikeStatus);
-      } else {
-        setAllPosts(posts);
+        try {
+          const postsWithLikeStatus = await Promise.all(
+            posts.map(async (post) => {
+              try {
+                const likeStatus = await blogService.getLikeStatus(post.id);
+                return {
+                  ...post,
+                  isLiked: likeStatus.isLiked,
+                  likes: likeStatus.likeCount
+                };
+              } catch (error) {
+                console.error(`Error loading like status for post ${post.id}:`, error);
+                // If it's an authentication error, don't show it as it's expected for non-logged-in users
+                if (error instanceof Error && !error.message.includes('401')) {
+                  console.warn(`Non-auth error loading like status for post ${post.id}:`, error);
+                }
+                return post; // Return original post if like status fails
+              }
+            })
+          );
+          setAllPosts(postsWithLikeStatus);
+        } catch (error) {
+          console.error('Error loading like statuses:', error);
+          // Keep original posts if like status loading fails
+        }
       }
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to load blog data');
@@ -143,7 +153,10 @@ const Blog: React.FC<BlogProps> = ({ setCurrentPage: setAppCurrentPage }) => {
       );
     } catch (error) {
       console.error('Error toggling like:', error);
-      // Optionally show error message to user
+      // If it's an authentication error, show login prompt
+      if (error instanceof Error && error.message.includes('401')) {
+        setShowLoginPrompt(true);
+      }
     }
   };
 
