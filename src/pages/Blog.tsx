@@ -36,7 +36,7 @@ const Blog: React.FC<BlogProps> = ({ setCurrentPage: setAppCurrentPage }) => {
       setAllPosts(posts);
       
       // Load like status for each post if user is logged in
-      if (checkAuthStatus()) {
+      if (user && user.email) {
         try {
           const postsWithLikeStatus = await Promise.all(
             posts.map(async (post) => {
@@ -68,7 +68,7 @@ const Blog: React.FC<BlogProps> = ({ setCurrentPage: setAppCurrentPage }) => {
     } finally {
       setLoading(false);
     }
-  }, [checkAuthStatus]);
+  }, [user]);
 
   // Load initial data
   useEffect(() => {
@@ -130,7 +130,7 @@ const Blog: React.FC<BlogProps> = ({ setCurrentPage: setAppCurrentPage }) => {
   // Handle like toggle
   const handleLikeToggle = async (postId: number) => {
     // Check if user is logged in
-    if (!checkAuthStatus()) {
+    if (!user || !user.email) {
       setShowLoginPrompt(true);
       return;
     }
@@ -440,11 +440,13 @@ const Blog: React.FC<BlogProps> = ({ setCurrentPage: setAppCurrentPage }) => {
                           </div>
                         </div>
                         <button 
-                          className={`blog-like-btn ${post.isLiked ? 'liked' : ''}`}
+                          className={`blog-like-btn ${post.isLiked ? 'liked' : ''} ${!user || !user.email ? 'disabled' : ''}`}
                           onClick={(e) => {
                             e.stopPropagation();
                             handleLikeToggle(post.id);
                           }}
+                          disabled={!user || !user.email}
+                          title={!user || !user.email ? '로그인이 필요합니다' : ''}
                         >
                           <span className="blog-like-icon">
                             {post.isLiked ? (

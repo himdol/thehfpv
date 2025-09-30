@@ -2655,6 +2655,17 @@
   color: #dc2626;
 }
 
+.blog-like-btn.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.blog-like-btn.disabled:hover {
+  transform: none;
+  background: transparent;
+}
+
 .blog-like-icon {
   font-size: 0.875rem;
   transition: transform 0.2s ease;
@@ -4366,6 +4377,17 @@
 .App.dark .blog-like-btn.liked:hover {
   background: transparent;
   color: #dc2626;
+}
+
+.App.dark .blog-like-btn.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.App.dark .blog-like-btn.disabled:hover {
+  transform: none;
+  background: transparent;
 }
 
 /* Blog Write Button Dark Mode */
