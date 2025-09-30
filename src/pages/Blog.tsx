@@ -129,11 +129,18 @@ const Blog: React.FC<BlogProps> = ({ setCurrentPage: setAppCurrentPage }) => {
 
   // Handle like toggle
   const handleLikeToggle = async (postId: number) => {
+    console.log('=== handleLikeToggle ===');
+    console.log('user:', user);
+    console.log('user?.email:', user?.email);
+    
     // Check if user is logged in
     if (!user || !user.email) {
+      console.log('User not logged in, showing prompt');
       setShowLoginPrompt(true);
       return;
     }
+    
+    console.log('User is logged in, calling API');
 
     try {
       // Call API to toggle like

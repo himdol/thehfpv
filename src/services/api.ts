@@ -26,6 +26,15 @@ class ApiService {
     this.baseURL = API_BASE_URL;
   }
 
+  // Get authentication headers with JWT token
+  private getAuthHeaders(): HeadersInit {
+    const token = localStorage.getItem('authToken');
+    return {
+      'Content-Type': 'application/json',
+      ...(token && { Authorization: `Bearer ${token}` }),
+    };
+  }
+
   // Simulate API delay
   private async delay(ms: number = 300): Promise<void> {
     return new Promise(resolve => setTimeout(resolve, ms));
@@ -382,9 +391,7 @@ class ApiService {
     try {
       const response = await fetch(`${this.baseURL}/blog/posts/${postId}/like`, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: this.getAuthHeaders(),
         credentials: 'include'
       });
 
@@ -421,9 +428,7 @@ class ApiService {
     try {
       const response = await fetch(`${this.baseURL}/blog/posts/${postId}/like-status`, {
         method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: this.getAuthHeaders(),
         credentials: 'include'
       });
 
