@@ -129,12 +129,8 @@ const Blog: React.FC<BlogProps> = ({ setCurrentPage: setAppCurrentPage }) => {
 
   // Handle like toggle
   const handleLikeToggle = async (postId: number) => {
-    console.log('handleLikeToggle called, user:', user);
-    console.log('checkAuthStatus():', checkAuthStatus());
-    
     // Check if user is logged in
     if (!user || !user.email) {
-      console.log('User not logged in, showing login prompt');
       setShowLoginPrompt(true);
       return;
     }
@@ -444,22 +440,11 @@ const Blog: React.FC<BlogProps> = ({ setCurrentPage: setAppCurrentPage }) => {
                           </div>
                         </div>
                         <button 
-                          className={`blog-like-btn ${post.isLiked ? 'liked' : ''} ${!user || !user.email ? 'disabled' : ''}`}
+                          className={`blog-like-btn ${post.isLiked ? 'liked' : ''}`}
                           onClick={(e) => {
                             e.stopPropagation();
-                            console.log('Like button clicked, user:', user);
-                            
-                            // Double check if user is logged in
-                            if (!user || !user.email) {
-                              console.log('User not logged in, preventing API call');
-                              setShowLoginPrompt(true);
-                              return;
-                            }
-                            
                             handleLikeToggle(post.id);
                           }}
-                          disabled={!user || !user.email}
-                          title={!user || !user.email ? '로그인이 필요합니다' : ''}
                         >
                           <span className="blog-like-icon">
                             {post.isLiked ? (
