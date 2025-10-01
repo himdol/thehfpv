@@ -97,7 +97,8 @@ class ApiService {
           featured: post.featured || false,
           image: post.featuredImageUrl || this.generateDefaultImage(post.title),
           slug: post.slug,
-          likes: post.viewCount || 0,
+          likes: post.likeCount || 0,
+          viewCount: post.viewCount || 0,
           isLiked: false
         }));
 
@@ -218,7 +219,7 @@ class ApiService {
           featured: result.featured || false,
           image: result.featuredImageUrl || this.generateDefaultImage(result.title),
           slug: result.slug,
-          likes: result.viewCount || 0,
+          likes: result.likeCount || 0,
           isLiked: false,
           viewCount: result.viewCount || 0
         };
@@ -299,7 +300,8 @@ class ApiService {
           featured: post.featured || false,
           image: post.featuredImageUrl || this.generateDefaultImage(post.title),
           slug: post.slug,
-          likes: post.viewCount || 0,
+          likes: post.likeCount || 0,
+          viewCount: post.viewCount || 0,
           isLiked: false
         }));
 
@@ -358,7 +360,8 @@ class ApiService {
           featured: post.featured || false,
           image: post.featuredImageUrl || this.generateDefaultImage(post.title),
           slug: post.slug,
-          likes: post.viewCount || 0,
+          likes: post.likeCount || 0,
+          viewCount: post.viewCount || 0,
           isLiked: false
         }));
 

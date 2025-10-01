@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -117,18 +118,40 @@ public class BlogController {
             System.out.println("Posts content size: " + posts.getContent().size());
             System.out.println("Posts content: " + posts.getContent());
             
-            // Debug: Check individual posts
+            // Transform posts to include like count
+            List<Map<String, Object>> transformedPosts = new ArrayList<>();
             for (BlogPost post : posts.getContent()) {
+                Map<String, Object> postMap = new HashMap<>();
+                postMap.put("postId", post.getPostId());
+                postMap.put("title", post.getTitle());
+                postMap.put("content", post.getContent());
+                postMap.put("excerpt", post.getExcerpt());
+                postMap.put("category", post.getCategory());
+                postMap.put("tags", post.getTags());
+                postMap.put("featured", post.getFeatured());
+                postMap.put("featuredImageUrl", post.getFeaturedImageUrl());
+                postMap.put("slug", post.getSlug());
+                postMap.put("status", post.getStatus());
+                postMap.put("createdAt", post.getCreatedAt());
+                postMap.put("publishedAt", post.getPublishedAt());
+                postMap.put("updatedAt", post.getUpdatedAt());
+                postMap.put("viewCount", post.getViewCount());
+                postMap.put("likeCount", blogService.getLikeCount(post.getPostId()));
+                postMap.put("author", post.getAuthor());
+                transformedPosts.add(postMap);
+                
                 System.out.println("Post ID: " + post.getPostId() + 
                     ", Title: " + post.getTitle() + 
                     ", Status: " + post.getStatus() + 
                     ", PublishedAt: " + post.getPublishedAt() +
+                    ", ViewCount: " + post.getViewCount() +
+                    ", LikeCount: " + blogService.getLikeCount(post.getPostId()) +
                     ", Author: " + (post.getAuthor() != null ? post.getAuthor().getFirstName() : "null"));
             }
             
             Map<String, Object> response = Map.of(
                 "success", true,
-                "posts", posts.getContent(),
+                "posts", transformedPosts,
                 "totalPages", posts.getTotalPages(),
                 "totalElements", posts.getTotalElements(),
                 "currentPage", posts.getNumber()
@@ -169,6 +192,12 @@ public class BlogController {
             System.out.println("Found post: " + post.getTitle() + " by " + 
                              (post.getAuthor() != null ? post.getAuthor().getFirstName() : "Unknown"));
             
+            // Increment view count
+            blogService.incrementViewCount(post.getPostId());
+            
+            // Refresh post to get updated view count
+            post = blogService.getPostById(id).orElse(post);
+            
             Map<String, Object> response = new HashMap<>();
             response.put("postId", post.getPostId());
             response.put("title", post.getTitle());
@@ -184,6 +213,7 @@ public class BlogController {
             response.put("publishedAt", post.getPublishedAt());
             response.put("updatedAt", post.getUpdatedAt());
             response.put("viewCount", post.getViewCount());
+            response.put("likeCount", blogService.getLikeCount(post.getPostId()));
             response.put("author", post.getAuthor());
             response.put("success", true);
             

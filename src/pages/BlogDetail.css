@@ -225,6 +225,9 @@
   padding: 20px 30px;
   border-top: 1px solid #e9ecef;
   background: #f8f9fa;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .blog-detail-stats {
@@ -372,5 +375,11 @@
   
   .blog-detail-featured-image img {
     height: 200px;
+  }
+  
+  .blog-detail-footer {
+    flex-direction: column;
+    gap: 15px;
+    align-items: flex-start;
   }
 }

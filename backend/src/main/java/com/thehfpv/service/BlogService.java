@@ -350,7 +350,6 @@ public class BlogService {
         if (likedUsers == null || likedUsers.isEmpty()) {
             // No likes yet, add user
             post.setLikedUsers(userId.toString());
-            post.setViewCount((post.getViewCount() != null ? post.getViewCount() : 0L) + 1);
             blogPostRepository.save(post);
             return true;
         } else {
@@ -370,14 +369,12 @@ public class BlogService {
             if (userLiked) {
                 // Remove like
                 post.setLikedUsers(String.join(",", userIdList));
-                post.setViewCount(Math.max(0, (post.getViewCount() != null ? post.getViewCount() : 0L) - 1));
                 blogPostRepository.save(post);
                 return false;
             } else {
                 // Add like
                 userIdList.add(userId.toString());
                 post.setLikedUsers(String.join(",", userIdList));
-                post.setViewCount((post.getViewCount() != null ? post.getViewCount() : 0L) + 1);
                 blogPostRepository.save(post);
                 return true;
             }
