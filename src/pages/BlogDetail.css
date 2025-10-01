@@ -195,8 +195,27 @@
   max-width: 100% !important;
   height: auto !important;
   border-radius: 8px;
-  margin: 20px 0 !important;
+  margin: 20px auto !important;
+  display: block;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* 이미지 정렬 스타일 지원 */
+.blog-detail-body .blog-post-content img[style*="margin-left: auto"] {
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+.blog-detail-body .blog-post-content p img {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* text-align center를 가진 요소 내 이미지 */
+.blog-detail-body .blog-post-content [style*="text-align: center"] img {
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .blog-detail-body .blog-post-content blockquote {

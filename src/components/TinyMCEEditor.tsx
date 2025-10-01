@@ -21,9 +21,18 @@ const TinyMCEEditor: React.FC<TinyMCEEditorProps> = ({
       const formData = new FormData();
       formData.append('image', blobInfo.blob(), blobInfo.filename());
 
+      // Get JWT token from localStorage
+      const token = localStorage.getItem('authToken');
+      const headers: HeadersInit = {};
+      if (token) {
+        headers['Authorization'] = `Bearer ${token}`;
+      }
+
       fetch('http://localhost:8080/upload/image', {
         method: 'POST',
+        headers: headers,
         body: formData,
+        credentials: 'include'
       })
       .then(response => {
         if (!response.ok) {

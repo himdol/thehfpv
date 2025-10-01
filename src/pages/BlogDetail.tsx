@@ -226,7 +226,7 @@ const BlogDetail: React.FC = () => {
                 )}
                 <div className="related-post-content">
                   <h4 className="related-post-title">{relatedPost.title}</h4>
-                  <p className="related-post-excerpt">{relatedPost.excerpt}</p>
+                  {/* <p className="related-post-excerpt">{relatedPost.excerpt}</p> */}
                   <div className="related-post-meta">
                     <span className="related-post-category">{relatedPost.category}</span>
                     <span className="related-post-date">{getRelativeTime(relatedPost.date)}</span>
