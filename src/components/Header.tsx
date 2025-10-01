@@ -67,7 +67,7 @@ const Header: React.FC<HeaderProps> = ({
   return (
     <header className="header">
       <div className="header-left">
-        <div className="logo" onClick={() => setCurrentPage('about')} style={{ cursor: 'pointer' }}>
+        <div className="logo" onClick={() => navigate('/')} style={{ cursor: 'pointer' }}>
           <span className="logo-h">H</span>
         </div>
       </div>

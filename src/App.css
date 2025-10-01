@@ -1432,7 +1432,8 @@
 }
 
 .btn-cancel,
-.btn-submit {
+.btn-submit,
+.btn-unpublish {
   display: flex;
   align-items: center;
   gap: 0.5rem;
@@ -1488,6 +1489,34 @@
 }
 
 .btn-submit:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.btn-unpublish {
+  background: #f59e0b;
+  color: white;
+}
+
+.btn-unpublish:hover:not(:disabled) {
+  background: #d97706;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3);
+}
+
+.App.dark .btn-unpublish {
+  background: #f59e0b;
+  color: white;
+}
+
+.App.dark .btn-unpublish:hover:not(:disabled) {
+  background: #d97706;
+  box-shadow: 0 4px 12px rgba(245, 158, 11, 0.4);
+}
+
+.btn-unpublish:disabled {
   opacity: 0.6;
   cursor: not-allowed;
   transform: none;
@@ -1594,7 +1623,8 @@
   }
   
   .btn-cancel,
-  .btn-submit {
+  .btn-submit,
+  .btn-unpublish {
     width: 100%;
     justify-content: center;
   }
@@ -2327,8 +2357,52 @@
   display: flex;
   gap: 1rem;
   justify-content: center;
+  align-items: center;
 }
 
+.social-icon-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  color: #666;
+  border: none;
+  padding: 0.75rem;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  width: 48px;
+  height: 48px;
+}
+
+.social-icon-btn:hover {
+  transform: translateY(-3px);
+  background: rgba(0, 0, 0, 0.05);
+}
+
+.App.dark .social-icon-btn {
+  color: #aaa;
+}
+
+.App.dark .social-icon-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.social-icon {
+  width: 24px;
+  height: 24px;
+  transition: all 0.3s ease;
+}
+
+.social-icon-btn:hover .instagram-icon {
+  color: #E1306C;
+}
+
+.social-icon-btn:hover .youtube-icon {
+  color: #FF0000;
+}
+
+/* Old YouTube button styles - keeping for backward compatibility */
 .youtube-btn {
   display: flex;
   align-items: center;
