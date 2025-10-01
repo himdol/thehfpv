@@ -26,6 +26,13 @@ spring:
   jackson:
     date-format: MM-dd-yyyy HH:mm:ss
     time-zone: UTC
+  
+  # File Upload Configuration
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 10MB
+      max-request-size: 10MB
 
   # OAuth2 Configuration
   security:
@@ -49,6 +56,7 @@ spring:
 
 # JWT Configuration
 jwt:
+  secret: thehfpv-blog-secret-key-2025-change-this-in-production-to-a-secure-random-value
   expiration: 86400000
 
 # CORS Configuration
