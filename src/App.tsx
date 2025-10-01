@@ -49,15 +49,22 @@ function AppContent() {
             const data = await response.json();
             console.log('프로필 데이터:', data);
             
-            // 사용자 정보를 localStorage에 저장
-            localStorage.setItem('user', JSON.stringify(data));
-            
-            // 소셜 로그인 상태 업데이트
-            socialLogin(data);
-            
-            console.log('OAuth2 로그인 성공!');
+            // 사용자 정보를 localStorage에 저장 (data.user 사용)
+            if (data.user) {
+              localStorage.setItem('user', JSON.stringify(data.user));
+              
+              // 소셜 로그인 상태 업데이트
+              await socialLogin(data.user);
+              
+              console.log('OAuth2 로그인 성공!');
+              alert('Google 로그인이 완료되었습니다!');
+            } else {
+              console.error('사용자 정보가 응답에 없음:', data);
+              alert('사용자 정보를 가져올 수 없습니다.');
+            }
           } else {
             console.error('프로필 요청 실패:', response.status);
+            alert('프로필 요청에 실패했습니다.');
           }
         } catch (error) {
           console.error('프로필 요청 중 오류:', error);

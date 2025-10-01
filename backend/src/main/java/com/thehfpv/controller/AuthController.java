@@ -4,6 +4,7 @@ import com.thehfpv.model.User;
 import com.thehfpv.model.UserRole;
 import com.thehfpv.repository.UserRepository;
 import com.thehfpv.service.JwtService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -12,6 +13,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -277,5 +280,35 @@ public class AuthController {
         Map<String, String> response = new HashMap<>();
         response.put("message", message);
         return response;
+    }
+    
+    // Logout
+    @PostMapping("/logout")
+    public ResponseEntity<?> logout(HttpServletRequest request) {
+        try {
+            System.out.println("=== AuthController.logout 호출됨 ===");
+            
+            // 세션 무효화
+            HttpSession session = request.getSession(false);
+            if (session != null) {
+                System.out.println("세션 무효화: " + session.getId());
+                session.invalidate();
+            }
+            
+            // SecurityContext 클리어
+            SecurityContextHolder.clearContext();
+            
+            System.out.println("로그아웃 완료");
+            
+            Map<String, Object> response = new HashMap<>();
+            response.put("success", true);
+            response.put("message", "Successfully logged out");
+            
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            System.err.println("Logout error: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(Map.of("success", false, "message", "Logout failed: " + e.getMessage()));
+        }
     }
 }

@@ -137,9 +137,22 @@ class AuthService {
 
   async logout(): Promise<void> {
     try {
-      // 토큰 제거
-      localStorage.removeItem('authToken');
-      localStorage.removeItem('user');
+      // 백엔드 로그아웃 API 호출 (세션 무효화)
+      try {
+        await fetch(`${API_BASE_URL}/auth/logout`, {
+          method: 'POST',
+          headers: this.getAuthHeaders(),
+          credentials: 'include' // 쿠키 포함
+        });
+      } catch (err) {
+        console.warn('Backend logout failed, continuing with local logout:', err);
+      }
+      
+      // 로컬 스토리지 및 세션 스토리지 완전 클리어
+      localStorage.clear();
+      sessionStorage.clear();
+      
+      console.log('로그아웃 완료 - 모든 스토리지 클리어됨');
     } catch (error) {
       console.error('Logout error:', error);
       throw error;

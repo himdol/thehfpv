@@ -18,6 +18,9 @@ import java.util.function.Function;
 @Service
 public class JwtService {
     
+    @Value("${jwt.secret}")
+    private String secretKey;
+    
     private SecretKey signingKey;
     
     @Value("${jwt.expiration:1800000}") // 30분 (30 * 60 * 1000)
@@ -25,7 +28,9 @@ public class JwtService {
     
     @PostConstruct
     public void init() {
-        signingKey = Keys.secretKeyFor(SignatureAlgorithm.HS256);
+        // Use fixed secret key from configuration
+        byte[] keyBytes = secretKey.getBytes();
+        signingKey = Keys.hmacShaKeyFor(keyBytes);
     }
     
     /**

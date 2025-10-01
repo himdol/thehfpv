@@ -71,9 +71,8 @@ class ApiService {
     try {
       const response = await fetch(`${this.baseURL}/blog/posts?page=${page}&size=${limit}`, {
         method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-        }
+        headers: this.getAuthHeaders(),
+        credentials: 'include'
       });
 
       if (!response.ok) {
@@ -99,7 +98,7 @@ class ApiService {
           slug: post.slug,
           likes: post.likeCount || 0,
           viewCount: post.viewCount || 0,
-          isLiked: false
+          isLiked: post.isLiked || false  // 백엔드에서 받은 isLiked 사용
         }));
 
         return {
@@ -193,9 +192,8 @@ class ApiService {
     try {
       const response = await fetch(`${this.baseURL}/blog/posts/${id}`, {
         method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-        }
+        headers: this.getAuthHeaders(),
+        credentials: 'include'
       });
 
       if (!response.ok) {
@@ -274,9 +272,8 @@ class ApiService {
     try {
       const response = await fetch(`${this.baseURL}/blog/posts/category/${category}?page=${page}&size=${limit}`, {
         method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-        }
+        headers: this.getAuthHeaders(),
+        credentials: 'include'
       });
 
       if (!response.ok) {
@@ -334,9 +331,8 @@ class ApiService {
     try {
       const response = await fetch(`${this.baseURL}/blog/posts/search?keyword=${encodeURIComponent(keyword)}&page=${page}&size=${limit}`, {
         method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-        }
+        headers: this.getAuthHeaders(),
+        credentials: 'include'
       });
 
       if (!response.ok) {

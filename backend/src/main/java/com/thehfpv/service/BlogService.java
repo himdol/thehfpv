@@ -1,8 +1,11 @@
 package com.thehfpv.service;
 
 import com.thehfpv.model.BlogPost;
+import com.thehfpv.model.BlogLike;
 import com.thehfpv.model.User;
 import com.thehfpv.repository.BlogPostRepository;
+import com.thehfpv.repository.BlogLikeRepository;
+import com.thehfpv.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -25,6 +28,12 @@ public class BlogService {
     
     @Autowired
     private BlogPostRepository blogPostRepository;
+    
+    @Autowired
+    private BlogLikeRepository blogLikeRepository;
+    
+    @Autowired
+    private UserRepository userRepository;
     
     // Create a new blog post
     public BlogPost createPost(BlogPost blogPost) {
@@ -339,86 +348,66 @@ public class BlogService {
 
     // Toggle like for a blog post
     public boolean toggleLike(Long postId, Long userId) {
-        Optional<BlogPost> postOpt = blogPostRepository.findById(postId);
-        if (!postOpt.isPresent()) {
-            throw new RuntimeException("Post not found");
-        }
+        BlogPost post = blogPostRepository.findById(postId)
+            .orElseThrow(() -> new RuntimeException("Post not found"));
         
-        BlogPost post = postOpt.get();
-        String likedUsers = post.getLikedUsers();
+        User user = userRepository.findById(userId)
+            .orElseThrow(() -> new RuntimeException("User not found"));
         
-        if (likedUsers == null || likedUsers.isEmpty()) {
-            // No likes yet, add user
-            post.setLikedUsers(userId.toString());
-            blogPostRepository.save(post);
-            return true;
+        Optional<BlogLike> existingLike = blogLikeRepository.findByPostAndUser(post, user);
+        
+        if (existingLike.isPresent()) {
+            // Unlike: remove existing like
+            blogLikeRepository.delete(existingLike.get());
+            return false;
         } else {
-            // Check if user already liked
-            String[] userIds = likedUsers.split(",");
-            List<String> userIdList = new ArrayList<>();
-            boolean userLiked = false;
-            
-            for (String id : userIds) {
-                if (id.trim().equals(userId.toString())) {
-                    userLiked = true;
-                } else {
-                    userIdList.add(id.trim());
-                }
-            }
-            
-            if (userLiked) {
-                // Remove like
-                post.setLikedUsers(String.join(",", userIdList));
-                blogPostRepository.save(post);
-                return false;
-            } else {
-                // Add like
-                userIdList.add(userId.toString());
-                post.setLikedUsers(String.join(",", userIdList));
-                blogPostRepository.save(post);
-                return true;
-            }
+            // Like: create new like
+            BlogLike newLike = new BlogLike(post, user);
+            blogLikeRepository.save(newLike);
+            return true;
         }
     }
 
     // Check if user liked a post
     public boolean isLikedByUser(Long postId, Long userId) {
-        Optional<BlogPost> postOpt = blogPostRepository.findById(postId);
-        if (!postOpt.isPresent()) {
+        BlogPost post = blogPostRepository.findById(postId)
+            .orElse(null);
+        
+        User user = userRepository.findById(userId)
+            .orElse(null);
+        
+        if (post == null || user == null) {
             return false;
         }
         
-        BlogPost post = postOpt.get();
-        String likedUsers = post.getLikedUsers();
-        
-        if (likedUsers == null || likedUsers.isEmpty()) {
-            return false;
-        }
-        
-        String[] userIds = likedUsers.split(",");
-        for (String id : userIds) {
-            if (id.trim().equals(userId.toString())) {
-                return true;
-            }
-        }
-        
-        return false;
+        return blogLikeRepository.existsByPostAndUser(post, user);
     }
 
     // Get like count for a post
     public int getLikeCount(Long postId) {
-        Optional<BlogPost> postOpt = blogPostRepository.findById(postId);
-        if (!postOpt.isPresent()) {
+        BlogPost post = blogPostRepository.findById(postId)
+            .orElse(null);
+        
+        if (post == null) {
             return 0;
         }
         
-        BlogPost post = postOpt.get();
-        String likedUsers = post.getLikedUsers();
+        return (int) blogLikeRepository.countByPost(post);
+    }
+    
+    // Get posts liked by user (for "My Likes" feature)
+    public List<BlogPost> getPostsLikedByUser(Long userId) {
+        User user = userRepository.findById(userId)
+            .orElseThrow(() -> new RuntimeException("User not found"));
         
-        if (likedUsers == null || likedUsers.isEmpty()) {
-            return 0;
-        }
+        return blogLikeRepository.findPostsLikedByUser(user);
+    }
+    
+    // Get user's likes with pagination
+    public List<BlogLike> getUserLikes(Long userId) {
+        User user = userRepository.findById(userId)
+            .orElseThrow(() -> new RuntimeException("User not found"));
         
-        return likedUsers.split(",").length;
+        return blogLikeRepository.findByUserOrderByCreatedAtDesc(user);
     }
 }

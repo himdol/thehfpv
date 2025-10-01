@@ -118,7 +118,18 @@ public class BlogController {
             System.out.println("Posts content size: " + posts.getContent().size());
             System.out.println("Posts content: " + posts.getContent());
             
-            // Transform posts to include like count
+            // Get current user if authenticated
+            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+            Long currentUserId = null;
+            if (auth != null && auth.isAuthenticated() && !(auth.getPrincipal() instanceof String && "anonymousUser".equals(auth.getPrincipal()))) {
+                String email = auth.getName();
+                Optional<User> userOpt = userRepository.findByEmail(email);
+                if (userOpt.isPresent()) {
+                    currentUserId = userOpt.get().getUserId();
+                }
+            }
+            
+            // Transform posts to include like count and user's like status
             List<Map<String, Object>> transformedPosts = new ArrayList<>();
             for (BlogPost post : posts.getContent()) {
                 Map<String, Object> postMap = new HashMap<>();
@@ -137,6 +148,14 @@ public class BlogController {
                 postMap.put("updatedAt", post.getUpdatedAt());
                 postMap.put("viewCount", post.getViewCount());
                 postMap.put("likeCount", blogService.getLikeCount(post.getPostId()));
+                
+                // Add user's like status if authenticated
+                if (currentUserId != null) {
+                    postMap.put("isLiked", blogService.isLikedByUser(post.getPostId(), currentUserId));
+                } else {
+                    postMap.put("isLiked", false);
+                }
+                
                 postMap.put("author", post.getAuthor());
                 transformedPosts.add(postMap);
                 
@@ -146,6 +165,7 @@ public class BlogController {
                     ", PublishedAt: " + post.getPublishedAt() +
                     ", ViewCount: " + post.getViewCount() +
                     ", LikeCount: " + blogService.getLikeCount(post.getPostId()) +
+                    ", IsLiked: " + (currentUserId != null ? blogService.isLikedByUser(post.getPostId(), currentUserId) : false) +
                     ", Author: " + (post.getAuthor() != null ? post.getAuthor().getFirstName() : "null"));
             }
             
@@ -656,6 +676,39 @@ public class BlogController {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body(Map.of("success", false, "message", "Failed to get like status: " + e.getMessage()));
+        }
+    }
+    
+    // Get posts liked by current user
+    @GetMapping("/my-likes")
+    public ResponseEntity<?> getMyLikes() {
+        try {
+            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+            if (auth == null || !auth.isAuthenticated()) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(Map.of("success", false, "message", "Authentication required"));
+            }
+            
+            String email = auth.getName();
+            Optional<User> userOpt = userRepository.findByEmail(email);
+            if (!userOpt.isPresent()) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(Map.of("success", false, "message", "User not found"));
+            }
+            User user = userOpt.get();
+            
+            List<BlogPost> likedPosts = blogService.getPostsLikedByUser(user.getUserId());
+            
+            return ResponseEntity.ok(Map.of(
+                "success", true,
+                "posts", likedPosts,
+                "totalLikes", likedPosts.size()
+            ));
+        } catch (Exception e) {
+            System.err.println("Error in getMyLikes: " + e.getMessage());
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(Map.of("success", false, "message", "Failed to get liked posts: " + e.getMessage()));
         }
     }
 }
