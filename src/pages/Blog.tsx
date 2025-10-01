@@ -399,9 +399,9 @@ const Blog: React.FC<BlogProps> = ({ setCurrentPage: setAppCurrentPage }) => {
                       <h2 className="blog-title">
                         {post.title}
                       </h2>
-                      <p className="blog-excerpt">
+                      {/* <p className="blog-excerpt">
                         {post.excerpt}
-                      </p>
+                      </p> */}
                       <div className="blog-post-footer">
                         <div className="blog-post-meta">
                           <div className="blog-tags">
