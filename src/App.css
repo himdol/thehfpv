@@ -4221,6 +4221,7 @@
   flex: 1;
   height: 100%;
   overflow: hidden;
+  justify-content: center;
 }
 
 @media (min-width: 768px) {
