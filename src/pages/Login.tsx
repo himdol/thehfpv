@@ -320,7 +320,7 @@ const Login: React.FC<LoginProps> = ({ setCurrentPage, previousPage }) => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.8 }}
           >
-            {loading ? '처리 중...' : (isLogin ? 'Sign In' : 'Create Account')}
+            {loading ? 'Processing...' : (isLogin ? 'Sign In' : 'Create Account')}
           </motion.button>
         </motion.form>
 

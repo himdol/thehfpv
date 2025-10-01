@@ -141,9 +141,7 @@ const Blog: React.FC<BlogProps> = ({ setCurrentPage: setAppCurrentPage }) => {
   // Handle login prompt
   const handleLoginPrompt = () => {
     setShowLoginPrompt(false);
-    if (setAppCurrentPage) {
-      setAppCurrentPage('login');
-    }
+    navigate('/login');
   };
 
   // Close login prompt
@@ -338,7 +336,7 @@ const Blog: React.FC<BlogProps> = ({ setCurrentPage: setAppCurrentPage }) => {
                     navigate('/write-blog');
                   }}
                 >
-                  ✍️
+                  +
                 </button>
               </div>
             )}
@@ -392,6 +390,18 @@ const Blog: React.FC<BlogProps> = ({ setCurrentPage: setAppCurrentPage }) => {
                             <span className="blog-featured">
                               ⭐
                             </span>
+                          )}
+                          {user?.userRole === 'ROOT' && (
+                            <button
+                              className="blog-edit-btn"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                navigate(`/write-blog?edit=${post.id}`);
+                              }}
+                              title="Edit post"
+                            >
+                              ✏️
+                            </button>
                           )}
                         </div>
                         <span className="text-sm text-gray-500">{getRelativeTime(post.date)}</span>

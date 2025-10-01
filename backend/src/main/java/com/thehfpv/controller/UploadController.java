@@ -28,7 +28,7 @@ public class UploadController {
             // 파일 유효성 검사
             if (file.isEmpty()) {
                 response.put("success", false);
-                response.put("message", "파일이 비어있습니다.");
+                response.put("message", "File is empty.");
                 return ResponseEntity.badRequest().body(response);
             }
 
@@ -36,7 +36,7 @@ public class UploadController {
             String contentType = file.getContentType();
             if (contentType == null || !contentType.startsWith("image/")) {
                 response.put("success", false);
-                response.put("message", "이미지 파일만 업로드 가능합니다.");
+                response.put("message", "Only image files can be uploaded.");
                 return ResponseEntity.badRequest().body(response);
             }
 
@@ -66,14 +66,14 @@ public class UploadController {
             response.put("filename", filename);
             response.put("location", imageUrl); // TinyMCE가 요구하는 필드
 
-            System.out.println("이미지 업로드 성공: " + filename);
+            System.out.println("Image upload success: " + filename);
 
             return ResponseEntity.ok(response);
 
         } catch (IOException e) {
-            System.err.println("이미지 업로드 실패: " + e.getMessage());
+            System.err.println("Image upload failed: " + e.getMessage());
             response.put("success", false);
-            response.put("message", "파일 업로드 중 오류가 발생했습니다.");
+            response.put("message", "An error occurred during file upload.");
             return ResponseEntity.status(500).body(response);
         }
     }

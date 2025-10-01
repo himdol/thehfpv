@@ -22,7 +22,7 @@ const BlogDetail: React.FC = () => {
   useEffect(() => {
     const loadPost = async () => {
       if (!id) {
-        setError('포스트 ID가 없습니다.');
+        setError('Post ID is missing.');
         setLoading(false);
         return;
       }

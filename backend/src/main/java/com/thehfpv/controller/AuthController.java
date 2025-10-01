@@ -153,23 +153,23 @@ public class AuthController {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             String currentUserEmail = authentication.getName();
             
-            System.out.println("=== AuthController.getProfile 호출됨 ===");
-            System.out.println("현재 사용자 이메일: " + currentUserEmail);
+            System.out.println("=== AuthController.getProfile called ===");
+            System.out.println("Current user email: " + currentUserEmail);
             
             // 사용자 조회 (이메일로 먼저 시도)
             User currentUser = userRepository.findByEmail(currentUserEmail)
                 .orElse(null);
             
             if (currentUser == null) {
-                System.out.println("이메일로 사용자를 찾을 수 없음: " + currentUserEmail);
+                System.out.println("User not found by email: " + currentUserEmail);
                 throw new RuntimeException("User not found with email: " + currentUserEmail);
             }
             
-            System.out.println("사용자 조회 성공: " + currentUser.getEmail() + ", Provider: " + currentUser.getProvider());
+            System.out.println("User retrieved successfully: " + currentUser.getEmail() + ", Provider: " + currentUser.getProvider());
             
             // 응답 생성
             Map<String, Object> response = new HashMap<>();
-            response.put("message", "프로필 정보 조회 성공");
+            response.put("message", "Profile information retrieved successfully");
             
             // user 정보를 안전하게 생성 (null 값 허용)
             Map<String, Object> userInfo = new HashMap<>();
@@ -188,7 +188,7 @@ public class AuthController {
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.badRequest()
-                .body(createErrorResponse("프로필 조회 중 오류가 발생했습니다: " + e.getMessage()));
+                .body(createErrorResponse("An error occurred while retrieving profile: " + e.getMessage()));
         }
     }
     
@@ -225,7 +225,7 @@ public class AuthController {
                 if (!passwordMatches) {
                     System.out.println("Password verification failed - returning error");
                     return ResponseEntity.badRequest()
-                        .body(createErrorResponse("현재 비밀번호가 일치하지 않습니다."));
+                        .body(createErrorResponse("Current password does not match."));
                 }
                 
                 System.out.println("Password verification successful - updating password");
@@ -251,7 +251,7 @@ public class AuthController {
             
             // 응답 생성
             Map<String, Object> response = new HashMap<>();
-            response.put("message", "프로필이 성공적으로 수정되었습니다.");
+            response.put("message", "Profile successfully updated.");
             response.put("user", Map.of(
                 "userId", updatedUser.getUserId(),
                 "email", updatedUser.getEmail(),
@@ -266,7 +266,7 @@ public class AuthController {
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.badRequest()
-                .body(createErrorResponse("프로필 수정 중 오류가 발생했습니다: " + e.getMessage()));
+                .body(createErrorResponse("An error occurred while updating profile: " + e.getMessage()));
         }
     }
     
@@ -286,19 +286,19 @@ public class AuthController {
     @PostMapping("/logout")
     public ResponseEntity<?> logout(HttpServletRequest request) {
         try {
-            System.out.println("=== AuthController.logout 호출됨 ===");
+            System.out.println("=== AuthController.logout called ===");
             
             // 세션 무효화
             HttpSession session = request.getSession(false);
             if (session != null) {
-                System.out.println("세션 무효화: " + session.getId());
+                System.out.println("Session invalidated: " + session.getId());
                 session.invalidate();
             }
             
             // SecurityContext 클리어
             SecurityContextHolder.clearContext();
             
-            System.out.println("로그아웃 완료");
+            System.out.println("Logout completed");
             
             Map<String, Object> response = new HashMap<>();
             response.put("success", true);

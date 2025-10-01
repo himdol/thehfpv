@@ -1494,6 +1494,13 @@
   box-shadow: none;
 }
 
+/* Small Button Size */
+.btn-small {
+  padding: 0.5rem 1rem !important;
+  font-size: 0.875rem !important;
+  border-radius: 1.5rem !important;
+}
+
 /* YouTube Style Buttons */
 .youtube-style {
   width: 48px !important;
@@ -2365,12 +2372,13 @@
   border: none;
   padding: 0.75rem;
   border-radius: 50%;
-  font-weight: 600;
+  font-weight: 300;
   cursor: pointer;
   transition: all 0.3s ease;
-  font-size: 1.5rem;
+  font-size: 2rem;
   width: 3rem;
   height: 3rem;
+  line-height: 1;
 }
 
 .blog-write-btn:hover {
@@ -4266,10 +4274,14 @@
   flex-shrink: 0;
 }
 
+.blog-post-header .text-sm {
+  font-size: 0.75rem !important;
+}
+
 .blog-post-meta {
   display: flex;
   align-items: center;
-  gap: 1rem;
+  gap: 0.5rem;
   flex-shrink: 0;
   height: 2rem;
   flex: 1;
@@ -4289,6 +4301,8 @@
   border-radius: 9999px;
   font-size: 0.875rem;
   font-weight: 500;
+  line-height: 1;
+  white-space: nowrap;
 }
 
 .blog-category.filming {
@@ -4320,6 +4334,26 @@
   font-weight: 500;
   line-height: 1;
   white-space: nowrap;
+}
+
+.blog-edit-btn {
+  background: none;
+  border: none;
+  font-size: 0.875rem;
+  font-weight: 500;
+  padding: 0.25rem 0.75rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  opacity: 0.6;
+  border-radius: 9999px;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.blog-edit-btn:hover {
+  opacity: 1;
+  background-color: rgba(59, 130, 246, 0.1);
+  transform: scale(1.1);
 }
 
 .blog-title {
@@ -4359,6 +4393,15 @@
 
 .App.dark .blog-title {
   color: #f9fafb;
+}
+
+.App.dark .blog-edit-btn {
+  color: #9ca3af;
+}
+
+.App.dark .blog-edit-btn:hover {
+  background-color: rgba(59, 130, 246, 0.2);
+  color: #60a5fa;
 }
 
 .App.dark .blog-like-btn {

@@ -32,7 +32,7 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
 
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
-        System.out.println("=== OAuth2UserService.loadUser 호출됨 ===");
+        System.out.println("=== OAuth2UserService.loadUser called ===");
         
         // 기본 OAuth2UserService를 사용하여 사용자 정보 가져오기
         org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService defaultService = 
@@ -40,7 +40,7 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
         
         OAuth2User oauth2User = defaultService.loadUser(userRequest);
         
-        System.out.println("기본 OAuth2User 로드 완료: " + oauth2User.getName());
+        System.out.println("Default OAuth2User loaded successfully: " + oauth2User.getName());
         
         // 사용자 정보 처리 및 반환 (CustomOAuth2User 대신 기본 OAuth2User 반환)
         return oauth2User;
@@ -52,7 +52,7 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
                                       org.springframework.security.core.Authentication authentication) 
                                       throws java.io.IOException, jakarta.servlet.ServletException {
         try {
-            System.out.println("=== OAuth2 인증 성공 핸들러 시작 ===");
+            System.out.println("=== OAuth2 authentication success handler started ===");
             
             // OAuth2User 타입에 관계없이 처리
             org.springframework.security.oauth2.core.user.OAuth2User oauth2User = 
@@ -67,7 +67,7 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
             // JWT 토큰 생성
             String jwtToken = jwtService.generateToken(user);
             
-            System.out.println("JWT 토큰 생성 완료: " + jwtToken);
+            System.out.println("JWT token generated successfully: " + jwtToken);
             
             // 세션에 사용자 정보 저장
             HttpSession session = request.getSession();
@@ -75,17 +75,17 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
             session.setAttribute("jwtToken", jwtToken);
             session.setAttribute("isAuthenticated", true);
             
-            System.out.println("세션에 사용자 정보 저장 완료: " + user.getEmail());
-            System.out.println("세션 ID: " + session.getId());
+            System.out.println("User information saved to session: " + user.getEmail());
+            System.out.println("Session ID: " + session.getId());
             
             // 세션 저장 확인
             User savedUser = (User) session.getAttribute("user");
             String savedToken = (String) session.getAttribute("jwtToken");
             Boolean savedAuth = (Boolean) session.getAttribute("isAuthenticated");
             
-            System.out.println("세션 저장 확인:");
+            System.out.println("Session save confirmation:");
             System.out.println("- user: " + (savedUser != null ? savedUser.getEmail() : "null"));
-            System.out.println("- jwtToken: " + (savedToken != null ? "있음" : "없음"));
+            System.out.println("- jwtToken: " + (savedToken != null ? "exists" : "none"));
             System.out.println("- isAuthenticated: " + savedAuth);
             
             // Spring Security 컨텍스트에 JWT 인증 정보 설정
@@ -111,17 +111,17 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
             // 현재 스레드의 SecurityContext도 설정
             org.springframework.security.core.context.SecurityContextHolder.setContext(securityContext);
             
-            System.out.println("Spring Security 컨텍스트에 JWT 인증 정보 설정 완료");
-            System.out.println("새로운 인증 정보: " + authToken.getPrincipal());
+            System.out.println("JWT authentication information set in Spring Security context");
+            System.out.println("New authentication info: " + authToken.getPrincipal());
             
             // 프론트엔드로 리다이렉트 (JWT 토큰을 URL 파라미터로 전달)
             String redirectUrl = "http://localhost:3000/?oauth_success=true&token=" + jwtToken;
 
-            System.out.println("리다이렉트 URL: " + redirectUrl);
+            System.out.println("Redirect URL: " + redirectUrl);
             response.sendRedirect(redirectUrl);
             
         } catch (Exception e) {
-            System.err.println("=== OAuth2 인증 성공 핸들러 에러 ===");
+            System.err.println("=== OAuth2 authentication success handler error ===");
             e.printStackTrace();
             response.sendRedirect("http://localhost:3000/login?error=oauth_failed");
         }
@@ -132,16 +132,16 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
                                       jakarta.servlet.http.HttpServletResponse response, 
                                       org.springframework.security.core.AuthenticationException exception) 
                                       throws java.io.IOException, jakarta.servlet.ServletException {
-        System.err.println("=== OAuth2 인증 실패 ===");
-        System.err.println("에러: " + exception.getMessage());
-        System.err.println("에러 타입: " + exception.getClass().getSimpleName());
+        System.err.println("=== OAuth2 authentication failed ===");
+        System.err.println("Error: " + exception.getMessage());
+        System.err.println("Error type: " + exception.getClass().getSimpleName());
         
         // OAuth 취소 상황 감지
         String errorMessage = exception.getMessage();
         if (errorMessage != null && (errorMessage.contains("access_denied") || 
                                    errorMessage.contains("user_cancelled") ||
                                    errorMessage.contains("cancelled"))) {
-            System.err.println("사용자가 OAuth 인증을 취소했습니다.");
+            System.err.println("User cancelled OAuth authentication.");
             response.sendRedirect("http://localhost:3000/login?error=oauth_cancelled");
         } else {
             response.sendRedirect("http://localhost:3000/login?error=oauth_failed");
@@ -149,7 +149,7 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
     }
 
     private User processOAuth2User(org.springframework.security.oauth2.core.user.OAuth2User oauth2User) {
-        System.out.println("=== processOAuth2User 시작 ===");
+        System.out.println("=== processOAuth2User started ===");
         String provider = "GOOGLE";
         
         String email = oauth2User.getAttribute("email");
@@ -163,8 +163,8 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
         System.out.println("ProviderId: " + providerId);
 
         if (email == null || email.isEmpty()) {
-            System.err.println("이메일 정보가 없습니다!");
-            throw new RuntimeException("이메일 정보를 가져올 수 없습니다.");
+            System.err.println("Email information is missing!");
+            throw new RuntimeException("Unable to retrieve email information.");
         }
 
         // 기존 사용자 확인 (provider + providerId로)
@@ -180,7 +180,7 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
             if (emailVerified != null && user.getEmailVerified() != emailVerified) {
                 user.setEmailVerified(emailVerified);
                 needsUpdate = true;
-                System.out.println("이메일 인증 상태 업데이트: " + emailVerified);
+                System.out.println("Email verification status updated: " + emailVerified);
             }
             
             // 마지막 로그인 시간 업데이트 (필수)
@@ -189,10 +189,10 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
             
             // 변경사항이 있을 때만 저장
             if (needsUpdate) {
-                System.out.println("기존 사용자 정보 업데이트: " + user.getEmail());
+                System.out.println("Existing user information updated: " + user.getEmail());
                 return userRepository.save(user);
             } else {
-                System.out.println("기존 사용자 정보 변경사항 없음: " + user.getEmail());
+                System.out.println("No changes to existing user information: " + user.getEmail());
                 return user;
             }
         }
@@ -206,7 +206,7 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
             user.setProviderId(providerId);
             user.setEmailVerified(true); // 소셜 로그인은 이메일 인증 완료로 간주
             user.setUpdateDate(LocalDateTime.now());
-            System.out.println("기존 이메일 사용자에 소셜 로그인 정보 추가: " + user.getEmail());
+            System.out.println("Social login info added to existing email user: " + user.getEmail());
             return userRepository.save(user);
         }
 
@@ -220,7 +220,7 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
         newUser.setUserStatus(1);
         newUser.setCreateDate(LocalDateTime.now());
         newUser.setUpdateDate(LocalDateTime.now());
-        System.out.println("새 소셜 로그인 사용자 생성: " + email);
+        System.out.println("New social login user created: " + email);
 
         // 이름 분리 (Google의 경우 full name을 first/last로 분리)
         if (name != null && !name.isEmpty()) {

@@ -15,9 +15,8 @@ const AuthCallback: React.FC<AuthCallbackProps> = ({ setCurrentPage }) => {
   useEffect(() => {
     const handleOAuthCallback = async () => {
       try {
-        console.log('=== OAuth 콜백 처리 시작 ===');
+        console.log('=== OAuth callback processing started ===');
         
-        // URL 파라미터 확인
         const urlParams = new URLSearchParams(window.location.search);
         const error = urlParams.get('error');
 
@@ -28,33 +27,30 @@ const AuthCallback: React.FC<AuthCallbackProps> = ({ setCurrentPage }) => {
           return;
         }
 
-        // 백엔드 세션에서 사용자 정보 가져오기
-        console.log('세션 정보 요청 중...');
+        console.log('Requesting session information...');
         const response = await fetch('http://localhost:8080/session/user', {
           method: 'GET',
-          credentials: 'include', // 쿠키 포함
+          credentials: 'include',
         });
 
-        console.log('세션 응답 상태:', response.status);
+        console.log('Session response status:', response.status);
         
         if (!response.ok) {
-          throw new Error(`세션 요청 실패: ${response.status}`);
+          throw new Error(`Session request failed: ${response.status}`);
         }
 
         const data = await response.json();
-        console.log('세션 데이터:', data);
+        console.log('Session data:', data);
 
         if (data.authenticated && data.user && data.jwtToken) {
-          // 토큰과 사용자 정보를 localStorage에 저장
           localStorage.setItem('authToken', data.jwtToken);
           localStorage.setItem('user', JSON.stringify(data.user));
           
-          console.log('로컬 스토리지에 사용자 정보 저장 완료');
+          console.log('User information saved to local storage');
           
-          // AuthContext 업데이트
           await socialLogin(data.user);
           
-          console.log('AuthContext 업데이트 완료');
+          console.log('AuthContext updated successfully');
           
           // Change URL to root path and navigate to About page
           window.history.replaceState({}, document.title, '/');

@@ -91,7 +91,7 @@ const MyLikes: React.FC<MyLikesProps> = ({ setCurrentPage }) => {
         <div className="blog-main">
           <div className="blog-container">
             <div className="blog-header">
-              <h1 className="blog-title">내 좋아요</h1>
+              <h1 className="blog-title">My Likes</h1>
               <p className="blog-subtitle">Loading...</p>
             </div>
           </div>
