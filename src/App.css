@@ -2265,10 +2265,15 @@
 .footer-content {
   max-width: 1200px;
   margin: 0 auto;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 3rem;
-  align-items: start;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  align-items: center;
+}
+
+.footer-section {
+  text-align: center;
+  width: 100%;
 }
 
 .footer-section h3 {
@@ -2365,7 +2370,6 @@
   align-items: center;
   justify-content: center;
   background: transparent;
-  color: #666;
   border: none;
   padding: 0.75rem;
   border-radius: 50%;
@@ -2376,12 +2380,8 @@
 }
 
 .social-icon-btn:hover {
-  transform: translateY(-3px);
+  transform: translateY(-3px) scale(1.1);
   background: rgba(0, 0, 0, 0.05);
-}
-
-.App.dark .social-icon-btn {
-  color: #aaa;
 }
 
 .App.dark .social-icon-btn:hover {
@@ -2389,17 +2389,27 @@
 }
 
 .social-icon {
-  width: 24px;
-  height: 24px;
+  width: 28px;
+  height: 28px;
   transition: all 0.3s ease;
 }
 
-.social-icon-btn:hover .instagram-icon {
+/* Instagram icon - always pink gradient */
+.instagram-icon {
   color: #E1306C;
 }
 
-.social-icon-btn:hover .youtube-icon {
+.social-icon-btn:hover .instagram-icon {
+  filter: brightness(1.2);
+}
+
+/* YouTube icon - always red */
+.youtube-icon {
   color: #FF0000;
+}
+
+.social-icon-btn:hover .youtube-icon {
+  filter: brightness(1.2);
 }
 
 /* Old YouTube button styles - keeping for backward compatibility */
