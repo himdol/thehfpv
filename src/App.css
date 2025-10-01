@@ -2394,22 +2394,30 @@
   transition: all 0.3s ease;
 }
 
-/* Instagram icon - always pink gradient */
-.instagram-icon {
-  color: #E1306C;
+/* Instagram icon - gradient background */
+.social-icon-btn .instagram-icon {
+  background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+  border-radius: 20%;
+  padding: 4px;
+  color: white;
 }
 
 .social-icon-btn:hover .instagram-icon {
-  filter: brightness(1.2);
+  transform: scale(1.1);
+  box-shadow: 0 4px 12px rgba(225, 48, 108, 0.4);
 }
 
 /* YouTube icon - always red */
 .youtube-icon {
   color: #FF0000;
+  background: white;
+  border-radius: 15%;
+  padding: 2px;
 }
 
 .social-icon-btn:hover .youtube-icon {
   filter: brightness(1.2);
+  box-shadow: 0 4px 12px rgba(255, 0, 0, 0.3);
 }
 
 /* Old YouTube button styles - keeping for backward compatibility */
