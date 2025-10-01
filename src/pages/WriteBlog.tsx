@@ -11,7 +11,7 @@ interface WriteBlogProps {
 
 const WriteBlog: React.FC<WriteBlogProps> = ({ setCurrentPage }) => {
   const navigate = useNavigate();
-  const { token } = useAuth();
+  const { token, user } = useAuth();
   const [searchParams] = useSearchParams();
   const editId = searchParams.get('edit');
   
@@ -20,7 +20,8 @@ const WriteBlog: React.FC<WriteBlogProps> = ({ setCurrentPage }) => {
     content: '',
     category: 'filming',
     tags: '',
-    featured: false // Featured post option
+    featured: false, // Featured post option
+    status: 'PUBLISHED' // Track current status
   });
 
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -39,7 +40,8 @@ const WriteBlog: React.FC<WriteBlogProps> = ({ setCurrentPage }) => {
               content: post.content || '',
               category: post.category,
               tags: Array.isArray(post.tags) ? post.tags.join(', ') : post.tags || '',
-              featured: post.featured || false
+              featured: post.featured || false,
+              status: post.status || 'PUBLISHED'
             });
           } else {
             alert('Post not found.');
@@ -117,6 +119,111 @@ const WriteBlog: React.FC<WriteBlogProps> = ({ setCurrentPage }) => {
 
   const handleCancel = () => {
     navigate('/blog');
+  };
+
+  const handleUnpublish = async () => {
+    if (!editId) return;
+    
+    const confirmUnpublish = window.confirm('Are you sure you want to unpublish this post? It will no longer be visible to readers.');
+    if (!confirmUnpublish) return;
+
+    try {
+      const headers: Record<string, string> = {
+        'Content-Type': 'application/json',
+      };
+      
+      if (token) {
+        headers['Authorization'] = `Bearer ${token}`;
+      }
+      
+      // Send current form data with status set to DRAFT
+      const unpublishData = {
+        title: formData.title,
+        content: formData.content,
+        category: formData.category,
+        tags: formData.tags,
+        featured: formData.featured,
+        status: 'DRAFT' // Directly set status to DRAFT
+      };
+      
+      console.log('=== Unpublish Request ===');
+      console.log('Edit ID:', editId);
+      console.log('Unpublish Data:', unpublishData);
+      console.log('Current formData.status:', formData.status);
+      
+      const response = await fetch(`http://localhost:8080/blog/posts/${editId}`, {
+        method: 'PUT',
+        headers,
+        credentials: 'include',
+        body: JSON.stringify(unpublishData)
+      });
+      
+      console.log('Response status:', response.status);
+
+      const result = await response.json();
+      console.log('Response result:', result);
+
+      if (result.success) {
+        console.log('Success! Updating local state to DRAFT');
+        // Update local state first
+        setFormData(prev => ({ ...prev, status: 'DRAFT' }));
+        console.log('New formData status should be DRAFT');
+        alert('Blog post unpublished successfully! Status changed to DRAFT.');
+      } else {
+        console.error('Failed:', result.message);
+        alert(`An error occurred: ${result.message}`);
+      }
+    } catch (error) {
+      console.error('Error while unpublishing blog:', error);
+      alert('An error occurred while unpublishing the blog post.');
+    }
+  };
+
+  const handlePublish = async () => {
+    if (!editId) return;
+    
+    const confirmPublish = window.confirm('Are you sure you want to publish this post? It will be visible to all readers.');
+    if (!confirmPublish) return;
+
+    try {
+      const headers: Record<string, string> = {
+        'Content-Type': 'application/json',
+      };
+      
+      if (token) {
+        headers['Authorization'] = `Bearer ${token}`;
+      }
+      
+      // Send current form data with status set to PUBLISHED
+      const publishData = {
+        title: formData.title,
+        content: formData.content,
+        category: formData.category,
+        tags: formData.tags,
+        featured: formData.featured,
+        status: 'PUBLISHED' // Directly set status to PUBLISHED
+      };
+      
+      const response = await fetch(`http://localhost:8080/blog/posts/${editId}`, {
+        method: 'PUT',
+        headers,
+        credentials: 'include',
+        body: JSON.stringify(publishData)
+      });
+
+      const result = await response.json();
+
+      if (result.success) {
+        // Update local state first
+        setFormData(prev => ({ ...prev, status: 'PUBLISHED' }));
+        alert('Blog post published successfully! Status changed to PUBLISHED.');
+      } else {
+        alert(`An error occurred: ${result.message}`);
+      }
+    } catch (error) {
+      console.error('Error while publishing blog:', error);
+      alert('An error occurred while publishing the blog post.');
+    }
   };
 
   if (isLoading) {
@@ -212,8 +319,55 @@ const WriteBlog: React.FC<WriteBlogProps> = ({ setCurrentPage }) => {
               />
             </div>
 
+            {/* Current Status Display */}
+            {editId && user?.userRole === 'ROOT' && (
+              <div style={{ 
+                marginBottom: '20px', 
+                padding: '12px', 
+                backgroundColor: formData.status === 'PUBLISHED' ? '#d1fae5' : '#fef3c7',
+                borderRadius: '8px',
+                border: `1px solid ${formData.status === 'PUBLISHED' ? '#10b981' : '#f59e0b'}`
+              }}>
+                <span style={{ fontWeight: 'bold', fontSize: '14px' }}>
+                  Current Status: 
+                  <span style={{ 
+                    marginLeft: '8px',
+                    color: formData.status === 'PUBLISHED' ? '#059669' : '#d97706'
+                  }}>
+                    {formData.status === 'PUBLISHED' ? '✅ Published' : '📝 Unpublished'}
+                  </span>
+                </span>
+              </div>
+            )}
+
             {/* Buttons */}
             <div className="form-buttons">
+              {editId && user?.userRole === 'ROOT' && formData.status === 'PUBLISHED' && (
+                <button
+                  type="button"
+                  onClick={handleUnpublish}
+                  className="btn-unpublish btn-small"
+                  disabled={isSubmitting}
+                  title="Unpublish"
+                >
+                  Unpublish
+                </button>
+              )}
+              {editId && user?.userRole === 'ROOT' && formData.status !== 'PUBLISHED' && (
+                <button
+                  type="button"
+                  onClick={handlePublish}
+                  className="btn-publish btn-small"
+                  disabled={isSubmitting}
+                  title="Publish"
+                  style={{
+                    backgroundColor: '#10b981',
+                    color: 'white'
+                  }}
+                >
+                  Publish
+                </button>
+              )}
               <button
                 type="button"
                 onClick={handleCancel}
@@ -226,7 +380,7 @@ const WriteBlog: React.FC<WriteBlogProps> = ({ setCurrentPage }) => {
               <button
                 type="submit"
                 className="btn-submit btn-small"
-                disabled={isSubmitting || !formData.title.trim() || !formData.content.trim()}
+                disabled={isSubmitting || !formData.title?.trim() || !formData.content?.trim()}
                 title={isSubmitting ? (editId ? 'Updating...' : 'Publishing...') : (editId ? 'Update' : 'Publish')}
               >
                 {isSubmitting ? (editId ? 'Updating...' : 'Publishing...') : (editId ? 'Update' : 'Publish')}

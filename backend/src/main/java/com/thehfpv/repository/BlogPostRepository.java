@@ -39,6 +39,10 @@ public interface BlogPostRepository extends JpaRepository<BlogPost, Long> {
     @Query("SELECT bp FROM BlogPost bp LEFT JOIN FETCH bp.author WHERE bp.category = :category AND bp.status = :status ORDER BY bp.publishedAt DESC")
     Page<BlogPost> findByCategoryAndStatusOrderByPublishedAtDesc(@Param("category") String category, @Param("status") String status, Pageable pageable);
     
+    // Find all posts by category (for ROOT users) with pagination
+    @Query("SELECT bp FROM BlogPost bp LEFT JOIN FETCH bp.author WHERE bp.category = :category ORDER BY bp.createdAt DESC")
+    Page<BlogPost> findByCategoryOrderByCreatedAtDesc(@Param("category") String category, Pageable pageable);
+    
     // Find posts by author
     List<BlogPost> findByAuthorOrderByCreatedAtDesc(User author);
     
@@ -76,6 +80,14 @@ public interface BlogPostRepository extends JpaRepository<BlogPost, Long> {
            "LOWER(bp.tags) LIKE LOWER(CONCAT('%', :keyword, '%'))) " +
            "ORDER BY bp.publishedAt DESC")
     Page<BlogPost> searchPublishedPosts(@Param("keyword") String keyword, Pageable pageable);
+    
+    // Search all posts (for ROOT users) with pagination
+    @Query("SELECT bp FROM BlogPost bp WHERE " +
+           "(LOWER(bp.title) LIKE LOWER(CONCAT('%', :keyword, '%')) OR " +
+           "LOWER(bp.content) LIKE LOWER(CONCAT('%', :keyword, '%')) OR " +
+           "LOWER(bp.tags) LIKE LOWER(CONCAT('%', :keyword, '%'))) " +
+           "ORDER BY bp.createdAt DESC")
+    Page<BlogPost> searchAllPosts(@Param("keyword") String keyword, Pageable pageable);
     
     // Find recent posts
     @Query("SELECT bp FROM BlogPost bp WHERE bp.status = 'PUBLISHED' " +

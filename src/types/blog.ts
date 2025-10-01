@@ -15,6 +15,7 @@ export interface BlogPost {
   likes: number;
   isLiked: boolean;
   viewCount?: number;
+  status?: string; // PUBLISHED, DRAFT, SCHEDULED
 }
 
 export interface BlogCategory {

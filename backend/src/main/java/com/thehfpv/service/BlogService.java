@@ -63,8 +63,14 @@ public class BlogService {
     
     // Update an existing blog post
     public BlogPost updatePost(Long postId, BlogPost updatedPost) {
+        System.out.println("=== BlogService.updatePost ===");
+        System.out.println("Post ID: " + postId);
+        System.out.println("Updated Post Status from parameter: " + updatedPost.getStatus());
+        
         BlogPost existingPost = blogPostRepository.findById(postId)
             .orElseThrow(() -> new RuntimeException("Blog post not found with id: " + postId));
+        
+        System.out.println("Existing Post Status before update: " + existingPost.getStatus());
         
         // Update fields
         existingPost.setTitle(updatedPost.getTitle());
@@ -77,6 +83,8 @@ public class BlogService {
         existingPost.setExcerpt(updatedPost.getExcerpt());
         existingPost.setFeaturedImageUrl(updatedPost.getFeaturedImageUrl());
         
+        System.out.println("Existing Post Status after setStatus: " + existingPost.getStatus());
+        
         // Update slug if title changed
         if (!existingPost.getTitle().equals(updatedPost.getTitle())) {
             String newSlug = generateSlug(updatedPost.getTitle());
@@ -88,7 +96,11 @@ public class BlogService {
             existingPost.setPublishedAt(LocalDateTime.now());
         }
         
-        return blogPostRepository.save(existingPost);
+        System.out.println("About to save post with status: " + existingPost.getStatus());
+        BlogPost savedPost = blogPostRepository.save(existingPost);
+        System.out.println("Saved post status from DB: " + savedPost.getStatus());
+        
+        return savedPost;
     }
     
     // Get post by ID
@@ -125,6 +137,19 @@ public class BlogService {
         return result;
     }
     
+    // Get all posts (for ROOT users) with pagination
+    @Transactional(readOnly = true)
+    public Page<BlogPost> getAllPostsForAdmin(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());
+        Page<BlogPost> result = blogPostRepository.findAll(pageable);
+        
+        System.out.println("=== DEBUG: All posts (including DRAFT) ===");
+        System.out.println("Found " + result.getTotalElements() + " total posts");
+        System.out.println("Page content size: " + result.getContent().size());
+        
+        return result;
+    }
+    
     
     
     
@@ -153,6 +178,19 @@ public class BlogService {
         System.out.println("Found " + result.getTotalElements() + " total posts in category: " + category);
         System.out.println("Page content size: " + result.getContent().size());
 
+        return result;
+    }
+    
+    // Get all posts by category (for ROOT users) with pagination
+    @Transactional(readOnly = true)
+    public Page<BlogPost> getAllPostsByCategoryForAdmin(String category, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());
+        Page<BlogPost> result = blogPostRepository.findByCategoryOrderByCreatedAtDesc(category, pageable);
+        
+        System.out.println("=== DEBUG: All posts in category (including DRAFT) ===");
+        System.out.println("Found " + result.getTotalElements() + " total posts in category: " + category);
+        System.out.println("Page content size: " + result.getContent().size());
+        
         return result;
     }
     
@@ -194,6 +232,19 @@ public class BlogService {
         System.out.println("Found " + result.getTotalElements() + " posts matching keyword: " + keyword);
         System.out.println("Page content size: " + result.getContent().size());
 
+        return result;
+    }
+    
+    // Search all posts (for ROOT users) with pagination
+    @Transactional(readOnly = true)
+    public Page<BlogPost> searchAllPostsForAdmin(String keyword, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());
+        Page<BlogPost> result = blogPostRepository.searchAllPosts(keyword, pageable);
+        
+        System.out.println("=== DEBUG: Search all posts (including DRAFT) ===");
+        System.out.println("Found " + result.getTotalElements() + " posts matching keyword: " + keyword);
+        System.out.println("Page content size: " + result.getContent().size());
+        
         return result;
     }
     

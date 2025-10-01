@@ -98,7 +98,8 @@ class ApiService {
           slug: post.slug,
           likes: post.likeCount || 0,
           viewCount: post.viewCount || 0,
-          isLiked: post.isLiked || false  // 백엔드에서 받은 isLiked 사용
+          isLiked: post.isLiked || false,  // 백엔드에서 받은 isLiked 사용
+          status: post.status || 'PUBLISHED'  // 백엔드에서 받은 status 사용
         }));
 
         return {
@@ -219,7 +220,8 @@ class ApiService {
           slug: result.slug,
           likes: result.likeCount || 0,
           isLiked: false,
-          viewCount: result.viewCount || 0
+          viewCount: result.viewCount || 0,
+          status: result.status || 'PUBLISHED'
         };
 
         return {
@@ -299,7 +301,8 @@ class ApiService {
           slug: post.slug,
           likes: post.likeCount || 0,
           viewCount: post.viewCount || 0,
-          isLiked: false
+          isLiked: false,
+          status: post.status || 'PUBLISHED'
         }));
 
         return {
@@ -358,7 +361,8 @@ class ApiService {
           slug: post.slug,
           likes: post.likeCount || 0,
           viewCount: post.viewCount || 0,
-          isLiked: false
+          isLiked: false,
+          status: post.status || 'PUBLISHED'
         }));
 
         return {

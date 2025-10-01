@@ -113,21 +113,38 @@ public class BlogController {
             System.out.println("=== getAllPublishedPosts called ===");
             System.out.println("Page: " + page + ", Size: " + size);
             
-            Page<BlogPost> posts = blogService.getPublishedPosts(page, size);
-            System.out.println("Found " + posts.getTotalElements() + " posts");
-            System.out.println("Posts content size: " + posts.getContent().size());
-            System.out.println("Posts content: " + posts.getContent());
-            
             // Get current user if authenticated
             Authentication auth = SecurityContextHolder.getContext().getAuthentication();
             Long currentUserId = null;
+            boolean isRootUser = false;
+            
             if (auth != null && auth.isAuthenticated() && !(auth.getPrincipal() instanceof String && "anonymousUser".equals(auth.getPrincipal()))) {
                 String email = auth.getName();
                 Optional<User> userOpt = userRepository.findByEmail(email);
                 if (userOpt.isPresent()) {
-                    currentUserId = userOpt.get().getUserId();
+                    User user = userOpt.get();
+                    currentUserId = user.getUserId();
+                    isRootUser = user.getUserRole() == com.thehfpv.model.UserRole.ROOT;
+                    System.out.println("=== User Role Check ===");
+                    System.out.println("User email: " + email);
+                    System.out.println("User role: " + user.getUserRole());
+                    System.out.println("Is ROOT? " + isRootUser);
                 }
             }
+            
+            // ROOT users see all posts, others see only published posts
+            Page<BlogPost> posts;
+            if (isRootUser) {
+                System.out.println("ROOT user detected - fetching all posts including DRAFT");
+                posts = blogService.getAllPostsForAdmin(page, size);
+            } else {
+                System.out.println("Regular user - fetching published posts only");
+                posts = blogService.getPublishedPosts(page, size);
+            }
+            
+            System.out.println("Found " + posts.getTotalElements() + " posts");
+            System.out.println("Posts content size: " + posts.getContent().size());
+            System.out.println("Posts content: " + posts.getContent());
             
             // Transform posts to include like count and user's like status
             List<Map<String, Object>> transformedPosts = new ArrayList<>();
@@ -295,7 +312,29 @@ public class BlogController {
                 page = page - 1;
             }
             
-            Page<BlogPost> posts = blogService.getPostsByCategory(category, page, size);
+            // Get current user if authenticated
+            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+            boolean isRootUser = false;
+            
+            if (auth != null && auth.isAuthenticated() && !(auth.getPrincipal() instanceof String && "anonymousUser".equals(auth.getPrincipal()))) {
+                String email = auth.getName();
+                Optional<User> userOpt = userRepository.findByEmail(email);
+                if (userOpt.isPresent()) {
+                    User user = userOpt.get();
+                    isRootUser = user.getUserRole() == com.thehfpv.model.UserRole.ROOT;
+                }
+            }
+            
+            // ROOT users see all posts, others see only published posts
+            Page<BlogPost> posts;
+            if (isRootUser) {
+                System.out.println("ROOT user detected - fetching all posts in category including DRAFT");
+                posts = blogService.getAllPostsByCategoryForAdmin(category, page, size);
+            } else {
+                System.out.println("Regular user - fetching published posts only in category");
+                posts = blogService.getPostsByCategory(category, page, size);
+            }
+            
             return ResponseEntity.ok(Map.of(
                 "success", true,
                 "posts", posts.getContent(),
@@ -316,7 +355,29 @@ public class BlogController {
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size) {
         try {
-            Page<BlogPost> posts = blogService.searchPublishedPosts(keyword, page, size);
+            // Get current user if authenticated
+            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+            boolean isRootUser = false;
+            
+            if (auth != null && auth.isAuthenticated() && !(auth.getPrincipal() instanceof String && "anonymousUser".equals(auth.getPrincipal()))) {
+                String email = auth.getName();
+                Optional<User> userOpt = userRepository.findByEmail(email);
+                if (userOpt.isPresent()) {
+                    User user = userOpt.get();
+                    isRootUser = user.getUserRole() == com.thehfpv.model.UserRole.ROOT;
+                }
+            }
+            
+            // ROOT users search all posts, others search only published posts
+            Page<BlogPost> posts;
+            if (isRootUser) {
+                System.out.println("ROOT user detected - searching all posts including DRAFT");
+                posts = blogService.searchAllPostsForAdmin(keyword, page, size);
+            } else {
+                System.out.println("Regular user - searching published posts only");
+                posts = blogService.searchPublishedPosts(keyword, page, size);
+            }
+            
             return ResponseEntity.ok(Map.of(
                 "success", true,
                 "posts", posts.getContent(),
@@ -453,6 +514,10 @@ public class BlogController {
                     .body(Map.of("success", false, "message", "You can only edit your own posts"));
             }
             
+            System.out.println("=== Update Post Request ===");
+            System.out.println("Post ID: " + postId);
+            System.out.println("Request Data: " + postData);
+            
             BlogPost updatedPost = new BlogPost();
             updatedPost.setTitle((String) postData.get("title"));
             updatedPost.setContent((String) postData.get("content"));
@@ -460,28 +525,46 @@ public class BlogController {
             updatedPost.setTags((String) postData.get("tags"));
             updatedPost.setFeatured((Boolean) postData.getOrDefault("featured", false));
             
-            // Handle publish type
-            String publishType = (String) postData.getOrDefault("publishType", "immediate");
-            if ("immediate".equals(publishType)) {
-                updatedPost.setStatus("PUBLISHED");
-            } else if ("scheduled".equals(publishType)) {
-                String scheduledDate = (String) postData.get("scheduledDate");
-                String scheduledTime = (String) postData.get("scheduledTime");
-                if (scheduledDate != null && scheduledTime != null) {
-                    LocalDateTime scheduledAt = LocalDateTime.parse(
-                        scheduledDate + "T" + scheduledTime,
-                        DateTimeFormatter.ISO_LOCAL_DATE_TIME
-                    );
-                    updatedPost.setStatus("SCHEDULED");
-                    updatedPost.setScheduledAt(scheduledAt);
+            // Handle status - if status is directly provided, use it (for unpublish)
+            String directStatus = (String) postData.get("status");
+            System.out.println("Direct Status from request: " + directStatus);
+            
+            if (directStatus != null) {
+                updatedPost.setStatus(directStatus);
+                System.out.println("Setting status directly to: " + directStatus);
+            } else {
+                // Handle publish type
+                String publishType = (String) postData.getOrDefault("publishType", "immediate");
+                System.out.println("No direct status, using publishType: " + publishType);
+                
+                if ("immediate".equals(publishType)) {
+                    updatedPost.setStatus("PUBLISHED");
+                } else if ("scheduled".equals(publishType)) {
+                    String scheduledDate = (String) postData.get("scheduledDate");
+                    String scheduledTime = (String) postData.get("scheduledTime");
+                    if (scheduledDate != null && scheduledTime != null) {
+                        LocalDateTime scheduledAt = LocalDateTime.parse(
+                            scheduledDate + "T" + scheduledTime,
+                            DateTimeFormatter.ISO_LOCAL_DATE_TIME
+                        );
+                        updatedPost.setStatus("SCHEDULED");
+                        updatedPost.setScheduledAt(scheduledAt);
+                    } else {
+                        updatedPost.setStatus("DRAFT");
+                    }
                 } else {
                     updatedPost.setStatus("DRAFT");
                 }
-            } else {
-                updatedPost.setStatus("DRAFT");
             }
             
+            System.out.println("Final status being set: " + updatedPost.getStatus());
+            
             BlogPost savedPost = blogService.updatePost(postId, updatedPost);
+            
+            System.out.println("=== AFTER SAVING TO DB ===");
+            System.out.println("Saved Post ID: " + savedPost.getPostId());
+            System.out.println("Saved Post Status: " + savedPost.getStatus());
+            System.out.println("Saved Post Title: " + savedPost.getTitle());
             
             return ResponseEntity.ok(Map.of(
                 "success", true,

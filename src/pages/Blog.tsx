@@ -22,6 +22,7 @@ const Blog: React.FC<BlogProps> = ({ setCurrentPage: setAppCurrentPage }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [showLoginPrompt, setShowLoginPrompt] = useState(false);
+  const [statusFilter, setStatusFilter] = useState<'all' | 'published' | 'draft'>('all'); // ROOT 사용자용 상태 필터 - 기본값 'all'
   const [filters, setFilters] = useState<BlogFilters>({
     searchTerm: ''
   });
@@ -60,6 +61,20 @@ const Blog: React.FC<BlogProps> = ({ setCurrentPage: setAppCurrentPage }) => {
   const filteredAndSortedPosts = useMemo(() => {
     let filtered = [...allPosts];
 
+    // Apply status filter
+    if (user?.userRole === 'ROOT') {
+      // ROOT users can see all statuses, but can filter
+      if (statusFilter === 'published') {
+        filtered = filtered.filter(post => post.status === 'PUBLISHED');
+      } else if (statusFilter === 'draft') {
+        filtered = filtered.filter(post => post.status === 'DRAFT' || post.status === 'SCHEDULED');
+      }
+      // statusFilter === 'all' shows all posts (no filtering)
+    } else {
+      // Non-ROOT users only see published posts
+      filtered = filtered.filter(post => post.status === 'PUBLISHED' || !post.status);
+    }
+
     // Apply search filter
     if (filters.searchTerm) {
       const searchLower = filters.searchTerm.toLowerCase();
@@ -94,7 +109,7 @@ const Blog: React.FC<BlogProps> = ({ setCurrentPage: setAppCurrentPage }) => {
     });
 
     return filtered;
-  }, [allPosts, filters]);
+  }, [allPosts, filters, statusFilter, user]);
 
 
 
@@ -181,6 +196,7 @@ const Blog: React.FC<BlogProps> = ({ setCurrentPage: setAppCurrentPage }) => {
   // Clear all filters
   const clearFilters = () => {
     setFilters({ searchTerm: '' });
+    setStatusFilter('all'); // Reset status filter to default (show all for ROOT)
   };
 
   // Convert category to display name
@@ -212,7 +228,7 @@ const Blog: React.FC<BlogProps> = ({ setCurrentPage: setAppCurrentPage }) => {
           <div className="blog-container">
             <div className="blog-header">
               <h1 className="blog-title">BLOG</h1>
-              <p className="blog-subtitle">Sharing development, daily life, and various experiences.</p>
+              <p className="blog-subtitle">Sharing all of my life.</p>
             </div>
             <div className="blog-loading">
               <div className="loading-spinner"></div>
@@ -232,7 +248,7 @@ const Blog: React.FC<BlogProps> = ({ setCurrentPage: setAppCurrentPage }) => {
           <div className="blog-container">
             <div className="blog-header">
               <h1 className="blog-title">BLOG</h1>
-              <p className="blog-subtitle">Sharing development, daily life, and various experiences.</p>
+              <p className="blog-subtitle">Sharing all of my life.</p>
             </div>
             <div className="blog-error">
               <p>Error: {error}</p>
@@ -251,7 +267,7 @@ const Blog: React.FC<BlogProps> = ({ setCurrentPage: setAppCurrentPage }) => {
           {/* Header */}
           <div className="blog-header">
             <h1 className="blog-title">BLOG</h1>
-            <p className="blog-subtitle">Sharing development, daily life, and various experiences.</p>
+            <p className="blog-subtitle">Sharing all of my life.</p>
           </div>
 
           {/* Search and Category Filter */}
@@ -308,6 +324,33 @@ const Blog: React.FC<BlogProps> = ({ setCurrentPage: setAppCurrentPage }) => {
               </button>
             </div>
 
+            {/* Status Filters - ROOT User Only */}
+            {user?.userRole === 'ROOT' && (
+              <div className="blog-tag-filters" style={{ marginTop: '10px', borderTop: '1px solid #e5e7eb', paddingTop: '10px' }}>
+                <button
+                  className={`blog-tag-filter-btn ${statusFilter === 'published' ? 'active' : ''}`}
+                  onClick={() => setStatusFilter('published')}
+                  style={{ fontSize: '12px', padding: '4px 12px' }}
+                >
+                  ✅ Published
+                </button>
+                <button
+                  className={`blog-tag-filter-btn ${statusFilter === 'draft' ? 'active' : ''}`}
+                  onClick={() => setStatusFilter('draft')}
+                  style={{ fontSize: '12px', padding: '4px 12px' }}
+                >
+                  📝 Unpublished
+                </button>
+                <button
+                  className={`blog-tag-filter-btn ${statusFilter === 'all' ? 'active' : ''}`}
+                  onClick={() => setStatusFilter('all')}
+                  style={{ fontSize: '12px', padding: '4px 12px' }}
+                >
+                  📋 All Posts
+                </button>
+              </div>
+            )}
+
             {/* Results Info */}
             <div className="blog-results-info">
               <span>
@@ -315,8 +358,10 @@ const Blog: React.FC<BlogProps> = ({ setCurrentPage: setAppCurrentPage }) => {
                 {filters.searchTerm && ` (search: "${filters.searchTerm}")`}
                 {filters.category && ` • category: ${getCategoryDisplayName(filters.category)}`}
                 {filters.featured && ` • featured only`}
+                {user?.userRole === 'ROOT' && statusFilter === 'published' && ` • status: published only`}
+                {user?.userRole === 'ROOT' && statusFilter === 'draft' && ` • status: unpublished only`}
               </span>
-              {(filters.searchTerm || filters.category || filters.featured) && (
+              {(filters.searchTerm || filters.category || filters.featured || (user?.userRole === 'ROOT' && statusFilter !== 'all')) && (
                 <button onClick={clearFilters} className="blog-clear-filters-btn">
                   Clear Filters
                 </button>
@@ -389,6 +434,19 @@ const Blog: React.FC<BlogProps> = ({ setCurrentPage: setAppCurrentPage }) => {
                           {post.featured && (
                             <span className="blog-featured">
                               ⭐
+                            </span>
+                          )}
+                          {user?.userRole === 'ROOT' && post.status && post.status !== 'PUBLISHED' && (
+                            <span className="blog-status-badge" style={{
+                              backgroundColor: post.status === 'DRAFT' ? '#fbbf24' : '#60a5fa',
+                              color: 'white',
+                              padding: '2px 8px',
+                              borderRadius: '4px',
+                              fontSize: '12px',
+                              fontWeight: 'bold',
+                              marginLeft: '8px'
+                            }}>
+                              {post.status}
                             </span>
                           )}
                           {user?.userRole === 'ROOT' && (
