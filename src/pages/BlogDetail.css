@@ -145,6 +145,8 @@
   font-size: 1.1rem;
   line-height: 1.8;
   color: #212529;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
 }
 
 .blog-post-content h1,
@@ -157,15 +159,24 @@
   margin-bottom: 15px;
   color: #212529;
   font-weight: 600;
+  line-height: 1.3;
+  word-break: keep-all;
 }
 
 .blog-post-content h1 { font-size: 2rem; }
 .blog-post-content h2 { font-size: 1.75rem; }
 .blog-post-content h3 { font-size: 1.5rem; }
 .blog-post-content h4 { font-size: 1.25rem; }
+.blog-post-content h5 { font-size: 1.1rem; }
+.blog-post-content h6 { font-size: 1rem; }
 
 .blog-post-content p {
   margin-bottom: 20px;
+  line-height: 1.8;
+}
+
+.blog-post-content p:empty {
+  margin-bottom: 10px;
 }
 
 .blog-detail-body .blog-post-content img {
@@ -191,10 +202,90 @@
 .blog-post-content ol {
   margin: 20px 0;
   padding-left: 30px;
+  list-style-position: outside;
+}
+
+.blog-post-content ul {
+  list-style-type: disc;
+}
+
+.blog-post-content ol {
+  list-style-type: decimal;
+}
+
+/* 중첩 리스트 스타일 */
+.blog-post-content ul ul {
+  list-style-type: circle;
+  margin-top: 8px;
+  margin-bottom: 8px;
+}
+
+.blog-post-content ul ul ul {
+  list-style-type: square;
+}
+
+.blog-post-content ol ol {
+  list-style-type: lower-alpha;
+  margin-top: 8px;
+  margin-bottom: 8px;
+}
+
+.blog-post-content ol ol ol {
+  list-style-type: lower-roman;
+}
+
+/* list-style-type: none 처리 */
+.blog-post-content li[style*="list-style-type: none"] {
+  list-style-type: disc !important;
 }
 
 .blog-post-content li {
   margin-bottom: 8px;
+  line-height: 1.6;
+}
+
+.blog-post-content li p {
+  margin-bottom: 8px;
+}
+
+.blog-post-content li:last-child {
+  margin-bottom: 0;
+}
+
+/* 텍스트 강조 스타일 */
+.blog-post-content strong {
+  font-weight: 700;
+  color: #212529;
+}
+
+.blog-post-content em {
+  font-style: italic;
+}
+
+.blog-post-content u {
+  text-decoration: underline;
+}
+
+/* 텍스트 정렬 */
+.blog-post-content [style*="text-align: left"] {
+  text-align: left !important;
+}
+
+.blog-post-content [style*="text-align: center"] {
+  text-align: center !important;
+}
+
+.blog-post-content [style*="text-align: right"] {
+  text-align: right !important;
+}
+
+.blog-post-content [style*="text-align: justify"] {
+  text-align: justify !important;
+}
+
+/* 색상 스타일 유지 */
+.blog-post-content [style*="color"] {
+  /* 인라인 스타일의 color 속성 유지 */
 }
 
 .blog-post-content code {
