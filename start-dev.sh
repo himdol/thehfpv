@@ -78,6 +78,9 @@ fi
 echo ""
 echo "🔧 Starting backend server..."
 cd backend
+# Google OAuth 환경 변수 설정 (사용 시 실제 값으로 교체하거나 시스템 환경변수에서 읽어오세요)
+# export GOOGLE_CLIENT_ID="your-google-client-id"
+# export GOOGLE_CLIENT_SECRET="your-google-client-secret"
 ./gradlew bootRun &
 BACKEND_PID=$!
 cd ..

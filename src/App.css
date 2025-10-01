@@ -2265,15 +2265,10 @@
 .footer-content {
   max-width: 1200px;
   margin: 0 auto;
-  display: flex;
-  flex-direction: column;
-  gap: 2rem;
-  align-items: center;
-}
-
-.footer-section {
-  text-align: center;
-  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 3rem;
+  align-items: start;
 }
 
 .footer-section h3 {
@@ -2363,6 +2358,7 @@
   gap: 1rem;
   justify-content: center;
   align-items: center;
+  margin-top: 2rem;
 }
 
 .social-icon-btn {
@@ -2375,8 +2371,8 @@
   border-radius: 50%;
   cursor: pointer;
   transition: all 0.3s ease;
-  width: 48px;
-  height: 48px;
+  width: 64px;
+  height: 64px;
 }
 
 .social-icon-btn:hover {
@@ -2394,30 +2390,34 @@
   transition: all 0.3s ease;
 }
 
-/* Instagram icon - gradient background */
-.social-icon-btn .instagram-icon {
-  background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
-  border-radius: 20%;
-  padding: 4px;
-  color: white;
+/* Instagram icon - image */
+.instagram-icon {
+  width: 60px;
+  height: 60px;
+  object-fit: contain;
+  border-radius: 50%;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  transition: all 0.3s ease;
 }
 
 .social-icon-btn:hover .instagram-icon {
-  transform: scale(1.1);
-  box-shadow: 0 4px 12px rgba(225, 48, 108, 0.4);
+  transform: scale(1.15);
+  filter: drop-shadow(0 4px 12px rgba(225, 48, 108, 0.4));
 }
 
-/* YouTube icon - always red */
+/* YouTube icon - image */
 .youtube-icon {
-  color: #FF0000;
-  background: white;
-  border-radius: 15%;
-  padding: 2px;
+  width: 60px;
+  height: 60px;
+  object-fit: contain;
+  border-radius: 50%;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  transition: all 0.3s ease;
 }
 
 .social-icon-btn:hover .youtube-icon {
-  filter: brightness(1.2);
-  box-shadow: 0 4px 12px rgba(255, 0, 0, 0.3);
+  transform: scale(1.15);
+  filter: drop-shadow(0 4px 12px rgba(255, 0, 0, 0.4));
 }
 
 /* Old YouTube button styles - keeping for backward compatibility */
@@ -2442,11 +2442,6 @@
   box-shadow: 0 4px 12px rgba(255, 0, 0, 0.3);
 }
 
-.youtube-icon {
-  width: 20px;
-  height: 20px;
-  fill: currentColor;
-}
 
 /* Blog Write Button - YouTube 버튼과 동일한 스타일 */
 .blog-write-btn-container {
