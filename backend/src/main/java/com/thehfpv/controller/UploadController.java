@@ -14,14 +14,14 @@ import java.util.Map;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/api/upload")
+@RequestMapping("/upload")
 @CrossOrigin(origins = "http://localhost:3000")
 public class UploadController {
 
     private static final String UPLOAD_DIR = "uploads/images/";
 
     @PostMapping("/image")
-    public ResponseEntity<?> uploadImage(@RequestParam("file") MultipartFile file) {
+    public ResponseEntity<?> uploadImage(@RequestParam("image") MultipartFile file) {
         Map<String, Object> response = new HashMap<>();
 
         try {
@@ -58,12 +58,13 @@ public class UploadController {
             Path filePath = Paths.get(UPLOAD_DIR + filename);
             Files.copy(file.getInputStream(), filePath);
 
-            // 응답 URL 생성
-            String imageUrl = "/uploads/images/" + filename;
+            // 응답 URL 생성 (프론트엔드에서 접근 가능한 절대 URL)
+            String imageUrl = "http://localhost:8080/uploads/images/" + filename;
 
             response.put("success", true);
             response.put("url", imageUrl);
             response.put("filename", filename);
+            response.put("location", imageUrl); // TinyMCE가 요구하는 필드
 
             System.out.println("이미지 업로드 성공: " + filename);
 
