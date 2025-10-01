@@ -33,20 +33,20 @@ const Login: React.FC<LoginProps> = ({ setCurrentPage, previousPage }) => {
       window.history.replaceState({}, document.title, '/');
       
       if (error === 'oauth_cancelled') {
-        setSubmitError('Google 로그인이 취소되었습니다. 다시 시도해주세요.');
-        // 5초 후 에러 메시지 자동 제거
+        setSubmitError('Google login was cancelled. Please try again.');
+        // Auto-remove error message after 5 seconds
         setTimeout(() => {
           setSubmitError(null);
         }, 5000);
       } else if (error === 'oauth_failed') {
-        setSubmitError('Google 로그인 중 오류가 발생했습니다. 다시 시도해주세요.');
-        // 5초 후 에러 메시지 자동 제거
+        setSubmitError('An error occurred during Google login. Please try again.');
+        // Auto-remove error message after 5 seconds
         setTimeout(() => {
           setSubmitError(null);
         }, 5000);
       } else {
-        setSubmitError('로그인 중 오류가 발생했습니다.');
-        // 5초 후 에러 메시지 자동 제거
+        setSubmitError('An error occurred during login.');
+        // Auto-remove error message after 5 seconds
         setTimeout(() => {
           setSubmitError(null);
         }, 5000);
@@ -66,14 +66,14 @@ const Login: React.FC<LoginProps> = ({ setCurrentPage, previousPage }) => {
           password: formData.password
         });
         
-        // 로그인 성공 후 이전 페이지로 이동
+        // Navigate to previous page after successful login
         const targetPage = previousPage || '/';
-        alert('로그인이 완료되었습니다!');
+        alert('Login completed!');
         navigate(targetPage);
       } else {
         // Sign up logic
         if (formData.password !== formData.confirmPassword) {
-          setSubmitError('비밀번호가 일치하지 않습니다.');
+          setSubmitError('Passwords do not match.');
           return;
         }
         
@@ -83,9 +83,9 @@ const Login: React.FC<LoginProps> = ({ setCurrentPage, previousPage }) => {
           firstName: formData.firstName,
           lastName: formData.lastName
         });
-        alert('회원가입이 완료되었습니다! 이메일 인증을 확인해주세요.');
+        alert('Registration completed! Please check your email for verification.');
         
-        // 회원가입 성공 후 로그인 폼으로 전환
+        // Switch to login form after successful registration
         setIsLogin(true);
         setFormData({
           email: '',
@@ -96,7 +96,7 @@ const Login: React.FC<LoginProps> = ({ setCurrentPage, previousPage }) => {
         });
       }
     } catch (err) {
-      setSubmitError(err instanceof Error ? err.message : '오류가 발생했습니다.');
+      setSubmitError(err instanceof Error ? err.message : 'An error occurred.');
     }
   };
 

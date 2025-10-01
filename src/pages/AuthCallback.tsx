@@ -22,8 +22,8 @@ const AuthCallback: React.FC<AuthCallbackProps> = ({ setCurrentPage }) => {
         const error = urlParams.get('error');
 
         if (error) {
-          console.error('OAuth 에러:', error);
-          alert('소셜 로그인에 실패했습니다: ' + error);
+          console.error('OAuth error:', error);
+          alert('Social login failed: ' + error);
           navigate('/login');
           return;
         }
@@ -56,20 +56,20 @@ const AuthCallback: React.FC<AuthCallbackProps> = ({ setCurrentPage }) => {
           
           console.log('AuthContext 업데이트 완료');
           
-          // URL을 루트 경로로 변경하고 About 페이지로 이동
+          // Change URL to root path and navigate to About page
           window.history.replaceState({}, document.title, '/');
-          alert('Google 로그인이 완료되었습니다!');
+          alert('Google login completed!');
           navigate('/');
         } else {
-          console.error('세션 데이터가 올바르지 않음:', data);
+          console.error('Session data is invalid:', data);
           window.history.replaceState({}, document.title, '/');
-          alert('세션에서 사용자 정보를 가져올 수 없습니다.');
+          alert('Failed to retrieve user information from session.');
           navigate('/login');
         }
       } catch (error) {
-        console.error('OAuth 콜백 처리 실패:', error);
+        console.error('OAuth callback processing failed:', error);
         window.history.replaceState({}, document.title, '/');
-        alert('로그인 정보를 확인하는 중 오류가 발생했습니다.');
+        alert('An error occurred while verifying login information.');
         setCurrentPage?.('login');
       }
     };
@@ -98,8 +98,8 @@ const AuthCallback: React.FC<AuthCallbackProps> = ({ setCurrentPage }) => {
       <div className="login-content">
         <div className="login-loading">
           <div className="login-spinner"></div>
-          <h2>로그인 처리 중...</h2>
-          <p>잠시만 기다려주세요.</p>
+          <h2>Processing login...</h2>
+          <p>Please wait.</p>
         </div>
       </div>
     </div>

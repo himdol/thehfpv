@@ -63,9 +63,9 @@ const WriteBlog: React.FC<WriteBlogProps> = ({ setCurrentPage }) => {
       console.log('응답 데이터:', result);
 
       if (result.success) {
-        alert('블로그 작성이 완료되었습니다!');
+        alert('Blog post created successfully!');
         
-        // 폼 초기화
+        // Reset form
         setFormData({
           title: '',
           content: '',
@@ -77,14 +77,14 @@ const WriteBlog: React.FC<WriteBlogProps> = ({ setCurrentPage }) => {
           scheduledTime: ''
         });
         
-        // 블로그 목록으로 이동
+        // Navigate to blog list
         navigate('/blog');
       } else {
-        alert('블로그 작성 중 오류가 발생했습니다: ' + result.message);
+        alert('Error while creating blog post: ' + result.message);
       }
     } catch (error) {
-      console.error('블로그 작성 중 오류:', error);
-      alert('블로그 작성 중 오류가 발생했습니다. 네트워크 연결을 확인해주세요.');
+      console.error('Error while creating blog:', error);
+      alert('An error occurred while creating the blog post. Please check your network connection.');
     } finally {
       setIsSubmitting(false);
     }
@@ -101,7 +101,7 @@ const WriteBlog: React.FC<WriteBlogProps> = ({ setCurrentPage }) => {
           {/* Header */}
           <div className="write-blog-header">
             <h1 className="write-blog-title">Write Blog</h1>
-            <p className="write-blog-subtitle">새로운 블로그 포스트를 작성해보세요.</p>
+            <p className="write-blog-subtitle">Create a new blog post.</p>
           </div>
 
           {/* Form */}

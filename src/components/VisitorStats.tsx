@@ -15,7 +15,7 @@ const VisitorStatsComponent: React.FC<VisitorStatsProps> = ({ className = '' }) 
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  // 통계 데이터 로드
+  // Load statistics data
   const loadStats = async () => {
     try {
       setIsLoading(true);
@@ -25,22 +25,22 @@ const VisitorStatsComponent: React.FC<VisitorStatsProps> = ({ className = '' }) 
       setStats(data);
       
       if (data.status === 'error') {
-        setError(data.message || '통계 조회에 실패했습니다.');
+        setError(data.message || 'Failed to load statistics.');
       }
     } catch (err) {
-      console.error('통계 로드 실패:', err);
-      setError('통계를 불러올 수 없습니다.');
+      console.error('Failed to load stats:', err);
+      setError('Unable to load statistics.');
     } finally {
       setIsLoading(false);
     }
   };
 
-  // 컴포넌트 마운트 시 통계 로드
+  // Load statistics on component mount
   useEffect(() => {
     loadStats();
   }, []);
 
-  // 주기적으로 통계 업데이트 (5분마다)
+  // Update statistics periodically (every 5 minutes)
   useEffect(() => {
     const interval = setInterval(() => {
       loadStats();
@@ -54,7 +54,7 @@ const VisitorStatsComponent: React.FC<VisitorStatsProps> = ({ className = '' }) 
       <div className={`visitor-stats ${className}`}>
         <div className="visitor-stats-loading">
           <div className="loading-spinner"></div>
-          <span>통계 로딩 중...</span>
+          <span>Loading statistics...</span>
         </div>
       </div>
     );
@@ -67,7 +67,7 @@ const VisitorStatsComponent: React.FC<VisitorStatsProps> = ({ className = '' }) 
           <span className="error-icon">⚠️</span>
           <span>{error}</span>
           <button onClick={loadStats} className="retry-btn">
-            다시 시도
+            Retry
           </button>
         </div>
       </div>
@@ -98,7 +98,7 @@ const VisitorStatsComponent: React.FC<VisitorStatsProps> = ({ className = '' }) 
       
       <div className="visitor-stats-footer">
         <span className="last-updated">
-          마지막 업데이트: {visitorService.formatLastUpdated(stats.lastUpdated)}
+          Last updated: {visitorService.formatLastUpdated(stats.lastUpdated)}
         </span>
       </div>
     </div>

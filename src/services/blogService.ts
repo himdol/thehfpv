@@ -327,6 +327,66 @@ class BlogService {
     }
   }
 
+  // Get total published posts count
+  async getTotalPostsCount(): Promise<number> {
+    try {
+      const response = await fetch('http://localhost:8080/blog/stats/total', {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+      const data = await response.json();
+      return data.totalPosts || 0;
+    } catch (error) {
+      console.error('Error getting total posts count:', error);
+      return 0;
+    }
+  }
+
+  // Get my liked posts
+  async getMyLikes(): Promise<BlogPost[]> {
+    try {
+      const token = localStorage.getItem('jwtToken');
+      const response = await fetch('http://localhost:8080/blog/my-likes', {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': token ? `Bearer ${token}` : '',
+        },
+        credentials: 'include',
+      });
+      
+      if (!response.ok) {
+        throw new Error('Failed to fetch liked posts');
+      }
+      
+      const data = await response.json();
+      const posts = data.posts || [];
+      
+      return posts.map((post: any) => ({
+        id: post.postId,
+        title: post.title,
+        content: post.content,
+        excerpt: post.excerpt,
+        category: post.category,
+        tags: post.tags ? post.tags.split(',').map((tag: string) => tag.trim()) : [],
+        featured: post.featured,
+        image: post.featuredImageUrl,
+        slug: post.slug,
+        author: post.author ? `${post.author.firstName || ''} ${post.author.lastName || ''}`.trim() : 'Unknown',
+        date: post.publishedAt ? new Date(post.publishedAt).toLocaleDateString('ko-KR') : '',
+        readTime: '5 min',
+        likes: post.likeCount || 0,
+        viewCount: post.viewCount || 0,
+        isLiked: true, // All posts in my likes are liked
+      }));
+    } catch (error) {
+      console.error('Error getting my likes:', error);
+      throw error;
+    }
+  }
+
   // Update post like (legacy method - now uses toggleLike)
   async updatePostLike(id: number, isLiked: boolean): Promise<{ likes: number; isLiked: boolean } | null> {
     try {

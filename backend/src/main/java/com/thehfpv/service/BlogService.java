@@ -410,4 +410,9 @@ public class BlogService {
         
         return blogLikeRepository.findByUserOrderByCreatedAtDesc(user);
     }
+    
+    // Get total published posts count
+    public long getTotalPublishedPostsCount() {
+        return blogPostRepository.countByStatus("PUBLISHED");
+    }
 }

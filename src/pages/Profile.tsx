@@ -49,24 +49,24 @@ const Profile: React.FC<ProfileProps> = ({ setCurrentPage }) => {
 
     try {
       if (isPasswordChange) {
-        // 비밀번호 변경 로직
+        // Password change logic
         if (!formData.currentPassword) {
-          setSubmitError('현재 비밀번호를 입력해주세요.');
+          setSubmitError('Please enter your current password.');
           return;
         }
         
         if (!formData.newPassword) {
-          setSubmitError('새 비밀번호를 입력해주세요.');
+          setSubmitError('Please enter a new password.');
           return;
         }
         
         if (formData.newPassword.length < 6) {
-          setSubmitError('새 비밀번호는 최소 6자 이상이어야 합니다.');
+          setSubmitError('New password must be at least 6 characters long.');
           return;
         }
         
         if (formData.newPassword !== formData.confirmPassword) {
-          setSubmitError('새 비밀번호가 일치하지 않습니다.');
+          setSubmitError('New passwords do not match.');
           return;
         }
 
@@ -75,9 +75,9 @@ const Profile: React.FC<ProfileProps> = ({ setCurrentPage }) => {
           newPassword: formData.newPassword
         });
         
-        setSuccessMessage('비밀번호가 성공적으로 변경되었습니다.');
+        setSuccessMessage('Password changed successfully.');
         
-        // 비밀번호 필드 초기화
+        // Reset password fields
         setFormData({
           ...formData,
           currentPassword: '',
@@ -86,14 +86,14 @@ const Profile: React.FC<ProfileProps> = ({ setCurrentPage }) => {
         });
         
       } else {
-        // 개인정보 수정 로직 (이메일 제외)
+        // Personal info update logic (excluding email)
         if (!formData.firstName.trim()) {
-          setSubmitError('이름을 입력해주세요.');
+          setSubmitError('Please enter your first name.');
           return;
         }
         
         if (!formData.lastName.trim()) {
-          setSubmitError('성을 입력해주세요.');
+          setSubmitError('Please enter your last name.');
           return;
         }
 
@@ -102,13 +102,13 @@ const Profile: React.FC<ProfileProps> = ({ setCurrentPage }) => {
           lastName: formData.lastName.trim()
         });
         
-        setSuccessMessage('개인정보가 성공적으로 수정되었습니다.');
+        setSuccessMessage('Personal information updated successfully.');
       }
     } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : '오류가 발생했습니다.';
+      const errorMessage = err instanceof Error ? err.message : 'An error occurred.';
       setSubmitError(errorMessage);
       
-      // 비밀번호 변경 실패 시 현재 비밀번호 필드 초기화
+      // Reset current password field on password change failure
       if (isPasswordChange) {
         setFormData({
           ...formData,
@@ -141,10 +141,10 @@ const Profile: React.FC<ProfileProps> = ({ setCurrentPage }) => {
     return `${firstInitial}${lastInitial}`.toUpperCase() || 'U';
   };
 
-  // 비밀번호 일치 여부 실시간 확인
+  // Real-time password match check
   const checkPasswordMatch = (newPassword: string, confirmPassword: string) => {
     if (confirmPassword && newPassword !== confirmPassword) {
-      setPasswordMatchError('비밀번호가 일치하지 않습니다.');
+      setPasswordMatchError('Passwords do not match.');
     } else {
       setPasswordMatchError(null);
     }
@@ -204,24 +204,24 @@ const Profile: React.FC<ProfileProps> = ({ setCurrentPage }) => {
           <div className="profile-avatar">
             {user ? getUserInitials(user.firstName, user.lastName) : 'U'}
           </div>
-          <h1 className="login-title">내 정보 수정</h1>
-          <p className="login-subtitle">개인정보를 수정하거나 비밀번호를 변경하세요</p>
+          <h1 className="login-title">Edit Profile</h1>
+          <p className="login-subtitle">Update your personal information or change your password</p>
         </div>
 
-        {/* Toggle Buttons - OAuth 사용자가 아닐 때만 비밀번호 수정 버튼 표시 */}
+        {/* Toggle Buttons - Show password button only for non-OAuth users */}
         <div className="login-toggle">
           <button
             className={`login-toggle-btn ${!isPasswordChange ? 'active' : ''}`}
             onClick={() => setIsPasswordChange(false)}
           >
-            개인정보
+            Personal Info
           </button>
           {!isOAuthUser && (
             <button
               className={`login-toggle-btn ${isPasswordChange ? 'active' : ''}`}
               onClick={() => setIsPasswordChange(true)}
             >
-              비밀번호
+              Password
             </button>
           )}
         </div>
@@ -242,9 +242,9 @@ const Profile: React.FC<ProfileProps> = ({ setCurrentPage }) => {
                   name="email"
                   value={formData.email}
                   className="login-input login-input-disabled"
-                  placeholder="이메일 (변경 불가)"
+                  placeholder="Email (cannot be changed)"
                   disabled
-                  title="이메일은 변경할 수 없습니다"
+                  title="Email cannot be changed"
                 />
               </div>
               <div className="login-input-group">
@@ -254,7 +254,7 @@ const Profile: React.FC<ProfileProps> = ({ setCurrentPage }) => {
                   value={formData.firstName}
                   onChange={handleChange}
                   className="login-input"
-                  placeholder="이름을 입력하세요"
+                  placeholder="Enter your first name"
                   required
                 />
               </div>
@@ -265,7 +265,7 @@ const Profile: React.FC<ProfileProps> = ({ setCurrentPage }) => {
                   value={formData.lastName}
                   onChange={handleChange}
                   className="login-input"
-                  placeholder="성을 입력하세요"
+                  placeholder="Enter your last name"
                   required
                 />
               </div>
@@ -279,7 +279,7 @@ const Profile: React.FC<ProfileProps> = ({ setCurrentPage }) => {
                   value={formData.currentPassword}
                   onChange={handleChange}
                   className="login-input"
-                  placeholder="현재 비밀번호를 입력하세요"
+                  placeholder="Enter your current password"
                   required
                 />
               </div>
@@ -290,7 +290,7 @@ const Profile: React.FC<ProfileProps> = ({ setCurrentPage }) => {
                   value={formData.newPassword}
                   onChange={handleChange}
                   className="login-input"
-                  placeholder="새 비밀번호를 입력하세요"
+                  placeholder="Enter your new password"
                   required
                 />
               </div>
@@ -301,7 +301,7 @@ const Profile: React.FC<ProfileProps> = ({ setCurrentPage }) => {
                   value={formData.confirmPassword}
                   onChange={handleChange}
                   className={`login-input ${passwordMatchError ? 'error' : ''}`}
-                  placeholder="새 비밀번호를 다시 입력하세요"
+                  placeholder="Re-enter your new password"
                   required
                 />
                 {passwordMatchError && (
@@ -313,8 +313,8 @@ const Profile: React.FC<ProfileProps> = ({ setCurrentPage }) => {
             </>
           ) : (
             <div className="oauth-user-message">
-              <p>구글 계정으로 로그인한 사용자는 비밀번호를 변경할 수 없습니다.</p>
-              <p>비밀번호 변경이 필요하시면 구글 계정 설정에서 변경해주세요.</p>
+              <p>Users logged in with Google cannot change their password.</p>
+              <p>If you need to change your password, please do so in your Google account settings.</p>
             </div>
           )}
 
@@ -353,7 +353,7 @@ const Profile: React.FC<ProfileProps> = ({ setCurrentPage }) => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.7 }}
             >
-              취소
+              Cancel
             </motion.button>
             <motion.button
               type="submit"
@@ -365,7 +365,7 @@ const Profile: React.FC<ProfileProps> = ({ setCurrentPage }) => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.8 }}
             >
-              {loading ? '처리 중...' : (isPasswordChange ? '비밀번호 변경' : '정보 수정')}
+              {loading ? 'Processing...' : (isPasswordChange ? 'Change Password' : 'Update Info')}
             </motion.button>
           </div>
         </motion.form>
@@ -379,27 +379,27 @@ const Profile: React.FC<ProfileProps> = ({ setCurrentPage }) => {
             transition={{ delay: 0.9 }}
           >
             <div className="user-info-header">
-              <h3>현재 정보</h3>
+              <h3>Current Information</h3>
             </div>
             <div className="user-info-content">
               <div className="user-info-item">
-                <span className="user-info-label">이름:</span>
+                <span className="user-info-label">Name:</span>
                 <span className="user-info-value">{user.firstName} {user.lastName}</span>
               </div>
               <div className="user-info-item">
-                <span className="user-info-label">이메일:</span>
-                <span className="user-info-value" title="이메일은 변경할 수 없습니다 (소셜 로그인 연동을 위해)">
-                  {user.email} <span style={{fontSize: '0.8em', color: '#666'}}>(변경 불가)</span>
+                <span className="user-info-label">Email:</span>
+                <span className="user-info-value" title="Email cannot be changed (for social login integration)">
+                  {user.email} <span style={{fontSize: '0.8em', color: '#666'}}>(cannot be changed)</span>
                 </span>
               </div>
               <div className="user-info-item">
-                <span className="user-info-label">권한:</span>
+                <span className="user-info-label">Role:</span>
                 <span className="user-info-value">{user.userRole}</span>
               </div>
               <div className="user-info-item">
-                <span className="user-info-label">이메일 인증:</span>
+                <span className="user-info-label">Email Verified:</span>
                 <span className={`user-info-value ${user.emailVerified ? 'verified' : 'unverified'}`}>
-                  {user.emailVerified ? '인증됨' : '미인증'}
+                  {user.emailVerified ? 'Verified' : 'Not Verified'}
                 </span>
               </div>
             </div>

@@ -63,6 +63,7 @@ public class SecurityConfig {
                 .requestMatchers("/auth/profile").authenticated() // 프로필 수정은 인증 필요
                 .requestMatchers("/upload/**").authenticated() // 이미지 업로드는 인증 필요
                 .requestMatchers("/blog/posts").permitAll() // 블로그 포스트 조회 허용
+                .requestMatchers("/blog/stats/**").permitAll() // 블로그 통계 허용
                 .requestMatchers("/blog/posts/*/like").authenticated() // 좋아요 토글은 인증 필요
                 .requestMatchers("/blog/posts/*/like-status").authenticated() // 좋아요 상태 조회는 인증 필요
                 .requestMatchers("/blog/my-likes").authenticated() // 내 좋아요 목록은 인증 필요

@@ -9,6 +9,7 @@ import BlogDetail from './pages/BlogDetail';
 import WriteBlog from './pages/WriteBlog';
 import Login from './pages/Login';
 import Profile from './pages/Profile';
+import MyLikes from './pages/MyLikes';
 import AuthCallback from './pages/AuthCallback';
 
 function AppContent() {
@@ -56,18 +57,18 @@ function AppContent() {
               // 소셜 로그인 상태 업데이트
               await socialLogin(data.user);
               
-              console.log('OAuth2 로그인 성공!');
-              alert('Google 로그인이 완료되었습니다!');
+              console.log('OAuth2 login successful!');
+              alert('Google login completed!');
             } else {
-              console.error('사용자 정보가 응답에 없음:', data);
-              alert('사용자 정보를 가져올 수 없습니다.');
+              console.error('No user info in response:', data);
+              alert('Failed to retrieve user information.');
             }
           } else {
-            console.error('프로필 요청 실패:', response.status);
-            alert('프로필 요청에 실패했습니다.');
+            console.error('Profile request failed:', response.status);
+            alert('Profile request failed.');
           }
         } catch (error) {
-          console.error('프로필 요청 중 오류:', error);
+          console.error('Error during profile request:', error);
         }
       }
     };
@@ -85,6 +86,7 @@ function AppContent() {
           <Route path="/write-blog" element={<WriteBlog />} />
           <Route path="/login" element={<Login />} />
           <Route path="/profile" element={<Profile />} />
+          <Route path="/my-likes" element={<MyLikes setCurrentPage={() => {}} />} />
           <Route path="/auth-callback" element={<AuthCallback />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>

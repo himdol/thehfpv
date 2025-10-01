@@ -128,10 +128,19 @@ const Header: React.FC<HeaderProps> = ({
                         navigate('/profile');
                       }}
                     >
-                      내 정보
+                      Profile
+                    </button>
+                    <button 
+                      className="user-menu-item" 
+                      onClick={() => {
+                        setShowUserMenu(false);
+                        navigate('/my-likes');
+                      }}
+                    >
+                      Likes
                     </button>
                     <button className="user-menu-item" onClick={handleLogout}>
-                      로그아웃
+                      Logout
                     </button>
                   </div>
                 </div>

@@ -711,4 +711,21 @@ public class BlogController {
                 .body(Map.of("success", false, "message", "Failed to get liked posts: " + e.getMessage()));
         }
     }
+    
+    // Get total published posts count
+    @GetMapping("/stats/total")
+    public ResponseEntity<?> getTotalPostsCount() {
+        try {
+            long totalCount = blogService.getTotalPublishedPostsCount();
+            return ResponseEntity.ok(Map.of(
+                "success", true,
+                "totalPosts", totalCount
+            ));
+        } catch (Exception e) {
+            System.err.println("Error in getTotalPostsCount: " + e.getMessage());
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(Map.of("success", false, "message", "Failed to get total posts count: " + e.getMessage()));
+        }
+    }
 }

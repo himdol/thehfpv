@@ -50,7 +50,7 @@ const BlogDetail: React.FC = () => {
           setRelatedPosts(related);
         }
       } catch (err) {
-        setError(err instanceof Error ? err.message : '포스트를 불러오는데 실패했습니다.');
+        setError(err instanceof Error ? err.message : 'Failed to load post.');
       } finally {
         setLoading(false);
       }
@@ -113,7 +113,7 @@ const BlogDetail: React.FC = () => {
       <div className="blog-detail-container">
         <div className="blog-detail-loading">
           <div className="loading-spinner"></div>
-          <p>포스트를 불러오는 중...</p>
+          <p>Loading post...</p>
         </div>
       </div>
     );
@@ -123,10 +123,10 @@ const BlogDetail: React.FC = () => {
     return (
       <div className="blog-detail-container">
         <div className="blog-detail-error">
-          <h2>오류가 발생했습니다</h2>
-          <p>{error || '포스트를 찾을 수 없습니다.'}</p>
+          <h2>An error occurred</h2>
+          <p>{error || 'Post not found.'}</p>
           <button onClick={handleBackClick} className="back-button">
-            블로그 목록으로 돌아가기
+            Back to Blog List
           </button>
         </div>
       </div>
@@ -153,7 +153,7 @@ const BlogDetail: React.FC = () => {
           
           {post.author && post.author.trim() && post.author !== 'Unknown' && (
             <div className="blog-detail-author">
-              <span>작성자: {post.author}</span>
+              <span>Author: {post.author}</span>
             </div>
           )}
           
@@ -185,8 +185,8 @@ const BlogDetail: React.FC = () => {
 
         <footer className="blog-detail-footer">
           <div className="blog-detail-stats">
-            <span>조회수: {post.viewCount || 0}</span>
-            <span>좋아요: {post.likes || 0}</span>
+            <span>Views: {post.viewCount || 0}</span>
+            <span>Likes: {post.likes || 0}</span>
           </div>
           <button 
             className={`blog-like-btn ${post.isLiked ? 'liked' : ''}`}
